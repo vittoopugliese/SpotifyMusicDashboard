@@ -1,12 +1,13 @@
 "use client";
 
+import { SpotifyUserProfile } from "@/lib/spotify";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 export type SpotifySession = {
   authenticated: boolean;
   id?: string;
   email?: string;
-  profile?: unknown;
+  profile?: SpotifyUserProfile;
 };
 
 type SpotifySessionContextValue = {

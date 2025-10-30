@@ -1,60 +1,20 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { useSpotifyToken } from "@/hooks/use-spotify-token";
 import { useTopArtists, useTopTracks, useAudioFeatures } from "@/hooks/use-spotify-data";
-import { average, yearFromDate, getMusicalMood, SpotifyTrack } from "@/lib/spotify";
+import { average, yearFromDate, getMusicalMood } from "@/lib/spotify";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, LineChart, Line, } from "recharts";
-import { Download, Play, Pause, Music2, BarChart3, Activity, Gauge, Heart, Waves } from "lucide-react";
+import { Download, Music2, BarChart3, Activity, Gauge, Heart, Waves } from "lucide-react";
 import StatCard from "@/components/stat-card";
-import LoginToGetTokenMessage from "@/components/login-to-get-token";
 import TitleWithPeriodSelector from "@/components/title-with-period-selector";
+import { TrackRow } from "@/components/track-row";
 
 type TimeRange = "short_term" | "medium_term" | "long_term";
 
-function formatTime(ms: number): string {
-  const seconds = Math.floor(ms / 1000);
-  const mins = Math.floor(seconds / 60);
-  const secs = seconds % 60;
-  return `${mins}:${secs.toString().padStart(2, "0")}`;
-}
-
-function TrackRow({track, index, onPlay, isPlaying}: { track: SpotifyTrack; index: number; onPlay: (trackId: string) => void; isPlaying: boolean; }) {
-  return (
-    <tr className="border-b hover:bg-muted/50 transition-colors">
-      <td className="p-3 text-muted-foreground w-12">{index + 1}</td>
-      <td className="p-3">
-        <div className="flex items-center gap-3">
-          <Avatar className="h-12 w-12">
-            <AvatarImage src={track.album.images[0]?.url} alt={track.album.name} />
-            <AvatarFallback>{track.name.charAt(0)}</AvatarFallback>
-          </Avatar>
-          <div>
-            <p className="font-medium">{track.name}</p>
-            <p className="text-sm text-muted-foreground">{track.artists[0]?.name}</p>
-          </div>
-        </div>
-      </td>
-      <td className="p-3 text-muted-foreground">{track.album.name}</td>
-      <td className="p-3 text-muted-foreground">{formatTime(track.duration_ms)}</td>
-      <td className="p-3">
-        {track.preview_url ? (
-          <Button variant="ghost" size="icon" onClick={() => onPlay(track.id)} className="h-8 w-8" >
-            {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-          </Button>
-        ) : (
-          <span className="text-muted-foreground text-sm">N/A</span>
-        )}
-      </td>
-    </tr>
-  );
-}
-
 export default function StatsPage() {
-  const { session, loading: sessionLoading, login } = useSpotifyToken();
   const [timeRange, setTimeRange] = useState<TimeRange>("medium_term");
   const [playingTrackId, setPlayingTrackId] = useState<string | null>(null);
   const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(null);
@@ -65,7 +25,7 @@ export default function StatsPage() {
   const trackIds = tracksData?.items?.map((t) => t.id) || [];
   const { data: audioFeaturesData, loading: audioLoading } = useAudioFeatures(trackIds || []);
 
-  const isLoading = sessionLoading || artistsLoading || tracksLoading || audioLoading;
+  const isLoading = artistsLoading || tracksLoading || audioLoading;
 
   // Audio Personality Radar Chart Data
   const radarData = useMemo(() => {
@@ -143,9 +103,7 @@ export default function StatsPage() {
     }
 
     // Stop current playback
-    if (audioElement) {
-      audioElement.pause();
-    }
+    if (audioElement) audioElement.pause();
 
     // Start new playback
     const audio = new Audio(track.preview_url);
@@ -180,18 +138,10 @@ export default function StatsPage() {
     URL.revokeObjectURL(url);
   };
 
-  if (!session.authenticated && !isLoading) return <LoginToGetTokenMessage onLogin={login} />;
-
   return (
     <div className="p-6 space-y-6">
-      <TitleWithPeriodSelector
-        title="Tus Stats"
-        icon={<BarChart3 className="h-8 w-8" />}
-        value={timeRange}
-        onChange={setTimeRange}
-        actions={<Button variant="outline" onClick={handleExportStats} className="gap-2"><Download className="h-4 w-4" />Exportar Stats</Button>}
-        className="mb-4"
-      />
+      <TitleWithPeriodSelector title="Tus Stats" icon={<BarChart3 className="h-8 w-8" />} value={timeRange} onChange={setTimeRange} className="mb-4"
+        actions={<Button variant="outline" onClick={handleExportStats} className="gap-2"><Download className="h-4 w-4" />Exportar Stats</Button>} />
 
       {/* Audio Personality Radar Chart */}
       <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
@@ -207,20 +157,8 @@ export default function StatsPage() {
               <PolarGrid />
               <PolarAngleAxis dataKey="subject" />
               <PolarRadiusAxis angle={90} domain={[0, 1]} />
-              <Radar
-                name="Your Music"
-                dataKey="personal"
-                stroke="#1DB954"
-                fill="#1DB954"
-                fillOpacity={0.6}
-              />
-              <Radar
-                name="Global Average"
-                dataKey="global"
-                stroke="#8884d8"
-                fill="#8884d8"
-                fillOpacity={0.3}
-              />
+              <Radar name="Your Music" dataKey="personal" stroke="#1DB954" fill="#1DB954" fillOpacity={0.6} />
+              <Radar name="Global Average" dataKey="global" stroke="#8884d8" fill="#8884d8" fillOpacity={0.3} />
               <Legend />
               <Tooltip />
             </RadarChart>
@@ -232,30 +170,10 @@ export default function StatsPage() {
 
       {/* Audio Feature Summary */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard
-          icon={Activity}
-          title="Energy"
-          value={isLoading || !featureSummary ? "—" : `${Math.round(featureSummary.avgEnergy * 100)}%`}
-          loading={isLoading}
-        />
-        <StatCard
-          icon={Waves}
-          title="Danceability"
-          value={isLoading || !featureSummary ? "—" : `${Math.round(featureSummary.avgDanceability * 100)}%`}
-          loading={isLoading}
-        />
-        <StatCard
-          icon={Heart}
-          title="Valence"
-          value={isLoading || !featureSummary ? "—" : `${Math.round(featureSummary.avgValence * 100)}%`}
-          loading={isLoading}
-        />
-        <StatCard
-          icon={Gauge}
-          title="Avg Tempo"
-          value={isLoading || !featureSummary ? "—" : `${Math.round(featureSummary.avgTempo)} BPM`}
-          loading={isLoading}
-        />
+        <StatCard icon={Activity} title="Energy" value={isLoading || !featureSummary ? "—" : `${Math.round(featureSummary.avgEnergy * 100)}%`} loading={isLoading} />
+        <StatCard icon={Waves} title="Danceability" value={isLoading || !featureSummary ? "—" : `${Math.round(featureSummary.avgDanceability * 100)}%`} loading={isLoading} />
+        <StatCard icon={Heart} title="Valence" value={isLoading || !featureSummary ? "—" : `${Math.round(featureSummary.avgValence * 100)}%`} loading={isLoading} />
+        <StatCard icon={Gauge} title="Avg Tempo" value={isLoading || !featureSummary ? "—" : `${Math.round(featureSummary.avgTempo)} BPM`} loading={isLoading} />
       </div>
 
       {/* Top Charts */}
@@ -283,13 +201,8 @@ export default function StatsPage() {
                 </thead>
                 <tbody>
                   {tracksData.items.slice(0, 50).map((track, index) => (
-                    <TrackRow
-                      key={track.id}
-                      track={track}
-                      index={index}
-                      onPlay={handlePlay}
-                      isPlaying={playingTrackId === track.id}
-                    />
+                    <TrackRow key={track.id} track={track} index={index}
+                      onPlay={handlePlay} isPlaying={playingTrackId === track.id} />
                   ))}
                 </tbody>
               </table>
@@ -311,18 +224,13 @@ export default function StatsPage() {
           ) : artistsData?.items && artistsData.items.length > 0 ? (
             <div className="grid grid-cols-2 gap-4 overflow-auto max-h-[600px]">
               {artistsData.items.map((artist) => (
-                <div
-                  key={artist.id}
-                  className="bg-muted/50 rounded-lg p-4 hover:bg-muted transition-colors"
-                >
+                <div key={artist.id} className="bg-muted/50 rounded-lg p-4 hover:bg-muted transition-colors" >
                   <Avatar className="h-24 w-24 mx-auto mb-3">
                     <AvatarImage src={artist.images[0]?.url} alt={artist.name} />
                     <AvatarFallback className="text-lg">{artist.name.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <p className="text-center font-medium truncate">{artist.name}</p>
-                  <p className="text-center text-sm text-muted-foreground">
-                    {artist.genres[0] || "Unknown"}
-                  </p>
+                  <p className="text-center text-sm text-muted-foreground">{artist.genres[0] || "Unknown"}</p>
                 </div>
               ))}
             </div>
@@ -364,13 +272,7 @@ export default function StatsPage() {
                 <XAxis dataKey="track" />
                 <YAxis domain={[0, 1]} />
                 <Tooltip />
-                <Line
-                  type="monotone"
-                  dataKey="valence"
-                  stroke="#1DB954"
-                  strokeWidth={2}
-                  name="Valence"
-                />
+                <Line type="monotone" dataKey="valence" stroke="#1DB954" strokeWidth={2} name="Valence" />
               </LineChart>
             </ResponsiveContainer>
           ) : (

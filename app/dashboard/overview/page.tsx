@@ -1,17 +1,17 @@
 "use client";
 
-import { useSpotifyToken } from "@/hooks/use-spotify-token";
 import { useTopArtists, useTopTracks } from "@/hooks/use-spotify-data";
 import { average, getDominantGenre, getGenreDistribution, yearFromDate } from "@/lib/spotify";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Music2, TrendingUp, Clock, CalendarDays, Users, Disc3, Music } from "lucide-react";
+import { Music2, TrendingUp, Clock, CalendarDays, Users, Disc3, Music, UserIcon } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip } from "recharts";
 import { useMemo } from "react";
 import InsightCard from "@/components/insight-card";
-import LoginToGetTokenMessage from "@/components/login-to-get-token";
 import { useState } from "react";
 import TitleWithPeriodSelector from "@/components/title-with-period-selector";
+import { Spinner } from "@/components/ui/spinner";
+import { useSpotifySession } from "@/contexts/spotify-session-context";
 
 const COLORS = ["#1DB954", "#1ed760", "#19e68c", "#15d4a8", "#12c2c1"];
 
@@ -23,10 +23,10 @@ function formatMs(ms: number): string {
 }
 
 export default function OverviewPage() {
-  const { session, loading: sessionLoading, login } = useSpotifyToken();
   const [timeRange, setTimeRange] = useState<"short_term" | "medium_term" | "long_term">("medium_term");
   const { data: artistsData, loading: artistsLoading } = useTopArtists(timeRange);
   const { data: tracksData, loading: tracksLoading } = useTopTracks(timeRange);
+  const { session, loading: sessionLoading } = useSpotifySession();
   
   const isLoading = sessionLoading || artistsLoading || tracksLoading;
 
@@ -91,82 +91,80 @@ export default function OverviewPage() {
   return (
     <div className="p-6 space-y-6">
       <TitleWithPeriodSelector title="Dashboard Overview" icon={<Music className="h-8 w-8" />} value={timeRange} onChange={setTimeRange} className="mb-4" />
-      
-      {(!session.authenticated && !isLoading) ? <LoginToGetTokenMessage onLogin={login} /> : (
-        <>
-        {session.authenticated && session.profile ? (
-          <div className="bg-card border border-border rounded-lg p-6 shadow-sm flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Avatar className="h-14 w-14">
-                <AvatarImage src={session.profile.images?.[0]?.url} alt={session.profile.display_name || "User"} />
-                <AvatarFallback className="font-bold">{(session.profile.display_name || "U").charAt(0).toUpperCase()}</AvatarFallback>
-              </Avatar>
-              <div className="flex flex-col">
-                <span className="text-lg font-semibold">{session.profile.display_name || "Spotify User"}</span>
-                {session.profile.email ? (
-                  <span className="text-sm text-muted-foreground">{session.profile.email}</span>
-                ) : null}
-              </div>
+
+      <div className="bg-card border border-border rounded-lg p-6 shadow-sm flex items-center justify-between">
+        {session.authenticated && session.profile ? <div className="flex items-center gap-4">
+          <Avatar className="h-14 w-14">
+            <AvatarImage src={session.profile.images?.[0]?.url} alt={session.profile.display_name || "User"} />
+            <AvatarFallback className="font-bold">{(session.profile.display_name || "U").charAt(0).toUpperCase()}</AvatarFallback>
+          </Avatar>
+          <div className="flex flex-col">
+            <span className="text-lg font-semibold">{session.profile.display_name || "Spotify User"}</span>
+            {session.profile.email ? (
+              <span className="text-sm text-muted-foreground">{session.profile.email}</span>
+            ) : null}
+          </div>
+        </div> : (
+          <div className="flex items-center gap-4">
+            <Spinner className="size-12" />
+            <div className="flex flex-row items-center gap-2">
+              <UserIcon className="h-8 w-8" />
+              <span className="text-lg font-semibold">Loading Spotify User...</span>
             </div>
           </div>
-        ) : null}
-        <div className="bg-gradient-to-br from-primary/20 via-primary/10 to-background border border-border rounded-xl p-6 shadow-lg">
-          <div className="flex items-center gap-3 mb-4">
-            <Music2 className="h-8 w-8 text-primary" />
-            <h1 className="text-3xl font-bold">Resumen de Escucha</h1>
-          </div>
-          {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
-              <Skeleton className="h-24" />
-              <Skeleton className="h-24" />
-              <Skeleton className="h-24" />
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mt-6">
-              <div className="bg-card/50 rounded-lg p-4 border border-border/50">
-                <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2"><Clock className="h-4 w-4" />Duración Promedio</p>
-                <p className="text-3xl font-bold text-primary">{formatMs(avgDurationMs)}</p>
-                <p className="text-xs text-muted-foreground mt-1">de tus canciones top</p>
-              </div>
-              <div className="bg-card/50 rounded-lg p-4 border border-border/50">
-                <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2"><TrendingUp className="h-4 w-4" />Popularidad Promedio</p>
-                <p className="text-3xl font-bold text-primary">{avgPopularity}</p>
-                <p className="text-xs text-muted-foreground mt-1">en escala 0 - 100</p>
-              </div>
-              <div className="bg-card/50 rounded-lg p-4 border border-border/50">
-                <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2"><CalendarDays className="h-4 w-4" />Año más frecuente</p>
-                <p className="text-3xl font-bold text-primary">{mostCommonYear ?? latestYear ?? "-"}</p>
-                <p className="text-xs text-muted-foreground mt-1">en tus lanzamientos</p>
-              </div>
-              <div className="bg-card/50 rounded-lg p-4 border border-border/50">
-                <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2"><Users className="h-4 w-4" />Artistas Únicos</p>
-                <p className="text-3xl font-bold text-primary">{totalArtists}</p>
-                <p className="text-xs text-muted-foreground mt-1">en tu top</p>
-              </div>
-              <div className="bg-card/50 rounded-lg p-4 border border-border/50">
-                <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2"><Music2 className="h-4 w-4" />Género Dominante</p>
-                <p className="text-3xl font-bold text-primary">{dominantGenre}</p>
-                <p className="text-xs text-muted-foreground mt-1">entre tus artistas</p>
-              </div>
-            </div>
-          )}
+        )}
+      </div>
+      <div className="bg-gradient-to-br from-primary/20 via-primary/10 to-background border border-border rounded-xl p-6 shadow-lg">
+        <div className="flex items-center gap-3 mb-4">
+          <Music2 className="h-8 w-8 text-primary" />
+          <h1 className="text-3xl font-bold">Resumen de Escucha</h1>
         </div>
+        {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+            <Skeleton className="h-24" />
+            <Skeleton className="h-24" />
+            <Skeleton className="h-24" />
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mt-6">
+            <div className="bg-card/50 rounded-lg p-4 border border-border/50">
+              <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2"><Clock className="h-4 w-4" />Duración Promedio</p>
+              <p className="text-3xl font-bold text-primary">{formatMs(avgDurationMs)}</p>
+              <p className="text-xs text-muted-foreground mt-1">de tus canciones top</p>
+            </div>
+            <div className="bg-card/50 rounded-lg p-4 border border-border/50">
+              <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2"><TrendingUp className="h-4 w-4" />Popularidad Promedio</p>
+              <p className="text-3xl font-bold text-primary">{avgPopularity}</p>
+              <p className="text-xs text-muted-foreground mt-1">en escala 0 - 100</p>
+            </div>
+            <div className="bg-card/50 rounded-lg p-4 border border-border/50">
+              <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2"><CalendarDays className="h-4 w-4" />Año más frecuente</p>
+              <p className="text-3xl font-bold text-primary">{mostCommonYear ?? latestYear ?? "-"}</p>
+              <p className="text-xs text-muted-foreground mt-1">en tus lanzamientos</p>
+            </div>
+            <div className="bg-card/50 rounded-lg p-4 border border-border/50">
+              <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2"><Users className="h-4 w-4" />Artistas Únicos</p>
+              <p className="text-3xl font-bold text-primary">{totalArtists}</p>
+              <p className="text-xs text-muted-foreground mt-1">en tu top</p>
+            </div>
+            <div className="bg-card/50 rounded-lg p-4 border border-border/50">
+              <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2"><Music2 className="h-4 w-4" />Género Dominante</p>
+              <p className="text-3xl font-bold text-primary">{dominantGenre}</p>
+              <p className="text-xs text-muted-foreground mt-1">entre tus artistas</p>
+            </div>
+          </div>
+        )}
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
-          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <Disc3 className="h-5 w-5" />
-            Distribución de Géneros (Top 5)
-          </h3>
+          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2"><Disc3 className="h-5 w-5" />Distribución de Géneros (Top 5)</h3>
           {isLoading ? (
             <Skeleton className="h-64 w-full" />
           ) : genreChartData.length > 0 ? (
             <ResponsiveContainer width="100%" height={250}>
               <PieChart>
-                <Pie data={genreChartData} cx="50%" cy="50%" labelLine={false}
-                  // label={(entry: any) => `${entry.name} (${(entry.percent * 100).toFixed(0)}%)`}
-                  label
-                  outerRadius={80} fill="#8884d8" dataKey="value" >
+                <Pie data={genreChartData} cx="50%" cy="50%" labelLine={false} label outerRadius={80} fill="#8884d8" dataKey="value">
                   {genreChartData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} /> )}
                 </Pie>
                 <Tooltip />
@@ -178,10 +176,7 @@ export default function OverviewPage() {
         </div>
 
         <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
-          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <TrendingUp className="h-5 w-5" />
-            Actividad Musical Reciente
-          </h3>
+          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2"><TrendingUp className="h-5 w-5" />Actividad Musical Reciente</h3>
           {isLoading ? (
             <Skeleton className="h-64 w-full" />
           ) : timelineData.length > 0 ? (
@@ -200,10 +195,7 @@ export default function OverviewPage() {
       </div>
 
       <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
-        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-          <Users className="h-5 w-5" />
-          Top 10 Artistas
-        </h3>
+        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2"><Users className="h-5 w-5" /> Top 10 Artistas</h3>
         {isLoading ? (
           <div className="flex gap-4">
             <Skeleton className="h-20 w-20 rounded-full" />
@@ -228,8 +220,6 @@ export default function OverviewPage() {
       </div>
 
       <InsightCard insight={insight} loading={isLoading} />
-      </>
-    )}
     </div>
   );
 }

@@ -22,6 +22,6 @@
 
 **3. Accede a tu app usando la IP loopback:**
 
-En lugar de abrir tu navegador en `http://localhost:3000`, usa:
+En lugar de abrir tu navegador en ``, usa:
 ```
 http://127.0.0.1:3000

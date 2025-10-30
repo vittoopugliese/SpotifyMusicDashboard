@@ -32,7 +32,8 @@ export function useSpotifyToken() {
   }, []);
 
   const login = () => {
-    window.location.href = "/api/spotify/login";
+    const origin = window.location.origin || "http://127.0.0.1:3000";
+    window.location.href = `${origin}/api/spotify/login`;
   };
 
   return { session, loading, login };

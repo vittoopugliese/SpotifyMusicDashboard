@@ -13,15 +13,16 @@ async function exchangeCodeForToken(code: string, redirectUri: string) {
       Authorization: `Basic ${Buffer.from(`${clientId}:${clientSecret}`).toString("base64")}`,
     },
   });
-  
+
   if (!res.ok) throw new Error(`Token exchange failed: ${res.status} ${await res.text()}`);
   return res.json() as Promise<{ access_token: string; refresh_token: string; expires_in: number }>;
 }
 
 export async function GET(request: NextRequest) {
   try {
-    const origin = request.nextUrl.origin;
-    const redirectUri = process.env.SPOTIFY_REDIRECT_URI || `${origin}/api/spotify/callback`;
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || process.env.BASE_URL || "http://127.0.0.1:3000";
+    const redirectUri = `${baseUrl}/api/spotify/callback`;
+
     const code = request.nextUrl.searchParams.get("code");
     const state = request.nextUrl.searchParams.get("state");
     const storedState = request.cookies.get("spotify_oauth_state")?.value;
@@ -35,7 +36,7 @@ export async function GET(request: NextRequest) {
     const isProduction = process.env.NODE_ENV === "production";
     const cookieOptions = { httpOnly: true, secure: isProduction, sameSite: "lax" as const, path: "/", };
 
-    const response = NextResponse.redirect(new URL("/dashboard/overview", request.url));
+    const response = NextResponse.redirect(`${baseUrl}/dashboard/overview`);
     response.cookies.set("spotify_access_token", token.access_token, { ...cookieOptions, maxAge: token.expires_in });
     response.cookies.set("spotify_refresh_token", token.refresh_token, { ...cookieOptions, maxAge: 60 * 60 * 24 * 30 });
     response.cookies.set("spotify_expires_at", String(expiresAt), { ...cookieOptions, maxAge: token.expires_in });

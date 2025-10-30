@@ -85,7 +85,7 @@ export default function OverviewPage() {
   }, [avgValence, avgEnergy, avgDanceability, dominantGenre, totalArtists, isLoading, audioFeaturesData]);
 
   return (
-    <div >
+    <div className="p-6 space-y-6">
       {(!session.authenticated && !isLoading) ? <LoginToGetTokenMessage onLogin={login} /> : (
         <>
         {session.authenticated && session.profile ? (

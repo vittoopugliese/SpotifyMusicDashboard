@@ -20,7 +20,8 @@ export function NavUser({ userDefaultData, }: { userDefaultData: SpotifyUserProf
 
   const handleLogout = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
-    window.location.href = "/api/spotify/logout";
+    const origin = window.location.origin || "http://127.0.0.1:3000";
+    window.location.href = `${origin}/api/spotify/logout`;
   };
 
   return (

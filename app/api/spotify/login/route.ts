@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   try {
-    const origin = request.nextUrl.origin;
     const clientId = process.env.SPOTIFY_CLIENT_ID;
-    const redirectUri = process.env.SPOTIFY_REDIRECT_URI || `${origin}/api/spotify/callback`;
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || process.env.BASE_URL || "http://127.0.0.1:3000";
+    const redirectUri = `${baseUrl}/api/spotify/callback`;
 
     if (!clientId) return NextResponse.json({ error: "Missing SPOTIFY_CLIENT_ID env" }, { status: 500 });
 
@@ -16,10 +16,13 @@ export async function GET(request: NextRequest) {
     url.searchParams.set("redirect_uri", redirectUri);
     url.searchParams.set("scope", scope);
     url.searchParams.set("state", state);
-    
-    const isProduction = process.env.NODE_ENV === "production";
+    // Force account/consent dialog so users can switch Spotify accounts
+    url.searchParams.set("show_dialog", "true");
+
+    // Set secure flag based on actual protocol to avoid dropping cookie on http in dev
+    const isSecure = request.nextUrl.protocol === "https:";
     const res = NextResponse.redirect(url.toString());
-    res.cookies.set("spotify_oauth_state", state, { httpOnly: true, secure: isProduction, sameSite: "lax", path: "/", maxAge: 600, });
+    res.cookies.set("spotify_oauth_state", state, { httpOnly: true, secure: isSecure, sameSite: "lax", path: "/", maxAge: 600, });
     return res;
   } catch (e) {
     return NextResponse.json({ error: e instanceof Error ? e.message : "Login init failed" }, { status: 500 });

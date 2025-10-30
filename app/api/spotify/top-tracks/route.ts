@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getUserTopTracks } from "@/lib/spotify";
+import { getUserTopTracks, type TopTracksResponse } from "@/lib/spotify";
+import { cacheGet, cacheSet, cacheKey } from "@/lib/cache";
 
 export async function GET(request: NextRequest) {
   try {
@@ -20,8 +21,21 @@ export async function GET(request: NextRequest) {
     const timeRange = (request.nextUrl.searchParams.get("time_range") || "medium_term") as "short_term" | "medium_term" | "long_term";
     const limit = parseInt(request.nextUrl.searchParams.get("limit") || "50");
 
+    const key = cacheKey(["top-tracks", timeRange, limit, userToken?.slice(-16)]);
+    const cached = cacheGet<TopTracksResponse>(key);
+    if (cached) {
+      const res = NextResponse.json(cached);
+      res.headers.set("X-Cache", "HIT");
+      res.headers.set("Cache-Control", "private, max-age=60");
+      return res;
+    }
+
     const data = await getUserTopTracks(userToken, timeRange, limit);
-    return NextResponse.json(data);
+    cacheSet(key, data, 60 * 1000);
+    const res = NextResponse.json(data);
+    res.headers.set("X-Cache", "MISS");
+    res.headers.set("Cache-Control", "private, max-age=60");
+    return res;
   } catch (error) {
     console.error("Error fetching top tracks:", error);
     return NextResponse.json({ error: error instanceof Error ? error.message : "Failed to fetch top tracks" }, { status: 500 });

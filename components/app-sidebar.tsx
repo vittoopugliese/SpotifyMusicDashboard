@@ -14,12 +14,12 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "/",
+      url: "/dashboard/overview",
       icon: SquareTerminal,
       isActive: true,
       items: [
-        { title: "Overview", url: "/", },
-        { title: "Your Stats", url: "/stats", },
+        { title: "Overview", url: "/dashboard/overview", },
+        { title: "Your Stats", url: "/dashboard/stats", },
       ],
     },
     {

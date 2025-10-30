@@ -1,6 +1,7 @@
-import React from "react";
+import { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { cn, timeRangeLabels } from "@/lib/utils";
+import IconTitle from "./icon-title";
 
 const DEFAULT_LABELS = {
   short_term: "Últimas 4 semanas",
@@ -11,13 +12,13 @@ const DEFAULT_LABELS = {
 export type PeriodType = "short_term" | "medium_term" | "long_term";
 
 interface TitleWithPeriodSelectorProps {
-  title: React.ReactNode;
-  icon?: React.ReactNode;
+  title: ReactNode;
+  icon?: ReactNode;
   value: PeriodType;
   onChange: (range: PeriodType) => void;
   className?: string;
   labels?: Partial<Record<PeriodType, string>>;
-  actions?: React.ReactNode;
+  actions?: ReactNode;
 }
 
 export function TitleWithPeriodSelector({ title, icon, value, onChange, className, labels, actions, }: TitleWithPeriodSelectorProps) {
@@ -25,20 +26,18 @@ export function TitleWithPeriodSelector({ title, icon, value, onChange, classNam
 
   return (
     <div className={cn("flex flex-col gap-2 md:flex-row md:items-center justify-between w-full", className)}>
-      <div className="flex items-center gap-2">
-        {icon && icon}
-        <span className="text-3xl font-bold">{title}</span>
-      </div>
-    <div className="flex items-center gap-2">
-    <div className="ml-3 flex gap-1 bg-muted rounded-lg p-1">
-          {Object.keys(timeRangeLabels).map((range) => (
-            <Button key={range} variant={value === range as PeriodType ? "default" : "ghost"} size="sm" onClick={() => onChange(range as PeriodType)} type="button" >
-              {mergedLabels[range as PeriodType]}
-            </Button>
-          ))}
+      <IconTitle icon={icon} title={title} />
+        <div className="flex items-center gap-2">
+            <div className="ml-3 flex gap-1 bg-muted rounded-lg p-1">
+            {Object.keys(timeRangeLabels).map((range) => (
+                <Button key={range} variant={value === range as PeriodType ? "default" : "ghost"} 
+                    size="sm" onClick={() => onChange(range as PeriodType)} type="button" >
+                {mergedLabels[range as PeriodType]}
+                </Button>
+            ))}
+            </div>
+            {actions && <div className="mt-2 md:mt-0 flex-shrink-0">{actions}</div>}
         </div>
-      {actions && <div className="mt-2 md:mt-0 flex-shrink-0">{actions}</div>}
-    </div>
     </div>
   );
 }

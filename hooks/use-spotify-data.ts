@@ -72,6 +72,8 @@ export function useAudioFeatures(trackIds: string[]) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ trackIds: ids }),
+      // Ensure auth cookies are sent in all environments
+      credentials: "include",
       signal: controller.signal,
     })
       .then((res) => res.json())

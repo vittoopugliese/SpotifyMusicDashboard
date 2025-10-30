@@ -4,18 +4,18 @@ import {Avatar, AvatarImage} from "@/components/ui/avatar";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, } from "@/components/ui/sidebar";
 import {Spinner} from "./ui/spinner";
 import {LogOut} from "lucide-react";
-import {useSpotifyToken} from "@/hooks/use-spotify-token";
+import {useSpotifySession} from "@/contexts/spotify-session-context";
 import {SpotifyUserProfile} from "@/lib/spotify";
 import {useEffect, useState} from "react";
 import {Button} from "./ui/button";
 
-export function NavUser({ userDefaultData, }: { userDefaultData: SpotifyUserProfile; }) {
-  const {session, loading, login} = useSpotifyToken();
-  const [user, setUser] = useState<SpotifyUserProfile>(userDefaultData);
+export function NavUser() {
+  const {session, loading, login} = useSpotifySession();
+  const [localUser, setLocalUser] = useState<SpotifyUserProfile | null>(null);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (session.authenticated && session.profile) setUser(session.profile as SpotifyUserProfile);
+    if (session.authenticated && session.profile) setLocalUser(session.profile as SpotifyUserProfile);
   }, [session.authenticated, session.profile]);
 
   const handleLogout = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -27,7 +27,7 @@ export function NavUser({ userDefaultData, }: { userDefaultData: SpotifyUserProf
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        {user?.id ? (
+        {localUser?.id ? (
           <>
             <SidebarMenuButton className="mb-2">
               <div className="flex items-center gap-2 justify-between w-full cursor-pointer" onClick={(e) => handleLogout(e)}>
@@ -44,12 +44,12 @@ export function NavUser({ userDefaultData, }: { userDefaultData: SpotifyUserProf
                     <Spinner className="size-6" />
                   </div>
                 ) : (
-                  <AvatarImage src={user?.images?.[0]?.url || "https://www.svgrepo.com/show/432033/user-4.svg"} alt={user?.display_name || "User"} />
+                  <AvatarImage src={localUser?.images?.[0]?.url || "https://www.svgrepo.com/show/432033/user-4.svg"} alt={localUser?.display_name || "User"} draggable={false} />
                 )}
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{loading ? "Username..." : user?.display_name}</span>
-                <span className="truncate text-xs">{loading ? "Email..." : user?.email}</span>
+                <span className="truncate font-medium">{loading ? "Username..." : localUser?.display_name}</span>
+                <span className="truncate text-xs">{loading ? "Email..." : localUser?.email}</span>
               </div>
             </SidebarMenuButton>
           </>

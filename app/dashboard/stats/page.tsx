@@ -11,6 +11,7 @@ import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Responsi
 import { Download, Play, Pause, Music2, BarChart3, Activity, Gauge, Heart, Waves } from "lucide-react";
 import StatCard from "@/components/stat-card";
 import LoginToGetTokenMessage from "@/components/login-to-get-token";
+import TitleWithPeriodSelector from "@/components/title-with-period-selector";
 
 type TimeRange = "short_term" | "medium_term" | "long_term";
 
@@ -77,46 +78,14 @@ export default function StatsPage() {
     const avgValence = average(features.map((f) => f.valence));
     const avgSpeechiness = average(features.map((f) => f.speechiness));
 
-    // Global averages (fake but believable)
-    const globalAverages = {
-      energy: 0.65,
-      danceability: 0.60,
-      acousticness: 0.25,
-      valence: 0.55,
-      speechiness: 0.08,
-    };
+    const globalAverages = { energy: 0.65, danceability: 0.60, acousticness: 0.25, valence: 0.55, speechiness: 0.08, };
 
     return [
-      {
-        subject: "Energy",
-        personal: avgEnergy,
-        global: globalAverages.energy,
-        fullMark: 1,
-      },
-      {
-        subject: "Danceability",
-        personal: avgDanceability,
-        global: globalAverages.danceability,
-        fullMark: 1,
-      },
-      {
-        subject: "Acousticness",
-        personal: avgAcousticness,
-        global: globalAverages.acousticness,
-        fullMark: 1,
-      },
-      {
-        subject: "Valence",
-        personal: avgValence,
-        global: globalAverages.valence,
-        fullMark: 1,
-      },
-      {
-        subject: "Speechiness",
-        personal: avgSpeechiness,
-        global: globalAverages.speechiness,
-        fullMark: 1,
-      },
+      { subject: "Energy", personal: avgEnergy, global: globalAverages.energy, fullMark: 1, },
+      { subject: "Danceability", personal: avgDanceability, global: globalAverages.danceability, fullMark: 1, },
+      { subject: "Acousticness", personal: avgAcousticness, global: globalAverages.acousticness, fullMark: 1, },
+      { subject: "Valence", personal: avgValence, global: globalAverages.valence, fullMark: 1, },
+      { subject: "Speechiness", personal: avgSpeechiness, global: globalAverages.speechiness, fullMark: 1, },
     ];
   }, [audioFeaturesData]);
 
@@ -127,12 +96,7 @@ export default function StatsPage() {
     const avgDanceability = average(features.map((f) => f.danceability));
     const avgValence = average(features.map((f) => f.valence));
     const avgTempo = average(features.map((f) => f.tempo));
-    return {
-      avgEnergy,
-      avgDanceability,
-      avgValence,
-      avgTempo,
-    };
+    return { avgEnergy, avgDanceability, avgValence, avgTempo, };
   }, [audioFeaturesData]);
 
   // Tracks by Decade
@@ -149,9 +113,7 @@ export default function StatsPage() {
       }
     });
 
-    return Object.entries(decadeCount)
-      .map(([decade, count]) => ({ decade, count }))
-      .sort((a, b) => a.decade.localeCompare(b.decade));
+    return Object.entries(decadeCount).map(([decade, count]) => ({ decade, count })).sort((a, b) => a.decade.localeCompare(b.decade));
   }, [tracksData]);
 
   // Mood Evolution Over Time (simplified - using track position as time proxy)
@@ -162,17 +124,11 @@ export default function StatsPage() {
       audioFeaturesData.audio_features.map((f) => [f.id, f])
     );
 
-    return tracksData.items
-      .slice(0, 20)
+    return tracksData.items.slice(0, 20)
       .map((track, index) => {
         const feature = featuresMap.get(track.id);
-        return {
-          track: index + 1,
-          mood: feature ? getMusicalMood(feature.valence) : "Equilibrado",
-          valence: feature?.valence || 0,
-        };
-      })
-      .filter((d) => d.valence > 0);
+        return { track: index + 1, mood: feature ? getMusicalMood(feature.valence) : "Equilibrado", valence: feature?.valence || 0, };
+      }).filter((d) => d.valence > 0);
   }, [tracksData, audioFeaturesData]);
 
   const handlePlay = (trackId: string) => {
@@ -224,43 +180,18 @@ export default function StatsPage() {
     URL.revokeObjectURL(url);
   };
 
-  const timeRangeLabels: Record<TimeRange, string> = {
-    short_term: "Last 4 weeks",
-    medium_term: "6 months",
-    long_term: "All time",
-  };
-
-  if (!session.authenticated && !isLoading) {
-    return <LoginToGetTokenMessage onLogin={login} />;
-  }
+  if (!session.authenticated && !isLoading) return <LoginToGetTokenMessage onLogin={login} />;
 
   return (
     <div className="p-6 space-y-6">
-      {/* Header with Period Selector */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold flex items-center gap-2">
-          <BarChart3 className="h-8 w-8" />
-          Your Stats
-        </h1>
-        <div className="flex items-center gap-2">
-          <div className="flex gap-1 bg-muted rounded-lg p-1">
-            {(Object.keys(timeRangeLabels) as TimeRange[]).map((range) => (
-              <Button
-                key={range}
-                variant={timeRange === range ? "default" : "ghost"}
-                size="sm"
-                onClick={() => setTimeRange(range)}
-              >
-                {timeRangeLabels[range]}
-              </Button>
-            ))}
-          </div>
-          <Button variant="outline" onClick={handleExportStats} className="gap-2">
-            <Download className="h-4 w-4" />
-            Export Stats
-          </Button>
-        </div>
-      </div>
+      <TitleWithPeriodSelector
+        title="Tus Stats"
+        icon={<BarChart3 className="h-8 w-8" />}
+        value={timeRange}
+        onChange={setTimeRange}
+        actions={<Button variant="outline" onClick={handleExportStats} className="gap-2"><Download className="h-4 w-4" />Exportar Stats</Button>}
+        className="mb-4"
+      />
 
       {/* Audio Personality Radar Chart */}
       <div className="bg-card border border-border rounded-lg p-6 shadow-sm">

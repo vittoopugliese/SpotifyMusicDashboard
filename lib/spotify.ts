@@ -148,6 +148,34 @@ export async function getAudioFeaturesForTracks(trackIds: string[]): Promise<{ a
   }
 }
 
+export async function getAudioFeaturesForTracksWithUser(
+  trackIds: string[],
+  userToken: string
+): Promise<{ audio_features: AudioFeatures[] }> {
+  const ids = trackIds.slice(0, 100).join(",");
+  try {
+    return await spotifyFetchWithUserToken(`/audio-features?ids=${ids}`, userToken);
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : String(e);
+    if (message.includes("403")) {
+      const results: AudioFeatures[] = [];
+      for (const id of trackIds.slice(0, 100)) {
+        try {
+          const one = await spotifyFetchWithUserToken<{ id: string } & AudioFeatures>(
+            `/audio-features/${id}`,
+            userToken
+          );
+          if (one?.id) results.push(one);
+        } catch {
+          // ignore individual failures
+        }
+      }
+      return { audio_features: results };
+    }
+    throw e;
+  }
+}
+
 export function groupBy<T, K extends string | number>(items: T[], keyFn: (item: T) => K): Record<K, T[]> {
   return items.reduce((acc, item) => {
     const key = keyFn(item);

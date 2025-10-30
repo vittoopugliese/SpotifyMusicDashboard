@@ -54,8 +54,11 @@ export function useAudioFeatures(trackIds: string[]) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
+  // Build a stable key from IDs to avoid re-fetching on new array references
+  const idsKey = trackIds.length > 0 ? Array.from(new Set(trackIds)).sort().join(",") : "";
+
   useEffect(() => {
-    if (trackIds.length === 0) {
+    if (!idsKey) {
       setTimeout(() => setData(null), 0);
       setTimeout(() => setLoading(false), 0);
       return;
@@ -63,10 +66,12 @@ export function useAudioFeatures(trackIds: string[]) {
 
     setTimeout(() => setLoading(true), 0);
     const controller = new AbortController();
+    // Reconstruct ids array from key to keep effect dependency stable and avoid churn
+    const ids = idsKey.split(",").filter(Boolean);
     fetch("/api/spotify/audio-features", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ trackIds }),
+      body: JSON.stringify({ trackIds: ids }),
       signal: controller.signal,
     })
       .then((res) => res.json())
@@ -77,7 +82,7 @@ export function useAudioFeatures(trackIds: string[]) {
       .catch((err) => setError(err instanceof Error ? err : new Error(String(err))))
       .finally(() => setLoading(false));
     return () => controller.abort();
-  }, [trackIds]);
+  }, [idsKey]);
 
   return { data, loading, error };
 }

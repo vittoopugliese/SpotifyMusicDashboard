@@ -8,7 +8,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, LineChart, Line, } from "recharts";
-import { Download, Play, Pause, Music2, BarChart3 } from "lucide-react";
+import { Download, Play, Pause, Music2, BarChart3, Activity, Gauge, Heart, Waves } from "lucide-react";
+import StatCard from "@/components/stat-card";
 import LoginToGetTokenMessage from "@/components/login-to-get-token";
 
 type TimeRange = "short_term" | "medium_term" | "long_term";
@@ -117,6 +118,21 @@ export default function StatsPage() {
         fullMark: 1,
       },
     ];
+  }, [audioFeaturesData]);
+
+  const featureSummary = useMemo(() => {
+    if (!audioFeaturesData?.audio_features || audioFeaturesData.audio_features.length === 0) return null;
+    const features = audioFeaturesData.audio_features.filter((f) => f != null);
+    const avgEnergy = average(features.map((f) => f.energy));
+    const avgDanceability = average(features.map((f) => f.danceability));
+    const avgValence = average(features.map((f) => f.valence));
+    const avgTempo = average(features.map((f) => f.tempo));
+    return {
+      avgEnergy,
+      avgDanceability,
+      avgValence,
+      avgTempo,
+    };
   }, [audioFeaturesData]);
 
   // Tracks by Decade
@@ -281,6 +297,34 @@ export default function StatsPage() {
         ) : (
           <p className="text-muted-foreground text-center py-12">No hay datos disponibles</p>
         )}
+      </div>
+
+      {/* Audio Feature Summary */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <StatCard
+          icon={Activity}
+          title="Energy"
+          value={isLoading || !featureSummary ? "—" : `${Math.round(featureSummary.avgEnergy * 100)}%`}
+          loading={isLoading}
+        />
+        <StatCard
+          icon={Waves}
+          title="Danceability"
+          value={isLoading || !featureSummary ? "—" : `${Math.round(featureSummary.avgDanceability * 100)}%`}
+          loading={isLoading}
+        />
+        <StatCard
+          icon={Heart}
+          title="Valence"
+          value={isLoading || !featureSummary ? "—" : `${Math.round(featureSummary.avgValence * 100)}%`}
+          loading={isLoading}
+        />
+        <StatCard
+          icon={Gauge}
+          title="Avg Tempo"
+          value={isLoading || !featureSummary ? "—" : `${Math.round(featureSummary.avgTempo)} BPM`}
+          loading={isLoading}
+        />
       </div>
 
       {/* Top Charts */}

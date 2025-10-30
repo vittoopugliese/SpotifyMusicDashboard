@@ -15,7 +15,7 @@ function InsightCard({ insight, loading, }: { insight: string | null; loading?: 
     <div className="bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/30 rounded-lg p-6">
       <div className="flex items-center gap-2 mb-3">
         <Radio className="h-5 w-5 text-primary" />
-        <h3 className="text-lg font-semibold">Insight del Día</h3>
+        <h3 className="text-lg font-semibold">Daily Insight</h3>
       </div>
       <p className="text-muted-foreground leading-relaxed">{insight}</p>
     </div>

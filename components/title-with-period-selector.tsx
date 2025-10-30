@@ -4,9 +4,9 @@ import { cn, timeRangeLabels } from "@/lib/utils";
 import IconTitle from "./icon-title";
 
 const DEFAULT_LABELS = {
-  short_term: "Últimas 4 semanas",
-  medium_term: "6 meses",
-  long_term: "Años",
+  short_term: "Last 4 weeks",
+  medium_term: "6 months",
+  long_term: "All time",
 };
 
 export type PeriodType = "short_term" | "medium_term" | "long_term";

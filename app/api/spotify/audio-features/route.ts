@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
     if (cached) {
       const res = NextResponse.json(cached);
       res.headers.set("X-Cache", "HIT");
-      res.headers.set("Cache-Control", "private, max-age=60");
+      res.headers.set("Cache-Control", "private, max-age=3600");
       return res;
     }
 
@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     cacheSet(key, data, 60 * 1000);
     const res = NextResponse.json(data);
     res.headers.set("X-Cache", "MISS");
-    res.headers.set("Cache-Control", "private, max-age=60");
+    res.headers.set("Cache-Control", "private, max-age=3600");
     return res;
   } catch (error) {
     console.error("Error fetching audio features:", error);

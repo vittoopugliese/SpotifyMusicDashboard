@@ -80,14 +80,12 @@ export default function StatsPage() {
   const moodEvolution = useMemo(() => {
     if (!tracksData?.items || tracksData.items.length === 0 || !audioFeaturesData?.audio_features || audioFeaturesData.audio_features.length === 0) return [];
 
-    const featuresMap = new Map(
-      audioFeaturesData.audio_features.map((f) => [f.id, f])
-    );
+    const featuresMap = new Map(audioFeaturesData.audio_features.map((f) => [f.id, f]));
 
     return tracksData.items.slice(0, 20)
       .map((track, index) => {
         const feature = featuresMap.get(track.id);
-        return { track: index + 1, mood: feature ? getMusicalMood(feature.valence) : "Equilibrado", valence: feature?.valence || 0, };
+        return { track: index + 1, mood: feature ? getMusicalMood(feature.valence) : "Balanced", valence: feature?.valence || 0, };
       }).filter((d) => d.valence > 0);
   }, [tracksData, audioFeaturesData]);
 
@@ -140,15 +138,12 @@ export default function StatsPage() {
 
   return (
     <div className="p-6 space-y-6">
-      <TitleWithPeriodSelector title="Tus Stats" icon={<BarChart3 className="h-8 w-8" />} value={timeRange} onChange={setTimeRange} className="mb-4"
-        actions={<Button variant="outline" onClick={handleExportStats} className="gap-2"><Download className="h-4 w-4" />Exportar Stats</Button>} />
+      <TitleWithPeriodSelector title="Your Stats" icon={<BarChart3 className="h-8 w-8" />} value={timeRange} onChange={setTimeRange} className="mb-4"
+        actions={<Button variant="outline" onClick={handleExportStats} className="gap-2"><Download className="h-4 w-4" />Export Stats</Button>} />
 
       {/* Audio Personality Radar Chart */}
       <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
-        <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-          <Music2 className="h-5 w-5" />
-          Audio Personality
-        </h2>
+        <h2 className="text-xl font-semibold mb-4 flex items-center gap-2"><Music2 className="h-5 w-5" />Audio Personality</h2>
         {isLoading ? (
           <Skeleton className="h-96 w-full" />
         ) : radarData ? (
@@ -164,7 +159,7 @@ export default function StatsPage() {
             </RadarChart>
           </ResponsiveContainer>
         ) : (
-          <p className="text-muted-foreground text-center py-12">No hay datos disponibles</p>
+          <p className="text-muted-foreground text-center py-12">No data available</p>
         )}
       </div>
 
@@ -200,16 +195,12 @@ export default function StatsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {tracksData.items.slice(0, 50).map((track, index) => (
-                    <TrackRow key={track.id} track={track} index={index}
-                      onPlay={handlePlay} isPlaying={playingTrackId === track.id} />
-                  ))}
+                  {tracksData.items.slice(0, 50).map((track, index) => <TrackRow key={track.id} track={track} index={index} onPlay={handlePlay} isPlaying={playingTrackId === track.id} />)}
                 </tbody>
               </table>
             </div>
-          ) : (
-            <p className="text-muted-foreground text-center py-12">No hay tracks disponibles</p>
-          )}
+          ) : <p className="text-muted-foreground text-center py-12">No tracks available</p>
+          }
         </div>
 
         {/* Top Artists Grid */}
@@ -235,7 +226,7 @@ export default function StatsPage() {
               ))}
             </div>
           ) : (
-            <p className="text-muted-foreground text-center py-12">No hay artistas disponibles</p>
+            <p className="text-muted-foreground text-center py-12">No artists available</p>
           )}
         </div>
       </div>
@@ -256,14 +247,12 @@ export default function StatsPage() {
                 <Bar dataKey="count" fill="#1DB954" />
               </BarChart>
             </ResponsiveContainer>
-          ) : (
-            <p className="text-muted-foreground text-center py-12">No hay datos disponibles</p>
-          )}
+          ) : <p className="text-muted-foreground text-center py-12">No data available</p>}
         </div>
 
         {/* Mood Evolution */}
         <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
-          <h2 className="text-xl font-semibold mb-4">Evolución del Mood Musical</h2>
+          <h2 className="text-xl font-semibold mb-4">Mood Evolution</h2>
           {isLoading ? (
             <Skeleton className="h-64 w-full" />
           ) : moodEvolution.length > 0 ? (
@@ -275,9 +264,7 @@ export default function StatsPage() {
                 <Line type="monotone" dataKey="valence" stroke="#1DB954" strokeWidth={2} name="Valence" />
               </LineChart>
             </ResponsiveContainer>
-          ) : (
-            <p className="text-muted-foreground text-center py-12">No hay datos disponibles</p>
-          )}
+          ) : <p className="text-muted-foreground text-center py-12">No data available</p>}
         </div>
       </div>
     </div>

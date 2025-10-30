@@ -85,7 +85,7 @@ export default function OverviewPage() {
     if (isLoading || !tracksData?.items?.length) return null;
     const year = mostCommonYear ?? latestYear ?? "";
     const top = topTrack?.name ?? "";
-    return `Tu música favorita ronda ${year} y tu tema más popular es "${top}". Popularidad promedio ${(avgPopularity).toFixed(0)} y duración media ${formatMs(avgDurationMs)}.`;
+    return `Your favorite music is around ${year} and your most popular song is "${top}". Average popularity ${(avgPopularity).toFixed(0)} and average duration ${formatMs(avgDurationMs)}.`;
   }, [isLoading, tracksData, mostCommonYear, latestYear, topTrack, avgPopularity, avgDurationMs]);
 
   return (
@@ -117,7 +117,7 @@ export default function OverviewPage() {
       <div className="bg-gradient-to-br from-primary/20 via-primary/10 to-background border border-border rounded-xl p-6 shadow-lg">
         <div className="flex items-center gap-3 mb-4">
           <Music2 className="h-8 w-8 text-primary" />
-          <h1 className="text-3xl font-bold">Resumen de Escucha</h1>
+          <h1 className="text-3xl font-bold">Listening Summary</h1>
         </div>
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
@@ -128,29 +128,29 @@ export default function OverviewPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mt-6">
             <div className="bg-card/50 rounded-lg p-4 border border-border/50">
-              <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2"><Clock className="h-4 w-4" />Duración Promedio</p>
+              <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2"><Clock className="h-4 w-4" />Average Duration</p>
               <p className="text-3xl font-bold text-primary">{formatMs(avgDurationMs)}</p>
               <p className="text-xs text-muted-foreground mt-1">de tus canciones top</p>
             </div>
             <div className="bg-card/50 rounded-lg p-4 border border-border/50">
-              <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2"><TrendingUp className="h-4 w-4" />Popularidad Promedio</p>
+              <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2"><TrendingUp className="h-4 w-4" />Average Popularity</p>
               <p className="text-3xl font-bold text-primary">{avgPopularity}</p>
-              <p className="text-xs text-muted-foreground mt-1">en escala 0 - 100</p>
+              <p className="text-xs text-muted-foreground mt-1">from 0 to 100</p>
             </div>
             <div className="bg-card/50 rounded-lg p-4 border border-border/50">
-              <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2"><CalendarDays className="h-4 w-4" />Año más frecuente</p>
+              <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2"><CalendarDays className="h-4 w-4" />Most Common Year</p>
               <p className="text-3xl font-bold text-primary">{mostCommonYear ?? latestYear ?? "-"}</p>
-              <p className="text-xs text-muted-foreground mt-1">en tus lanzamientos</p>
+              <p className="text-xs text-muted-foreground mt-1">in your releases</p>
             </div>
             <div className="bg-card/50 rounded-lg p-4 border border-border/50">
-              <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2"><Users className="h-4 w-4" />Artistas Únicos</p>
+              <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2"><Users className="h-4 w-4" />Unique Artists</p>
               <p className="text-3xl font-bold text-primary">{totalArtists}</p>
-              <p className="text-xs text-muted-foreground mt-1">en tu top</p>
+              <p className="text-xs text-muted-foreground mt-1">in your top</p>
             </div>
             <div className="bg-card/50 rounded-lg p-4 border border-border/50">
-              <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2"><Music2 className="h-4 w-4" />Género Dominante</p>
-              <p className="text-3xl font-bold text-primary">{dominantGenre}</p>
-              <p className="text-xs text-muted-foreground mt-1">entre tus artistas</p>
+              <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2"><Music2 className="h-4 w-4" />Dominant Genre</p>
+              <p className="text-3xl font-bold text-primary">{dominantGenre.charAt(0).toUpperCase() + dominantGenre.slice(1)}</p>
+              <p className="text-xs text-muted-foreground mt-1">in your artists</p>
             </div>
           </div>
         )}
@@ -158,7 +158,7 @@ export default function OverviewPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
-          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2"><Disc3 className="h-5 w-5" />Distribución de Géneros (Top 5)</h3>
+          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2"><Disc3 className="h-5 w-5" />Genre Distribution (Top 5)</h3>
           {isLoading ? (
             <Skeleton className="h-64 w-full" />
           ) : genreChartData.length > 0 ? (
@@ -171,12 +171,12 @@ export default function OverviewPage() {
               </PieChart>
             </ResponsiveContainer>
           ) : (
-            <p className="text-muted-foreground text-center py-12">No hay datos disponibles</p>
+            <p className="text-muted-foreground text-center py-12">No data available</p>
           )}
         </div>
 
         <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
-          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2"><TrendingUp className="h-5 w-5" />Actividad Musical Reciente</h3>
+          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2"><TrendingUp className="h-5 w-5" />Recent Musical Activity</h3>
           {isLoading ? (
             <Skeleton className="h-64 w-full" />
           ) : timelineData.length > 0 ? (
@@ -189,13 +189,13 @@ export default function OverviewPage() {
               </LineChart>
             </ResponsiveContainer>
           ) : (
-            <p className="text-muted-foreground text-center py-12">No hay datos disponibles</p>
+            <p className="text-muted-foreground text-center py-12">No data available</p>
           )}
         </div>
       </div>
 
       <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
-        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2"><Users className="h-5 w-5" /> Top 10 Artistas</h3>
+        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2"><Users className="h-5 w-5" />Top 10 Artists</h3>
         {isLoading ? (
           <div className="flex gap-4">
             <Skeleton className="h-20 w-20 rounded-full" />
@@ -215,7 +215,7 @@ export default function OverviewPage() {
             ))}
           </div>
         ) : (
-          <p className="text-muted-foreground text-center py-8">No hay artistas disponibles</p>
+          <p className="text-muted-foreground text-center py-8">No artists available</p>
         )}
       </div>
 

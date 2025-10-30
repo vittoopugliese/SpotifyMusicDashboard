@@ -5,19 +5,15 @@ import type { TopArtistsResponse, TopTracksResponse, AudioFeatures } from "@/lib
 
 type TimeRange = "short_term" | "medium_term" | "long_term";
 
-export function useTopArtists(token: string | null, timeRange: TimeRange = "medium_term") {
+export function useTopArtists(timeRange: TimeRange = "medium_term") {
   const [data, setData] = useState<TopArtistsResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    if (!token) {
-      setLoading(false);
-      return;
-    }
-
-    setLoading(true);
-    fetch(`/api/spotify/top-artists?time_range=${timeRange}&token=${encodeURIComponent(token)}`)
+    setTimeout(() => setLoading(true), 0);
+    const controller = new AbortController();
+    fetch(`/api/spotify/top-artists?time_range=${timeRange}`, { signal: controller.signal })
       .then((res) => res.json())
       .then((data) => {
         if (data.error) throw new Error(data.error);
@@ -25,24 +21,21 @@ export function useTopArtists(token: string | null, timeRange: TimeRange = "medi
       })
       .catch((err) => setError(err instanceof Error ? err : new Error(String(err))))
       .finally(() => setLoading(false));
-  }, [token, timeRange]);
+    return () => controller.abort();
+  }, [timeRange]);
 
   return { data, loading, error };
 }
 
-export function useTopTracks(token: string | null, timeRange: TimeRange = "medium_term") {
+export function useTopTracks(timeRange: TimeRange = "medium_term") {
   const [data, setData] = useState<TopTracksResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    if (!token) {
-      setLoading(false);
-      return;
-    }
-
-    setLoading(true);
-    fetch(`/api/spotify/top-tracks?time_range=${timeRange}&token=${encodeURIComponent(token)}`)
+    setTimeout(() => setLoading(true), 0);
+    const controller = new AbortController();
+    fetch(`/api/spotify/top-tracks?time_range=${timeRange}`, { signal: controller.signal })
       .then((res) => res.json())
       .then((data) => {
         if (data.error) throw new Error(data.error);
@@ -50,27 +43,31 @@ export function useTopTracks(token: string | null, timeRange: TimeRange = "mediu
       })
       .catch((err) => setError(err instanceof Error ? err : new Error(String(err))))
       .finally(() => setLoading(false));
-  }, [token, timeRange]);
+    return () => controller.abort();
+  }, [timeRange]);
 
   return { data, loading, error };
 }
 
-export function useAudioFeatures(token: string | null, trackIds: string[]) {
+export function useAudioFeatures(trackIds: string[]) {
   const [data, setData] = useState<{ audio_features: AudioFeatures[] } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    if (!token || trackIds.length === 0) {
-      setLoading(false);
+    if (trackIds.length === 0) {
+      setTimeout(() => setData(null), 0);
+      setTimeout(() => setLoading(false), 0);
       return;
     }
 
-    setLoading(true);
+    setTimeout(() => setLoading(true), 0);
+    const controller = new AbortController();
     fetch("/api/spotify/audio-features", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ trackIds }),
+      signal: controller.signal,
     })
       .then((res) => res.json())
       .then((data) => {
@@ -79,7 +76,8 @@ export function useAudioFeatures(token: string | null, trackIds: string[]) {
       })
       .catch((err) => setError(err instanceof Error ? err : new Error(String(err))))
       .finally(() => setLoading(false));
-  }, [token, trackIds.join(",")]);
+    return () => controller.abort();
+  }, [trackIds]);
 
   return { data, loading, error };
 }

@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, LineChart, Line, } from "recharts";
 import { Download, Play, Pause, Music2, BarChart3 } from "lucide-react";
+import LoginToGetTokenMessage from "@/components/login-to-get-token";
 
 type TimeRange = "short_term" | "medium_term" | "long_term";
 
@@ -19,17 +20,7 @@ function formatTime(ms: number): string {
   return `${mins}:${secs.toString().padStart(2, "0")}`;
 }
 
-function TrackRow({
-  track,
-  index,
-  onPlay,
-  isPlaying,
-}: {
-  track: SpotifyTrack;
-  index: number;
-  onPlay: (trackId: string) => void;
-  isPlaying: boolean;
-}) {
+function TrackRow({track, index, onPlay, isPlaying}: { track: SpotifyTrack; index: number; onPlay: (trackId: string) => void; isPlaying: boolean; }) {
   return (
     <tr className="border-b hover:bg-muted/50 transition-colors">
       <td className="p-3 text-muted-foreground w-12">{index + 1}</td>
@@ -49,12 +40,7 @@ function TrackRow({
       <td className="p-3 text-muted-foreground">{formatTime(track.duration_ms)}</td>
       <td className="p-3">
         {track.preview_url ? (
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => onPlay(track.id)}
-            className="h-8 w-8"
-          >
+          <Button variant="ghost" size="icon" onClick={() => onPlay(track.id)} className="h-8 w-8" >
             {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
           </Button>
         ) : (
@@ -65,40 +51,19 @@ function TrackRow({
   );
 }
 
-function NoTokenMessage() {
-  return (
-    <div className="p-6">
-      <div className="bg-muted border border-border rounded-lg p-8 text-center">
-        <h2 className="text-2xl font-semibold mb-2">Authentication Required</h2>
-        <p className="text-muted-foreground mb-4">
-          Para ver tus estadísticas, necesitas proporcionar tu token de acceso de Spotify.
-        </p>
-        <p className="text-sm text-muted-foreground">
-          En desarrollo, puedes establecer tu token en localStorage con la clave{" "}
-          <code className="bg-background px-2 py-1 rounded">spotify_user_token</code>
-        </p>
-      </div>
-    </div>
-  );
-}
-
 export default function StatsPage() {
-  const token = useSpotifyToken();
+  const { session, loading: sessionLoading, login } = useSpotifyToken();
   const [timeRange, setTimeRange] = useState<TimeRange>("medium_term");
   const [playingTrackId, setPlayingTrackId] = useState<string | null>(null);
   const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(null);
 
-  const { data: artistsData, loading: artistsLoading } = useTopArtists(token, timeRange);
-  const { data: tracksData, loading: tracksLoading } = useTopTracks(token, timeRange);
-  
-  // if (!token && !artistsLoading && !tracksLoading) {
-  //   return <NoTokenMessage />;
-  // }
+  const { data: artistsData, loading: artistsLoading } = useTopArtists(timeRange);
+  const { data: tracksData, loading: tracksLoading } = useTopTracks(timeRange);
   
   const trackIds = tracksData?.items?.map((t) => t.id) || [];
-  const { data: audioFeaturesData, loading: audioLoading } = useAudioFeatures(token, trackIds || []);
+  const { data: audioFeaturesData, loading: audioLoading } = useAudioFeatures(trackIds || []);
 
-  const isLoading = artistsLoading || tracksLoading || audioLoading;
+  const isLoading = sessionLoading || artistsLoading || tracksLoading || audioLoading;
 
   // Audio Personality Radar Chart Data
   const radarData = useMemo(() => {
@@ -248,6 +213,10 @@ export default function StatsPage() {
     medium_term: "6 months",
     long_term: "All time",
   };
+
+  if (!session.authenticated && !isLoading) {
+    return <LoginToGetTokenMessage onLogin={login} />;
+  }
 
   return (
     <div className="p-6 space-y-6">

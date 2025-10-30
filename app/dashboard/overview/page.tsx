@@ -10,6 +10,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, LineChart, Line, XAxis, YAxis
 import { useMemo } from "react";
 import StatCard from "@/components/stat-card";
 import InsightCard from "@/components/insight-card";
+import LoginToGetTokenMessage from "@/components/login-to-get-token";
 
 const COLORS = ["#1DB954", "#1ed760", "#19e68c", "#15d4a8", "#12c2c1"];
 
@@ -25,14 +26,14 @@ function generateDailyInsight( avgValence: number, avgEnergy: number, avgDanceab
 }
 
 export default function OverviewPage() {
-  const token = useSpotifyToken();
-  const { data: artistsData, loading: artistsLoading } = useTopArtists(token, "medium_term");
-  const { data: tracksData, loading: tracksLoading } = useTopTracks(token, "medium_term");
+  const { session, loading: sessionLoading, login } = useSpotifyToken();
+  const { data: artistsData, loading: artistsLoading } = useTopArtists("medium_term");
+  const { data: tracksData, loading: tracksLoading } = useTopTracks("medium_term");
   
   const trackIds = useMemo(() => tracksData?.items?.map((t) => t.id) || [], [tracksData]);
-  const { data: audioFeaturesData, loading: audioLoading } = useAudioFeatures(token, trackIds);
+  const { data: audioFeaturesData, loading: audioLoading } = useAudioFeatures(trackIds);
 
-  const isLoading = artistsLoading || tracksLoading || audioLoading;
+  const isLoading = sessionLoading || artistsLoading || tracksLoading || audioLoading;
 
   // Calculate Music DNA (averages)
   const avgValence = useMemo(() => {
@@ -84,8 +85,26 @@ export default function OverviewPage() {
   }, [avgValence, avgEnergy, avgDanceability, dominantGenre, totalArtists, isLoading, audioFeaturesData]);
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="bg-gradient-to-br from-primary/20 via-primary/10 to-background border border-border rounded-xl p-8 shadow-lg">
+    <div >
+      {(!session.authenticated && !isLoading) ? <LoginToGetTokenMessage onLogin={login} /> : (
+        <>
+        {session.authenticated && session.profile ? (
+          <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
+            <div className="flex items-center gap-4">
+              <Avatar className="h-14 w-14">
+                <AvatarImage src={session.profile.images?.[0]?.url} alt={session.profile.display_name || "User"} />
+                <AvatarFallback>{(session.profile.display_name || "U").charAt(0)}</AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col">
+                <span className="text-lg font-semibold">{session.profile.display_name || "Spotify User"}</span>
+                {session.profile.email ? (
+                  <span className="text-sm text-muted-foreground">{session.profile.email}</span>
+                ) : null}
+              </div>
+            </div>
+          </div>
+        ) : null}
+        <div className="bg-gradient-to-br from-primary/20 via-primary/10 to-background border border-border rounded-xl p-8 shadow-lg">
         <div className="flex items-center gap-3 mb-4">
           <Dna className="h-8 w-8 text-primary" />
           <h1 className="text-3xl font-bold">Your Music DNA</h1>
@@ -201,6 +220,8 @@ export default function OverviewPage() {
 
       {/* Insight del Dia */}
       <InsightCard insight={insight} loading={isLoading} />
+        </>
+      )}
     </div>
   );
 }

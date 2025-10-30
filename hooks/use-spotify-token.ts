@@ -1,23 +1,40 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
-// For development: you can set a token in localStorage with key 'spotify_user_token'
-// In production, this would come from OAuth flow
+export type SpotifySession = {
+  authenticated: boolean;
+  profile?: { display_name?: string; images?: Array<{ url: string }>; id?: string; email?: string };
+};
+
 export function useSpotifyToken() {
-  const [token, setToken] = useState<string | null>(null);
+  const [session, setSession] = useState<SpotifySession>({ authenticated: false });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check localStorage for development token
-    const storedToken = typeof window !== "undefined" 
-      ? localStorage.getItem("spotify_user_token") 
-      : null;
-    
-    if (storedToken) {
-      setToken(storedToken);
+    let cancelled = false;
+    async function load() {
+      setLoading(true);
+      try {
+        const res = await fetch("/api/spotify/session", { cache: "no-store" });
+        const json = (await res.json()) as SpotifySession;
+        if (!cancelled) setSession(json);
+      } catch {
+        if (!cancelled) setSession({ authenticated: false });
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
     }
+    load();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  return token;
+  const login = () => {
+    window.location.href = "/api/spotify/login";
+  };
+
+  return { session, loading, login };
 }
 

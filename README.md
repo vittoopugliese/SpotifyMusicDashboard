@@ -1,4 +1,4 @@
-# 🎵 [Nombre Creativo] - Music Insights Explorer
+# 🎵 Spotify Music Dashboard
 
 [GIF/Screenshot del app en acción]
 
@@ -17,3 +17,11 @@
 ## 🚀 Quick Start
 
 [Que sea REALMENTE fácil de correr localmente]
+
+-------------------
+
+**3. Accede a tu app usando la IP loopback:**
+
+En lugar de abrir tu navegador en `http://localhost:3000`, usa:
+```
+http://127.0.0.1:3000

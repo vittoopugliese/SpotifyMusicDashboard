@@ -7,10 +7,8 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail, } f
 import { TeamSwitcher } from "./team-switcher"
 
 const data = {
-  user: { name: "Music Explorer", email: "user@spotify.com", avatar: "https://www.svgrepo.com/show/432033/user-4.svg", },
-  teams: [
-    { name: "Spotify Insights", logo: AudioWaveform, plan: "Music Analytics", },
-  ],
+  user: { id: null, display_name: "Spotify User", email: "user@spotify.com", images: [{ url: "https://www.svgrepo.com/show/432033/user-4.svg" }], },
+  teams: [ { name: "Spotify Insights", logo: AudioWaveform, plan: "Music Analytics", }, ],
   navMain: [
     {
       title: "Dashboard",

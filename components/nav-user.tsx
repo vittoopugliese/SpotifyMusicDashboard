@@ -1,30 +1,63 @@
-"use client"
-import { BadgeCheck, Bell, ChevronsUpDown, CreditCard, LogOut, Sparkles, } from "lucide-react"
-import { Avatar, AvatarFallback, AvatarImage, } from "@/components/ui/avatar"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, } from "@/components/ui/dropdown-menu"
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar, } from "@/components/ui/sidebar"
+"use client";
 
-export function NavUser({ user, }: { user: { name: string; email: string; avatar: string } }) {
-  const { isMobile } = useSidebar()
+import {Avatar, AvatarImage} from "@/components/ui/avatar";
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, } from "@/components/ui/sidebar";
+import {Spinner} from "./ui/spinner";
+import {LogOut} from "lucide-react";
+import {useSpotifyToken} from "@/hooks/use-spotify-token";
+import {SpotifyUserProfile} from "@/lib/spotify";
+import {useEffect, useState} from "react";
+import {Button} from "./ui/button";
+
+export function NavUser({ userDefaultData, }: { userDefaultData: SpotifyUserProfile; }) {
+  const {session, loading, login} = useSpotifyToken();
+  const [user, setUser] = useState<SpotifyUserProfile>(userDefaultData);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (session.authenticated && session.profile) setUser(session.profile as SpotifyUserProfile);
+  }, [session.authenticated, session.profile]);
+
+  const handleLogout = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    window.location.href = "/api/spotify/logout";
+  };
 
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <SidebarMenuButton size="lg" className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground" >
-              <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-              </Avatar>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user.name}</span>
-                <span className="truncate text-xs">{user.email}</span>
+        {user?.id ? (
+          <>
+            <SidebarMenuButton className="mb-2">
+              <div className="flex items-center gap-2 justify-between w-full cursor-pointer" onClick={(e) => handleLogout(e)}>
+                <div className="flex items-center">
+                  <span>User Logout</span>
+                </div>
+                <LogOut className="size-4" />
               </div>
             </SidebarMenuButton>
-          </DropdownMenuTrigger>
-        </DropdownMenu>
+            <SidebarMenuButton size="lg" className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
+              <Avatar className="h-8 w-8 rounded-lg">
+                {loading ? (
+                  <div className="flex items-center justify-center">
+                    <Spinner className="size-6" />
+                  </div>
+                ) : (
+                  <AvatarImage src={user?.images?.[0]?.url || "https://www.svgrepo.com/show/432033/user-4.svg"} alt={user?.display_name || "User"} />
+                )}
+              </Avatar>
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-medium">{loading ? "Username..." : user?.display_name}</span>
+                <span className="truncate text-xs">{loading ? "Email..." : user?.email}</span>
+              </div>
+            </SidebarMenuButton>
+          </>
+        ) : (
+          <div className="flex items-center justify-center mb-2">
+            <Button onClick={login}>Login with Spotify</Button>
+          </div>
+        )}
       </SidebarMenuItem>
     </SidebarMenu>
-  )
+  );
 }

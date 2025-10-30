@@ -2,10 +2,74 @@ const SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token";
 const SPOTIFY_API_BASE = "https://api.spotify.com/v1";
 type AppToken = { accessToken: string; expiresAt: number; };
 let cachedToken: AppToken | null = null;
+
+export type SpotifyUserProfile = {
+  id: string;
+  display_name?: string;
+  email?: string;
+  images?: Array<{ url: string; height?: number; width?: number }>;
+  country?: string;
+  followers?: { total?: number };
+};
+
+export type SpotifyArtist = {
+  id: string;
+  name: string;
+  images: Array<{ url: string; height: number; width: number }>;
+  genres: string[];
+  popularity: number;
+  external_urls: { spotify: string };
+};
+
+export type SpotifyTrack = {
+  id: string;
+  name: string;
+  artists: Array<{ id: string; name: string }>;
+  album: {
+    id: string;
+    name: string;
+    images: Array<{ url: string; height: number; width: number }>;
+    release_date: string;
+  };
+  popularity: number;
+  duration_ms: number;
+  preview_url: string | null;
+  external_urls: { spotify: string };
+};
+
+export type TopArtistsResponse = {
+  items: SpotifyArtist[];
+  total: number;
+  limit: number;
+  offset: number;
+};
+
+export type TopTracksResponse = {
+  items: SpotifyTrack[];
+  total: number;
+  limit: number;
+  offset: number;
+};
+
+export type AudioFeatures = {
+  id: string;
+  danceability: number;
+  energy: number;
+  valence: number;
+  acousticness: number;
+  instrumentalness: number;
+  speechiness: number;
+  tempo: number;
+  liveness: number;
+  loudness: number;
+  mode: number; // 1 major, 0 minor
+  key: number; // 0-11
+  duration_ms: number;
+};
  
 function getBasicAuthHeader(): string {
- const clientId = process.env.SPOTIFY_CLIENT_ID;
- const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
+  const clientId = process.env.SPOTIFY_CLIENT_ID;
+  const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
   if (!clientId || !clientSecret) throw new Error("Missing SPOTIFY_CLIENT_ID or SPOTIFY_CLIENT_SECRET");
   const encoded = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
   return `Basic ${encoded}`;
@@ -47,7 +111,7 @@ export async function spotifyFetch<T>(path: string, init?: RequestInit): Promise
     // Never cache Spotify fetch on the server; callers can wrap with Next revalidate if needed
     cache: "no-store",
   });
-  
+
   if (!res.ok) {
     const text = await res.text();
     throw new Error(`Spotify API ${path} failed: ${res.status} ${text}`);
@@ -55,22 +119,6 @@ export async function spotifyFetch<T>(path: string, init?: RequestInit): Promise
 
   return (await res.json()) as T;
 }
-
-export type AudioFeatures = {
-  id: string;
-  danceability: number;
-  energy: number;
-  valence: number;
-  acousticness: number;
-  instrumentalness: number;
-  speechiness: number;
-  tempo: number;
-  liveness: number;
-  loudness: number;
-  mode: number; // 1 major, 0 minor
-  key: number; // 0-11
-  duration_ms: number;
-};
 
 export async function getArtistTopTracks(artistId: string, market = "US") {
   return spotifyFetch<{ tracks: { id: string; name: string; album: { id: string; release_date: string }; popularity: number }[] }>(`/artists/${artistId}/top-tracks?market=${market}`);
@@ -134,44 +182,9 @@ export async function spotifyFetchWithUserToken<T>( path: string, userToken: str
   return (await res.json()) as T;
 }
 
-export type SpotifyArtist = {
-  id: string;
-  name: string;
-  images: Array<{ url: string; height: number; width: number }>;
-  genres: string[];
-  popularity: number;
-  external_urls: { spotify: string };
-};
-
-export type SpotifyTrack = {
-  id: string;
-  name: string;
-  artists: Array<{ id: string; name: string }>;
-  album: {
-    id: string;
-    name: string;
-    images: Array<{ url: string; height: number; width: number }>;
-    release_date: string;
-  };
-  popularity: number;
-  duration_ms: number;
-  preview_url: string | null;
-  external_urls: { spotify: string };
-};
-
-export type TopArtistsResponse = {
-  items: SpotifyArtist[];
-  total: number;
-  limit: number;
-  offset: number;
-};
-
-export type TopTracksResponse = {
-  items: SpotifyTrack[];
-  total: number;
-  limit: number;
-  offset: number;
-};
+export async function getCurrentUserProfile(userToken: string): Promise<SpotifyUserProfile> {
+  return spotifyFetchWithUserToken<SpotifyUserProfile>(`/me`, userToken);
+}
 
 export async function getUserTopArtists(userToken: string, timeRange: "short_term" | "medium_term" | "long_term" = "medium_term", limit = 50 ): Promise<TopArtistsResponse> {
   return spotifyFetchWithUserToken<TopArtistsResponse>(`/me/top/artists?time_range=${timeRange}&limit=${limit}`, userToken);

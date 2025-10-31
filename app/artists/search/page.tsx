@@ -1,67 +1,22 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import IconTitle from "@/components/icon-title";
 import { Input } from "@/components/ui/input";
 import { Search, Music2 } from "lucide-react";
-import { SpotifyArtist } from "@/lib/spotify";
-import { useSpotifySession } from "@/contexts/spotify-session-context";
 import { Spinner } from "@/components/ui/spinner";
 import ArtistCard from "@/components/artist-card";
+import { useArtistSearch } from "@/hooks/use-artist-search";
 
 export default function ArtistsSearchPage() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [debouncedQuery, setDebouncedQuery] = useState("");
-  const [artists, setArtists] = useState<SpotifyArtist[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const { session } = useSpotifySession();
+  const { query, setQuery, artists, loading, error, isSearching } = useArtistSearch();
 
-  useEffect(() => {
-    const handler = setTimeout(() => setDebouncedQuery(searchQuery), 500);
-    return () => clearTimeout(handler);
-  }, [searchQuery]);
-
-  useEffect(() => {
-    if (!debouncedQuery.trim()) {
-      setArtists([]);
-      setError(null);
-      return;
-    }
-
-    if (!session.authenticated) {
-      setError("Por favor inicia sesión para buscar artistas");
-      return;
-    }
-
-    const searchArtists = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const response = await fetch(`/api/spotify/search-artists?q=${encodeURIComponent(debouncedQuery)}&limit=20`);
-
-        if (!response.ok) throw new Error("Error al buscar artistas");
-
-        const data = await response.json();
-        setArtists(data.artists || []);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Error desconocido");
-        setArtists([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    searchArtists();
-  }, [debouncedQuery, session.authenticated]);
-  
   return (
     <div className="p-6 space-y-6">
       <IconTitle icon={<Search className="h-8 w-8" />} title="Artists Search" />
       
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input type="text" placeholder="Busca un artista..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="pl-10 w-full" />
+        <Input type="text" placeholder="Busca un artista..." value={query} onChange={(e) => setQuery(e.target.value)} className="pl-10 w-full" />
       </div>
 
       {loading && (
@@ -75,11 +30,11 @@ export default function ArtistsSearchPage() {
 
       {!loading && !error && artists.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {artists.map((artist) => <ArtistCard key={artist.id} artist={artist} />)}
+          {artists.map(artist => <ArtistCard key={artist.id} artist={artist} />)}
         </div>
       )}
 
-      {!loading && !error && debouncedQuery && artists.length === 0 && (
+      {!loading && !error && isSearching && artists.length === 0 && (
         <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
           <Music2 className="h-16 w-16 mb-4" />
           <p className="text-lg">No artists found</p>
@@ -87,7 +42,7 @@ export default function ArtistsSearchPage() {
         </div>
       )}
 
-      {!loading && !error && !debouncedQuery && (
+      {!loading && !error && !isSearching && (
         <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
           <Search className="h-16 w-16 mb-4" />
           <p className="text-lg mb-1 font-bold">Search your favorite artists</p>

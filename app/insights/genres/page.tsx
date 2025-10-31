@@ -4,7 +4,7 @@ import { Music2 } from "lucide-react";
 export default function InsightsGenresPage() {
   return (
     <div className="p-6 space-y-6">
-      <IconTitle icon={Music2} title="Genres" />
+      <IconTitle icon={Music2} title="Genres" subtitle="Explore your favorite genres and their characteristics" />
     </div>
   );
 }

@@ -7,6 +7,7 @@ import IconTitle from "@/components/icon-title";
 import ArtistCard from "@/components/artist-card";
 import LoadingComponent from "@/components/loading-component";
 import CustomAlertComponent from "@/components/custom-alert-component";
+import ViewHint from "@/components/view-hint";
 
 export default function ArtistsSearchPage() {
   const { query, setQuery, artists, loading, error, isSearching } = useArtistSearch();
@@ -29,7 +30,7 @@ export default function ArtistsSearchPage() {
       { loading && <LoadingComponent message="Searching your favorite artists..." size={9} />}
       { error && <CustomAlertComponent title="Oops! Something went wrong" description={error} variant="destructive" /> }
       { !loading && !error && isSearching && artists.length === 0 && <CustomAlertComponent title="No artists found" description="Try with another search term" /> }
-      { !loading && !error && !isSearching && <CustomAlertComponent title="Search your favorite artists" description="Write the name of an artist to start searching" /> }
+      { !loading && !error && !isSearching && <ViewHint title="Search your favorite artists" description="Write the name of an artist to start searching" icon={Search} /> }
     </div>
   );
 }

@@ -12,6 +12,7 @@ import { useState } from "react";
 import TitleWithPeriodSelector from "@/components/title-with-period-selector";
 import { Spinner } from "@/components/ui/spinner";
 import { useSpotifySession } from "@/contexts/spotify-session-context";
+import SummaryCard from "@/components/summary-card";
 
 const COLORS = ["#1DB954", "#1ed760", "#19e68c", "#15d4a8", "#12c2c1"];
 
@@ -126,32 +127,12 @@ export default function OverviewPage() {
             <Skeleton className="h-24" />
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mt-6">
-            <div className="bg-card/50 rounded-lg p-4 border border-border/50">
-              <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2"><Clock className="h-4 w-4" />Average Duration</p>
-              <p className="text-3xl font-bold text-primary">{formatMs(avgDurationMs)}</p>
-              <p className="text-xs text-muted-foreground mt-1">de tus canciones top</p>
-            </div>
-            <div className="bg-card/50 rounded-lg p-4 border border-border/50">
-              <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2"><TrendingUp className="h-4 w-4" />Average Popularity</p>
-              <p className="text-3xl font-bold text-primary">{avgPopularity}</p>
-              <p className="text-xs text-muted-foreground mt-1">from 0 to 100</p>
-            </div>
-            <div className="bg-card/50 rounded-lg p-4 border border-border/50">
-              <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2"><CalendarDays className="h-4 w-4" />Most Common Year</p>
-              <p className="text-3xl font-bold text-primary">{mostCommonYear ?? latestYear ?? "-"}</p>
-              <p className="text-xs text-muted-foreground mt-1">in your releases</p>
-            </div>
-            <div className="bg-card/50 rounded-lg p-4 border border-border/50">
-              <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2"><Users className="h-4 w-4" />Unique Artists</p>
-              <p className="text-3xl font-bold text-primary">{totalArtists}</p>
-              <p className="text-xs text-muted-foreground mt-1">in your top</p>
-            </div>
-            <div className="bg-card/50 rounded-lg p-4 border border-border/50">
-              <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2"><Music2 className="h-4 w-4" />Dominant Genre</p>
-              <p className="text-3xl font-bold text-primary">{dominantGenre.charAt(0).toUpperCase() + dominantGenre.slice(1)}</p>
-              <p className="text-xs text-muted-foreground mt-1">in your artists</p>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mt-6">
+            <SummaryCard icon={Clock} title="Average Duration" value={formatMs(avgDurationMs)} description="de tus canciones top" />
+            <SummaryCard icon={TrendingUp} title="Average Popularity" value={avgPopularity} description="from 0 to 100" />
+            <SummaryCard icon={CalendarDays} title="Most Common Year" value={mostCommonYear ?? latestYear ?? "-"} description="in your releases" />
+            <SummaryCard icon={Users} title="Unique Artists" value={totalArtists} description="in your top" />
+            <SummaryCard icon={Music2} title="Dominant Genre" value={dominantGenre.charAt(0).toUpperCase() + dominantGenre.slice(1)} description="in your artists" />
           </div>
         )}
       </div>

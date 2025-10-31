@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Search, X, Plus, Music2 } from "lucide-react";
 import { useArtistSearch } from "@/hooks/use-artist-search";
 import Image from "next/image";
+import { Spinner } from "./ui/spinner";
 
 interface ArtistSelectorProps {
   selectedArtists: SpotifyArtist[];
@@ -67,14 +68,15 @@ export default function ArtistSelector({ selectedArtists, onAddArtist, onRemoveA
           <div className="flex items-center gap-2">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input type="text" placeholder="Search for an artist..." value={query} onChange={(e) => setQuery(e.target.value)} className="pl-10" />
+              <Input type="text" placeholder="Search for an artist..." value={query} onChange={(e) => setQuery(e.target.value)}  className="pl-10 w-full h-11" />
             </div>
             {selectedArtists.length > 0 && <Button variant="outline" onClick={() => setShowSearch(false)}>Cancel</Button>}
           </div>
 
           {loading && (
-            <div className="flex items-center justify-center py-8">
-              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+            <div className="flex items-center flex-col justify-center py-8">
+              <Spinner className="size-9" />
+              <p className="text-sm text-muted-foreground mt-3">Searching for artists...</p>
             </div>
           )}
 

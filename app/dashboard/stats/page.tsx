@@ -137,7 +137,7 @@ export default function StatsPage() {
 
   return (
     <div className="p-6 space-y-6">
-      <TitleWithPeriodSelector title="Your Stats" icon={<BarChart3 className="h-8 w-8" />} 
+      <TitleWithPeriodSelector title="Your Stats" icon={BarChart3} 
         value={timeRange} onChange={setTimeRange} className="mb-4" subtitle="Analysis of your musical preferences based on your favorite artists and tracks"
         actions={<Button variant="outline" onClick={handleExportStats} className="gap-2"><Download className="h-4 w-4" />Export Stats</Button>} />
 

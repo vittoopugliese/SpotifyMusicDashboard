@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { cn, timeRangeLabels } from "@/lib/utils";
 import IconTitle from "./icon-title";
+import { LucideIcon } from "lucide-react";
 
 const DEFAULT_LABELS = {
   short_term: "Last 4 weeks",
@@ -12,9 +13,9 @@ const DEFAULT_LABELS = {
 export type PeriodType = "short_term" | "medium_term" | "long_term";
 
 interface TitleWithPeriodSelectorProps {
-  title: ReactNode;
-  subtitle?: ReactNode;
-  icon?: ReactNode;
+  title: string;
+  subtitle?: string;
+  icon: LucideIcon;
   value: PeriodType;
   onChange: (range: PeriodType) => void;
   className?: string;

@@ -66,6 +66,41 @@ export type SearchArtistsResponse = {
   };
 };
 
+export type SearchTracksResponse = {
+  tracks: {
+    items: SpotifyTrack[];
+    total: number;
+    limit: number;
+    offset: number;
+  };
+};
+
+export type AudioFeatures = {
+  id: string;
+  acousticness: number;
+  danceability: number;
+  energy: number;
+  instrumentalness: number;
+  key: number;
+  liveness: number;
+  loudness: number;
+  mode: number;
+  speechiness: number;
+  tempo: number;
+  time_signature: number;
+  valence: number;
+  duration_ms: number;
+};
+
+export type TrackRecommendations = {
+  tracks: SpotifyTrack[];
+  seeds: Array<{
+    id: string;
+    type: string;
+    href: string;
+  }>;
+};
+
 // User-specific endpoints (requires user access token)
 // This fn is called from hooks and pass here the api route
 export async function spotifyFetchWithUserToken<T>( path: string, userToken: string, init?: RequestInit ): Promise<T> {

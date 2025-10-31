@@ -33,7 +33,6 @@ const data = {
       url: "/tracks",
       icon: AudioWaveform,
       items: [
-        { title: "Track Analysis", url: "/tracks/analysis", },
         { title: "Top Tracks", url: "/tracks/top", },
       ],
     },

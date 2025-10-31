@@ -137,12 +137,12 @@ export default function StatsPage() {
 
   return (
     <div className="p-6 space-y-6">
-      <TitleWithPeriodSelector title="Your Stats" icon={<BarChart3 className="h-8 w-8" />} value={timeRange} onChange={setTimeRange} className="mb-4"
+      <TitleWithPeriodSelector title="Your Stats" icon={<BarChart3 className="h-8 w-8" />} 
+        value={timeRange} onChange={setTimeRange} className="mb-4" subtitle="Analysis of your musical preferences based on your favorite artists and tracks"
         actions={<Button variant="outline" onClick={handleExportStats} className="gap-2"><Download className="h-4 w-4" />Export Stats</Button>} />
 
       <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
         <h2 className="text-xl font-semibold mb-1 flex items-center gap-2"><Music2 className="h-5 w-5" />Music Taste Profile</h2>
-        <p className="text-sm text-muted-foreground mb-4">Analysis of your musical preferences based on your favorite artists and tracks</p>
         {isLoading ? (
           <Skeleton className="h-96 w-full" />
         ) : radarData ? (

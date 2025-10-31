@@ -28,7 +28,7 @@ export function NavMain({ items, }: { items: itemType[] }) {
               <CollapsibleTrigger asChild>
                 <SidebarMenuButton tooltip={item.title}>
                   {item.icon && <item.icon />}
-                  <span>{item.title}</span>
+                  <span style={{userSelect: "none"}}>{item.title}</span>
                   <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                 </SidebarMenuButton>
               </CollapsibleTrigger>
@@ -38,7 +38,7 @@ export function NavMain({ items, }: { items: itemType[] }) {
                     <SidebarMenuSubItem key={subItem.title}>
                       <SidebarMenuSubButton asChild>
                         <Link href={subItem.url} aria-disabled={pathname === subItem.url}>
-                          <span>{subItem.title}</span>
+                          <span style={{userSelect: "none"}}>{subItem.title}</span>
                         </Link>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>

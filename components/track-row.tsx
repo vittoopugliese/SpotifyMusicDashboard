@@ -17,8 +17,8 @@ export function TrackRow({ track, index, onPlay, isPlaying, }: { track: SpotifyT
       <td className="p-3">
         <div className="flex items-center gap-3">
           <Avatar className="h-12 w-12">
-            <AvatarImage src={track.album.images[0]?.url} alt={track.album.name} />
-            <AvatarFallback>{track.name.charAt(0)}</AvatarFallback>
+            <AvatarImage src={track.album.images[0]?.url} alt={track.album.name} draggable={false} />
+            <AvatarFallback draggable={false}>{track.name.charAt(0)}</AvatarFallback>
           </Avatar>
           <div>
             <p className="font-medium">{track.name}</p>
@@ -31,8 +31,8 @@ export function TrackRow({ track, index, onPlay, isPlaying, }: { track: SpotifyT
       <td className="p-3">
         { track.preview_url
             ? <Button variant="ghost" size="icon" onClick={() => onPlay(track.id)} className="h-8 w-8">
-              {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-            </Button>
+                {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+              </Button>
             : <span className="text-muted-foreground text-sm">N/A</span>}
       </td>
     </tr>

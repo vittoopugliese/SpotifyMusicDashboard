@@ -162,10 +162,10 @@ export default function StatsPage() {
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard icon={TrendingUp} title="Popularity" value={isLoading || !musicStats ? "—" : `${musicStats.avgPopularity}/100`} loading={isLoading} />
-        <StatCard icon={Clock} title="Average Duration" value={isLoading || !musicStats ? "—" : `${Math.floor(musicStats.avgDuration / 60)}:${String(musicStats.avgDuration % 60).padStart(2, '0')}`} loading={isLoading} />
-        <StatCard icon={Palette} title="Unique Genres" value={isLoading || !musicStats ? "—" : `${musicStats.uniqueGenres}`} loading={isLoading} />
-        <StatCard icon={Calendar} title="Average Year" value={isLoading || !musicStats ? "—" : `~${musicStats.avgYear}`} loading={isLoading} />
+        <StatCard icon={TrendingUp} title="Popularity" value={isLoading || !musicStats ? "—" : `${musicStats.avgPopularity}/100`} loading={isLoading} tooltipDescription="Average popularity of your favorite songs in Spotify (0-100)" />
+        <StatCard icon={Clock} title="Average Duration" value={isLoading || !musicStats ? "—" : `${Math.floor(musicStats.avgDuration / 60)}:${String(musicStats.avgDuration % 60).padStart(2, '0')}`} loading={isLoading} tooltipDescription="Average duration of your favorite songs" />
+        <StatCard icon={Palette} title="Unique Genres" value={isLoading || !musicStats ? "—" : `${musicStats.uniqueGenres}`} loading={isLoading} tooltipDescription="Number of unique genres in your library" />
+        <StatCard icon={Calendar} title="Average Year" value={isLoading || !musicStats ? "—" : `~${musicStats.avgYear}`} loading={isLoading} tooltipDescription="Average year of release of your favorite songs" />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -173,9 +173,7 @@ export default function StatsPage() {
           <h2 className="text-xl font-semibold mb-4">Top 50 Tracks</h2>
           {isLoading ? (
             <div className="space-y-2">
-              {[...Array(5)].map((_, i) => (
-                <Skeleton key={i} className="h-16 w-full" />
-              ))}
+              {[...Array(5)].map((_, i) => <Skeleton key={i} className="h-16 w-full" />)}
             </div>
           ) : tracksData?.items && tracksData.items.length > 0 ? (
             <div className="overflow-auto max-h-[600px]">
@@ -211,8 +209,8 @@ export default function StatsPage() {
               {artistsData.items.map((artist) => (
                 <div key={artist.id} className="bg-muted/50 rounded-lg p-4 hover:bg-muted transition-colors" >
                   <Avatar className="h-24 w-24 mx-auto mb-3">
-                    <AvatarImage src={artist.images[0]?.url} alt={artist.name} />
-                    <AvatarFallback className="text-lg">{artist.name.charAt(0)}</AvatarFallback>
+                    <AvatarImage src={artist.images[0]?.url} alt={artist.name} draggable={false} />
+                    <AvatarFallback className="text-lg" draggable={false}>{artist.name.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <p className="text-center font-medium truncate">{artist.name}</p>
                   <p className="text-center text-sm text-muted-foreground">{artist.genres[0] || "Unknown"}</p>

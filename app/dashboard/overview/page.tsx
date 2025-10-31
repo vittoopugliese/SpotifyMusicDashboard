@@ -129,11 +129,11 @@ export default function OverviewPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mt-6">
-            <SummaryCard icon={Clock} title="Average Duration" value={formatMs(avgDurationMs)} description="de tus canciones top" />
-            <SummaryCard icon={TrendingUp} title="Average Popularity" value={avgPopularity} description="from 0 to 100" />
-            <SummaryCard icon={CalendarDays} title="Most Common Year" value={mostCommonYear ?? latestYear ?? "-"} description="in your releases" />
-            <SummaryCard icon={Users} title="Unique Artists" value={totalArtists} description="in your top" />
-            <SummaryCard icon={Music2} title="Dominant Genre" value={dominantGenre.charAt(0).toUpperCase() + dominantGenre.slice(1)} description="in your artists" />
+            <SummaryCard icon={Clock} title="Average Duration" value={formatMs(avgDurationMs)} description="of your favorite songs" tooltipDescription="Average duration of your favorite songs in the selected period" />
+            <SummaryCard icon={TrendingUp} title="Average Popularity" value={avgPopularity} description="from 0 to 100" tooltipDescription="Average popularity of your songs in Spotify" />
+            <SummaryCard icon={CalendarDays} title="Most Common Year" value={mostCommonYear ?? latestYear ?? "-"} description="of your releases" tooltipDescription="Most common year of release among your favorite songs" />
+            <SummaryCard icon={Users} title="Unique Artists" value={totalArtists} description="in your top" tooltipDescription="Total number of unique artists in your top artists" />
+            <SummaryCard icon={Music2} title="Dominant Genre" value={dominantGenre.charAt(0).toUpperCase() + dominantGenre.slice(1)} description="of your artists" tooltipDescription="Most frequent genre among your favorite artists" />
           </div>
         )}
       </div>

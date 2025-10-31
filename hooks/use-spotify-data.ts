@@ -13,14 +13,22 @@ export function useTopArtists(timeRange: TimeRange = "medium_term") {
   useEffect(() => {
     setTimeout(() => setLoading(true), 0);
     const controller = new AbortController();
-    fetch(`/api/spotify/top-artists?time_range=${timeRange}`, { signal: controller.signal })
-      .then((res) => res.json())
-      .then((data) => {
+    
+    const fetchTopArtists = async () => {
+      try {
+        const res = await fetch(`/api/spotify/top-artists?time_range=${timeRange}`, { signal: controller.signal });
+        const data = await res.json();
         if (data.error) throw new Error(data.error);
         setData(data);
-      })
-      .catch((err) => setError(err instanceof Error ? err : new Error(String(err))))
-      .finally(() => setLoading(false));
+      } catch (err) {
+        setError(err instanceof Error ? err : new Error(String(err)));
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchTopArtists();
+    
     return () => controller.abort();
   }, [timeRange]);
 

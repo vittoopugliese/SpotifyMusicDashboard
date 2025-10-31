@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { useTopArtists, useTopTracks } from "@/hooks/use-spotify-data";
-import { average, yearFromDate, getGenreDistribution } from "@/lib/spotify";
+import { average, yearFromDate, getGenreDistribution } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";

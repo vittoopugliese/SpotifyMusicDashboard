@@ -1,7 +1,7 @@
 "use client";
 
 import { useTopArtists, useTopTracks } from "@/hooks/use-spotify-data";
-import { average, getDominantGenre, getGenreDistribution, yearFromDate } from "@/lib/spotify";
+import { average, getDominantGenre, getGenreDistribution, yearFromDate } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Music2, TrendingUp, Clock, CalendarDays, Users, Disc3, Music, UserIcon } from "lucide-react";

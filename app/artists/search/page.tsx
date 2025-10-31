@@ -12,7 +12,7 @@ export default function ArtistsSearchPage() {
 
   return (
     <div className="p-6 space-y-6">
-      <IconTitle icon={<Search className="h-8 w-8" />} title="Artists Search" />
+      <IconTitle icon={<Search className="h-8 w-8" />} title="Artists Search" subtitle="Search for your favorite artists and view their follower count, main genres and popularity" />
       
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />

@@ -17,7 +17,7 @@ export default function ArtistCard({artist}: {artist: SpotifyArtist}) {
     <div className="group bg-card border rounded-lg overflow-hidden hover:shadow-lg transition-all duration-200 hover:scale-[1.02] cursor-pointer">
       <div className="relative aspect-square bg-muted">
         {artist.images.length > 0 ? (
-          <Image src={artist.images[0]?.url || ""} alt={artist.name} fill
+          <Image src={artist.images[0]?.url || ""} alt={artist.name} fill draggable={false}
             className="object-cover group-hover:scale-105 transition-transform duration-200"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
           />

@@ -8,6 +8,7 @@ import {useSpotifySession} from "@/contexts/spotify-session-context";
 import {SpotifyUserProfile} from "@/lib/spotify";
 import {useEffect, useState} from "react";
 import {Button} from "./ui/button";
+import { getRandomAvatar } from "@/lib/utils";
 
 export function NavUser() {
   const {session, loading, login} = useSpotifySession();
@@ -44,7 +45,7 @@ export function NavUser() {
                     <Spinner className="size-6" />
                   </div>
                 ) : (
-                  <AvatarImage src={localUser?.images?.[0]?.url || "https://www.svgrepo.com/show/432033/user-4.svg"} alt={localUser?.display_name || "User"} draggable={false} />
+                  <AvatarImage src={localUser?.images?.[0]?.url || getRandomAvatar()} alt={localUser?.display_name || "User"} draggable={false} />
                 )}
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">

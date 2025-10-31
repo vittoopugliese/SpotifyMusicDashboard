@@ -98,7 +98,6 @@ http://127.0.0.1:3000
 
 - `GET /api/spotify/top-artists`
 - `GET /api/spotify/top-tracks`
-- `GET /api/spotify/audio-features`
 
 These wrap Spotify endpoints via server-side fetches defined in `lib/spotify.ts`.
 

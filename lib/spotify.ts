@@ -124,58 +124,6 @@ export async function getArtistTopTracks(artistId: string, market = "US") {
   return spotifyFetch<{ tracks: { id: string; name: string; album: { id: string; release_date: string }; popularity: number }[] }>(`/artists/${artistId}/top-tracks?market=${market}`);
 }
 
-export async function getAudioFeaturesForTracks(trackIds: string[]): Promise<{ audio_features: AudioFeatures[] }> {
-  const ids = trackIds.slice(0, 100).join(",");
-  try {
-    return await spotifyFetch(`/audio-features?ids=${ids}`);
-  } catch (e: unknown) {
-    const message = e instanceof Error ? e.message : String(e);
-    // Fallback: some environments report 403 on batch endpoint; try per-id fetches
-    if (message.includes("403")) {
-      const results: AudioFeatures[] = [];
-      for (const id of trackIds.slice(0, 100)) {
-        try {
-          const one = await spotifyFetch<{ id: string } & AudioFeatures>(`/audio-features/${id}`);
-          // The endpoint returns 200 with minimal body if not found; ensure id matches
-          if (one?.id) results.push(one);
-        } catch {
-          // ignore individual failures
-        }
-      }
-      return { audio_features: results };
-    }
-    throw e;
-  }
-}
-
-export async function getAudioFeaturesForTracksWithUser(
-  trackIds: string[],
-  userToken: string
-): Promise<{ audio_features: AudioFeatures[] }> {
-  const ids = trackIds.slice(0, 100).join(",");
-  try {
-    return await spotifyFetchWithUserToken(`/audio-features?ids=${ids}`, userToken);
-  } catch (e: unknown) {
-    const message = e instanceof Error ? e.message : String(e);
-    if (message.includes("403")) {
-      const results: AudioFeatures[] = [];
-      for (const id of trackIds.slice(0, 100)) {
-        try {
-          const one = await spotifyFetchWithUserToken<{ id: string } & AudioFeatures>(
-            `/audio-features/${id}`,
-            userToken
-          );
-          if (one?.id) results.push(one);
-        } catch {
-          // ignore individual failures
-        }
-      }
-      return { audio_features: results };
-    }
-    throw e;
-  }
-}
-
 export function groupBy<T, K extends string | number>(items: T[], keyFn: (item: T) => K): Record<K, T[]> {
   return items.reduce((acc, item) => {
     const key = keyFn(item);

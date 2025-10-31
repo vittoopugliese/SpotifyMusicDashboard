@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { AudioFeatures, SpotifyArtist } from "./spotify";
+import { SpotifyArtist } from "./spotify";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -26,25 +26,6 @@ export function getGenreDistribution(artists: SpotifyArtist[], topN = 5): Array<
   const genreCount: Record<string, number> = {};
   artists.forEach((artist) => artist.genres.forEach((genre) => genreCount[genre] = (genreCount[genre] || 0) + 1));
   return Object.entries(genreCount).map(([genre, count]) => ({ genre, count })).sort((a, b) => b.count - a.count).slice(0, topN);
-}
-
-export function getMusicalMood(valence: number): string {
-  if (valence >= 0.6) return "Feliz";
-  if (valence >= 0.4) return "Equilibrado";
-  return "Melancólico";
-}
-
-export function getMostCommonKey(features: AudioFeatures[]): number {
-  if (features.length === 0) return 0;
-  const keyCount: Record<number, number> = {};
-  features.forEach(f => keyCount[f.key] = (keyCount[f.key] || 0) + 1);
-  const sorted = Object.entries(keyCount).sort((a, b) => b[1] - a[1]);
-  return Number(sorted[0]?.[0] || 0);
-}
-
-export function getKeyName(key: number): string {
-  const keys = ["C", "C♯/D♭", "D", "D♯/E♭", "E", "F", "F♯/G♭", "G", "G♯/A♭", "A", "A♯/B♭", "B"];
-  return keys[key] || "Unknown";
 }
 
 export function findCommonGenres(artist1Genres: string[], artist2Genres: string[]): string[] {

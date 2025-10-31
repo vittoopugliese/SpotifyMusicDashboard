@@ -1,5 +1,3 @@
-import { average } from "./utils";
-
 const SPOTIFY_API_BASE = "https://api.spotify.com/v1";
 
 // TYPES
@@ -53,34 +51,6 @@ export type TopTracksResponse = {
   offset: number;
 };
 
-export type AudioFeatures = {
-  id: string;
-  danceability: number;
-  energy: number;
-  valence: number;
-  acousticness: number;
-  instrumentalness: number;
-  speechiness: number;
-  tempo: number;
-  liveness: number;
-  loudness: number;
-  mode: number; // 1 major, 0 minor
-  key: number; // 0-11
-  duration_ms: number;
-};
-
-export type AverageAudioFeatures = {
-  danceability: number;
-  energy: number;
-  valence: number;
-  acousticness: number;
-  instrumentalness: number;
-  speechiness: number;
-  tempo: number;
-  liveness: number;
-  loudness: number;
-};
-
 // User-specific endpoints (requires user access token)
 // This fn is called from hooks and pass here the api route
 export async function spotifyFetchWithUserToken<T>( path: string, userToken: string, init?: RequestInit ): Promise<T> {
@@ -93,32 +63,4 @@ export async function spotifyFetchWithUserToken<T>( path: string, userToken: str
   }
 
   return (await res.json()) as T;
-}
-
-export async function getCurrentUserProfile(userToken: string): Promise<SpotifyUserProfile> {
-  return spotifyFetchWithUserToken<SpotifyUserProfile>(`/me`, userToken);
-}
-
-export async function getUserTopArtists(userToken: string, timeRange: "short_term" | "medium_term" | "long_term" = "medium_term", limit = 50 ): Promise<TopArtistsResponse> {
-  return spotifyFetchWithUserToken<TopArtistsResponse>(`/me/top/artists?time_range=${timeRange}&limit=${limit}`, userToken);
-}
-
-export async function getUserTopTracks( userToken: string, timeRange: "short_term" | "medium_term" | "long_term" = "medium_term", limit = 50 ): Promise<TopTracksResponse> {
-  return spotifyFetchWithUserToken<TopTracksResponse>(`/me/top/tracks?time_range=${timeRange}&limit=${limit}`, userToken);
-}
-
-export function getAverageAudioFeatures(features: AudioFeatures[]): AverageAudioFeatures {
-  if (features.length === 0) return { danceability: 0, energy: 0, valence: 0, acousticness: 0, instrumentalness: 0, speechiness: 0, tempo: 0, liveness: 0, loudness: 0, };
-
-  return {
-    danceability: average(features.map(f => f.danceability)),
-    energy: average(features.map(f => f.energy)),
-    valence: average(features.map(f => f.valence)),
-    acousticness: average(features.map(f => f.acousticness)),
-    instrumentalness: average(features.map(f => f.instrumentalness)),
-    speechiness: average(features.map(f => f.speechiness)),
-    tempo: average(features.map(f => f.tempo)),
-    liveness: average(features.map(f => f.liveness)),
-    loudness: average(features.map(f => f.loudness)),
-  };
 }

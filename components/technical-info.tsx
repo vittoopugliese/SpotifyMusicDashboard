@@ -1,6 +1,7 @@
 "use client";
 
 import { AudioFeatures, SpotifyTrack } from "@/lib/spotify";
+import { formatDuration } from "@/lib/utils";
 import { Music, Clock, Activity, Grid3x3 } from "lucide-react";
 
 type TechnicalInfoProps = {
@@ -15,13 +16,6 @@ function getKeyAndMode(key: number, mode: number): string {
   const pitchClass = PITCH_CLASS[key];
   const modeName = mode === 1 ? "Major" : "Minor";
   return `${pitchClass} ${modeName}`;
-}
-
-function formatDuration(ms: number): string {
-  const totalSeconds = Math.floor(ms / 1000);
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 }
 
 export function TechnicalInfo({ track, audioFeatures }: TechnicalInfoProps) {

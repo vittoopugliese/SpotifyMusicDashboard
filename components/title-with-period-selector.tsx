@@ -26,8 +26,8 @@ export function TitleWithPeriodSelector({ title, subtitle, icon, value, onChange
   return (
     <div className={cn("flex flex-col gap-2 md:flex-row md:items-center justify-between w-full", className)}>
       <IconTitle icon={icon} title={title} subtitle={subtitle} />
-        <div className="flex items-center gap-2">
-          <div className="ml-3 flex gap-1 bg-muted rounded-lg p-1">
+        <div className="flex items-center gap-2 md:flex-row flex-col">
+          <div className="flex gap-1 bg-muted rounded-lg p-1">
             {Object.keys(timeRangeLabels).map((range) => (
               <Button key={range} variant={value === range as PeriodType ? "default" : "ghost"} size="sm" onClick={() => onChange(range as PeriodType)} type="button" >
               {DEFAULT_LABELS[range as PeriodType]}

@@ -1,5 +1,8 @@
 "use client";
 
+import StatCard from "@/components/stat-card";
+import Link from "next/link"
+import TitleWithPeriodSelector from "@/components/title-with-period-selector";
 import { useState, useMemo } from "react";
 import { useTopArtists, useTopTracks } from "@/hooks/use-spotify-data";
 import { average, yearFromDate, getGenreDistribution } from "@/lib/utils";
@@ -8,16 +11,11 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
 import { Download, Music2, BarChart3, TrendingUp, Clock, Palette, Calendar } from "lucide-react";
-import StatCard from "@/components/stat-card";
-import TitleWithPeriodSelector from "@/components/title-with-period-selector";
-import { TrackRow } from "@/components/track-row";
 
 type TimeRange = "short_term" | "medium_term" | "long_term";
 
 export default function StatsPage() {
   const [timeRange, setTimeRange] = useState<TimeRange>("medium_term");
-  const [playingTrackId, setPlayingTrackId] = useState<string | null>(null);
-  const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(null);
 
   const { data: artistsData, loading: artistsLoading } = useTopArtists(timeRange);
   const { data: tracksData, loading: tracksLoading } = useTopTracks(timeRange);
@@ -89,29 +87,6 @@ export default function StatsPage() {
     return getGenreDistribution(artistsData.items, 8);
   }, [artistsData]);
 
-  const handlePlay = (trackId: string) => {
-    const track = tracksData?.items.find((t) => t.id === trackId);
-    if (!track?.preview_url) return;
-
-    if (playingTrackId === trackId && audioElement) {
-      audioElement.pause();
-      setPlayingTrackId(null);
-      setAudioElement(null);
-      return;
-    }
-
-    if (audioElement) audioElement.pause();
-
-    const audio = new Audio(track.preview_url);
-    audio.play();
-    audio.onended = () => {
-      setPlayingTrackId(null);
-      setAudioElement(null);
-    };
-    setPlayingTrackId(trackId);
-    setAudioElement(audio);
-  };
-
   const handleExportStats = () => {
     const stats = {
       timeRange,
@@ -168,54 +143,23 @@ export default function StatsPage() {
         <StatCard icon={Calendar} title="Average Year" value={isLoading || !musicStats ? "—" : `~${musicStats.avgYear}`} loading={isLoading} tooltipDescription="Average year of release of your favorite songs" />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
-          <h2 className="text-xl font-semibold mb-4">Top 50 Tracks</h2>
-          {isLoading ? (
-            <div className="space-y-2">
-              {[...Array(5)].map((_, i) => <Skeleton key={i} className="h-16 w-full" />)}
-            </div>
-          ) : tracksData?.items && tracksData.items.length > 0 ? (
-            <div className="overflow-auto max-h-[600px]">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b text-left text-sm text-muted-foreground">
-                    <th className="p-3">#</th>
-                    <th className="p-3">Track</th>
-                    <th className="p-3">Album</th>
-                    <th className="p-3">Duration</th>
-                    <th className="p-3">Preview</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {tracksData.items.slice(0, 50).map((track, index) => <TrackRow key={track.id} track={track} index={index} onPlay={handlePlay} isPlaying={playingTrackId === track.id} />)}
-                </tbody>
-              </table>
-            </div>
-          ) : <p className="text-muted-foreground text-center py-12">No tracks available</p>
-          }
-        </div>
-
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-4 overflow-auto max-h-[900px]">
         <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
           <h2 className="text-xl font-semibold mb-4">Top Artists</h2>
           {isLoading ? (
-            <div className="grid grid-cols-2 gap-4">
-              {[...Array(6)].map((_, i) => (
-                <Skeleton key={i} className="h-32 w-full" />
-              ))}
-            </div>
+            <div className="grid grid-cols-2 gap-4">{[...Array(6)].map((_, i) => <Skeleton key={i} className="h-32 w-full" />)}</div>
           ) : artistsData?.items && artistsData.items.length > 0 ? (
-            <div className="grid grid-cols-2 gap-4 overflow-auto max-h-[600px]">
-              {artistsData.items.map((artist) => (
-                <div key={artist.id} className="bg-muted/50 rounded-lg p-4 hover:bg-muted transition-colors" >
+            <div className="grid grid-cols-5 gap-4 overflow-auto max-h-[600px]">
+              {artistsData.items.map((artist) => 
+                <Link href={`/artists/${artist.id}`} key={artist.id} className="bg-muted/50 rounded-lg p-4 hover:bg-muted transition-colors flex flex-col items-center justify-center">
                   <Avatar className="h-24 w-24 mx-auto mb-3">
                     <AvatarImage src={artist.images[0]?.url} alt={artist.name} draggable={false} />
                     <AvatarFallback className="text-lg" draggable={false}>{artist.name.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <p className="text-center font-medium truncate">{artist.name}</p>
                   <p className="text-center text-sm text-muted-foreground">{artist.genres[0] || "Unknown"}</p>
-                </div>
-              ))}
+                </Link>
+              )}
             </div>
           ) : (
             <p className="text-muted-foreground text-center py-12">No artists available</p>

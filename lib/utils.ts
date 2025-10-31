@@ -15,6 +15,12 @@ export const getRandomAvatar = () => {
 
 // SPOTIFY UTILS 
 
+export function formatDuration(ms: number): string {
+  const minutes = Math.floor(ms / 60000);
+  const seconds = ((ms % 60000) / 1000).toFixed(0);
+  return `${minutes}:${parseInt(seconds) < 10 ? "0" : ""}${seconds}`;
+}
+
 export function getDominantGenre(artists: SpotifyArtist[]): string {
   const genreCount: Record<string, number> = {};
   artists.forEach((artist) =>     artist.genres.forEach((genre) => genreCount[genre] = (genreCount[genre] || 0) + 1));

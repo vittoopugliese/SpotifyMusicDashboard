@@ -18,9 +18,7 @@ export async function POST(request: NextRequest) {
     // Attempt silent refresh if expired
     if (expiresAt && Date.now() >= expiresAt && request.cookies.get("spotify_refresh_token")?.value) {
       const refreshRes = await fetch(new URL("/api/spotify/refresh", request.url), { method: "POST" });
-      if (refreshRes.ok) {
-        userToken = request.cookies.get("spotify_access_token")?.value || userToken;
-      }
+      if (refreshRes.ok) userToken = request.cookies.get("spotify_access_token")?.value || userToken;
     }
 
     const idsKey = [...new Set(trackIds)].sort().join(",");

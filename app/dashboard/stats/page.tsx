@@ -1,13 +1,13 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { useTopArtists, useTopTracks, useAudioFeatures } from "@/hooks/use-spotify-data";
-import { average, yearFromDate, getMusicalMood } from "@/lib/spotify";
+import { useTopArtists, useTopTracks } from "@/hooks/use-spotify-data";
+import { average, yearFromDate, getGenreDistribution } from "@/lib/spotify";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, LineChart, Line, } from "recharts";
-import { Download, Music2, BarChart3, Activity, Gauge, Heart, Waves } from "lucide-react";
+import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
+import { Download, Music2, BarChart3, TrendingUp, Clock, Palette, Calendar } from "lucide-react";
 import StatCard from "@/components/stat-card";
 import TitleWithPeriodSelector from "@/components/title-with-period-selector";
 import { TrackRow } from "@/components/track-row";
@@ -21,45 +21,53 @@ export default function StatsPage() {
 
   const { data: artistsData, loading: artistsLoading } = useTopArtists(timeRange);
   const { data: tracksData, loading: tracksLoading } = useTopTracks(timeRange);
-  
-  const trackIds = tracksData?.items?.map((t) => t.id) || [];
-  const { data: audioFeaturesData, loading: audioLoading } = useAudioFeatures(trackIds || []);
 
-  const isLoading = artistsLoading || tracksLoading || audioLoading;
+  const isLoading = artistsLoading || tracksLoading;
 
-  // Audio Personality Radar Chart Data
   const radarData = useMemo(() => {
-    if (!audioFeaturesData?.audio_features || audioFeaturesData.audio_features.length === 0) return null;
+    if (!artistsData?.items || !tracksData?.items) return null;
 
-    const features = audioFeaturesData.audio_features.filter((f) => f != null);
-    const avgEnergy = average(features.map((f) => f.energy));
-    const avgDanceability = average(features.map((f) => f.danceability));
-    const avgAcousticness = average(features.map((f) => f.acousticness));
-    const avgValence = average(features.map((f) => f.valence));
-    const avgSpeechiness = average(features.map((f) => f.speechiness));
-
-    const globalAverages = { energy: 0.65, danceability: 0.60, acousticness: 0.25, valence: 0.55, speechiness: 0.08, };
+    // Popularity (0-100 -> 0-1)
+    const avgPopularity = average(tracksData.items.map((t) => t.popularity)) / 100;
+    
+    // Genre Diversity (0-1, based on unique genres count)
+    const allGenres = artistsData.items.flatMap((a) => a.genres);
+    const uniqueGenres = new Set(allGenres);
+    const genreDiversity = Math.min(uniqueGenres.size / 50, 1); // Max diversity at 50 genres
+    
+    // Mainstream Score (average artist popularity)
+    const avgArtistPopularity = average(artistsData.items.map((a) => a.popularity)) / 100;
+    
+    // Recency (how recent are the tracks - 0-1)
+    const currentYear = new Date().getFullYear();
+    const avgYear = average(tracksData.items.map((t) => yearFromDate(t.album.release_date)));
+    const recency = Math.max(0, Math.min(1, (avgYear - 1960) / (currentYear - 1960)));
+    
+    // Artist Loyalty (fewer unique artists = higher loyalty)
+    const uniqueArtists = new Set(tracksData.items.flatMap((t) => t.artists.map((a) => a.id)));
+    const artistLoyalty = Math.max(0, 1 - (uniqueArtists.size / tracksData.items.length));
 
     return [
-      { subject: "Energy", personal: avgEnergy, global: globalAverages.energy, fullMark: 1, },
-      { subject: "Danceability", personal: avgDanceability, global: globalAverages.danceability, fullMark: 1, },
-      { subject: "Acousticness", personal: avgAcousticness, global: globalAverages.acousticness, fullMark: 1, },
-      { subject: "Valence", personal: avgValence, global: globalAverages.valence, fullMark: 1, },
-      { subject: "Speechiness", personal: avgSpeechiness, global: globalAverages.speechiness, fullMark: 1, },
+      { subject: "Popularity", value: avgPopularity, fullMark: 1 },
+      { subject: "Genre Diversity", value: genreDiversity, fullMark: 1 },
+      { subject: "Mainstream", value: avgArtistPopularity, fullMark: 1 },
+      { subject: "Recency", value: recency, fullMark: 1 },
+      { subject: "Artist Loyalty", value: artistLoyalty, fullMark: 1 },
     ];
-  }, [audioFeaturesData]);
+  }, [artistsData, tracksData]);
 
-  const featureSummary = useMemo(() => {
-    if (!audioFeaturesData?.audio_features || audioFeaturesData.audio_features.length === 0) return null;
-    const features = audioFeaturesData.audio_features.filter((f) => f != null);
-    const avgEnergy = average(features.map((f) => f.energy));
-    const avgDanceability = average(features.map((f) => f.danceability));
-    const avgValence = average(features.map((f) => f.valence));
-    const avgTempo = average(features.map((f) => f.tempo));
-    return { avgEnergy, avgDanceability, avgValence, avgTempo, };
-  }, [audioFeaturesData]);
+  const musicStats = useMemo(() => {
+    if (!artistsData?.items || !tracksData?.items) return null;
+    
+    const avgPopularity = Math.round(average(tracksData.items.map((t) => t.popularity)));
+    const avgDuration = Math.round(average(tracksData.items.map((t) => t.duration_ms)) / 1000);
+    const allGenres = artistsData.items.flatMap((a) => a.genres);
+    const uniqueGenres = new Set(allGenres).size;
+    const avgYear = Math.round(average(tracksData.items.map((t) => yearFromDate(t.album.release_date))));
+    
+    return { avgPopularity, avgDuration, uniqueGenres, avgYear };
+  }, [artistsData, tracksData]);
 
-  // Tracks by Decade
   const decadeData = useMemo(() => {
     if (!tracksData?.items || tracksData.items.length === 0) return [];
 
@@ -76,18 +84,10 @@ export default function StatsPage() {
     return Object.entries(decadeCount).map(([decade, count]) => ({ decade, count })).sort((a, b) => a.decade.localeCompare(b.decade));
   }, [tracksData]);
 
-  // Mood Evolution Over Time (simplified - using track position as time proxy)
-  const moodEvolution = useMemo(() => {
-    if (!tracksData?.items || tracksData.items.length === 0 || !audioFeaturesData?.audio_features || audioFeaturesData.audio_features.length === 0) return [];
-
-    const featuresMap = new Map(audioFeaturesData.audio_features.map((f) => [f.id, f]));
-
-    return tracksData.items.slice(0, 20)
-      .map((track, index) => {
-        const feature = featuresMap.get(track.id);
-        return { track: index + 1, mood: feature ? getMusicalMood(feature.valence) : "Balanced", valence: feature?.valence || 0, };
-      }).filter((d) => d.valence > 0);
-  }, [tracksData, audioFeaturesData]);
+  const genreData = useMemo(() => {
+    if (!artistsData?.items || artistsData.items.length === 0) return [];
+    return getGenreDistribution(artistsData.items, 8);
+  }, [artistsData]);
 
   const handlePlay = (trackId: string) => {
     const track = tracksData?.items.find((t) => t.id === trackId);
@@ -100,10 +100,8 @@ export default function StatsPage() {
       return;
     }
 
-    // Stop current playback
     if (audioElement) audioElement.pause();
 
-    // Start new playback
     const audio = new Audio(track.preview_url);
     audio.play();
     audio.onended = () => {
@@ -119,11 +117,12 @@ export default function StatsPage() {
       timeRange,
       totalArtists: artistsData?.total || 0,
       totalTracks: tracksData?.total || 0,
-      audioPersonality: radarData,
+      musicTasteProfile: radarData,
+      musicStats,
       topArtists: artistsData?.items?.slice(0, 10) || [],
       topTracks: tracksData?.items?.slice(0, 10) || [],
       decadeDistribution: decadeData,
-      moodEvolution: moodEvolution,
+      genreDistribution: genreData,
       exportedAt: new Date().toISOString(),
     };
 
@@ -141,9 +140,9 @@ export default function StatsPage() {
       <TitleWithPeriodSelector title="Your Stats" icon={<BarChart3 className="h-8 w-8" />} value={timeRange} onChange={setTimeRange} className="mb-4"
         actions={<Button variant="outline" onClick={handleExportStats} className="gap-2"><Download className="h-4 w-4" />Export Stats</Button>} />
 
-      {/* Audio Personality Radar Chart */}
       <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
-        <h2 className="text-xl font-semibold mb-4 flex items-center gap-2"><Music2 className="h-5 w-5" />Audio Personality</h2>
+        <h2 className="text-xl font-semibold mb-1 flex items-center gap-2"><Music2 className="h-5 w-5" />Music Taste Profile</h2>
+        <p className="text-sm text-muted-foreground mb-4">Analysis of your musical preferences based on your favorite artists and tracks</p>
         {isLoading ? (
           <Skeleton className="h-96 w-full" />
         ) : radarData ? (
@@ -152,10 +151,9 @@ export default function StatsPage() {
               <PolarGrid />
               <PolarAngleAxis dataKey="subject" />
               <PolarRadiusAxis angle={90} domain={[0, 1]} />
-              <Radar name="Your Music" dataKey="personal" stroke="#1DB954" fill="#1DB954" fillOpacity={0.6} />
-              <Radar name="Global Average" dataKey="global" stroke="#8884d8" fill="#8884d8" fillOpacity={0.3} />
+              <Radar name="Your Music" dataKey="value" stroke="#1DB954" fill="#1DB954" fillOpacity={0.6} />
               <Legend />
-              <Tooltip />
+              <Tooltip formatter={(value: number) => `${Math.round(value * 100)}%`} />
             </RadarChart>
           </ResponsiveContainer>
         ) : (
@@ -163,17 +161,14 @@ export default function StatsPage() {
         )}
       </div>
 
-      {/* Audio Feature Summary */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard icon={Activity} title="Energy" value={isLoading || !featureSummary ? "—" : `${Math.round(featureSummary.avgEnergy * 100)}%`} loading={isLoading} />
-        <StatCard icon={Waves} title="Danceability" value={isLoading || !featureSummary ? "—" : `${Math.round(featureSummary.avgDanceability * 100)}%`} loading={isLoading} />
-        <StatCard icon={Heart} title="Valence" value={isLoading || !featureSummary ? "—" : `${Math.round(featureSummary.avgValence * 100)}%`} loading={isLoading} />
-        <StatCard icon={Gauge} title="Avg Tempo" value={isLoading || !featureSummary ? "—" : `${Math.round(featureSummary.avgTempo)} BPM`} loading={isLoading} />
+        <StatCard icon={TrendingUp} title="Popularity" value={isLoading || !musicStats ? "—" : `${musicStats.avgPopularity}/100`} loading={isLoading} />
+        <StatCard icon={Clock} title="Average Duration" value={isLoading || !musicStats ? "—" : `${Math.floor(musicStats.avgDuration / 60)}:${String(musicStats.avgDuration % 60).padStart(2, '0')}`} loading={isLoading} />
+        <StatCard icon={Palette} title="Unique Genres" value={isLoading || !musicStats ? "—" : `${musicStats.uniqueGenres}`} loading={isLoading} />
+        <StatCard icon={Calendar} title="Average Year" value={isLoading || !musicStats ? "—" : `~${musicStats.avgYear}`} loading={isLoading} />
       </div>
 
-      {/* Top Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Top Tracks Table */}
         <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
           <h2 className="text-xl font-semibold mb-4">Top 50 Tracks</h2>
           {isLoading ? (
@@ -203,7 +198,6 @@ export default function StatsPage() {
           }
         </div>
 
-        {/* Top Artists Grid */}
         <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
           <h2 className="text-xl font-semibold mb-4">Top Artists</h2>
           {isLoading ? (
@@ -231,11 +225,9 @@ export default function StatsPage() {
         </div>
       </div>
 
-      {/* Listening Patterns */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Tracks by Decade */}
         <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
-          <h2 className="text-xl font-semibold mb-4">Canciones por Década</h2>
+          <h2 className="text-xl font-semibold mb-4">Tracks by Decade</h2>
           {isLoading ? (
             <Skeleton className="h-64 w-full" />
           ) : decadeData.length > 0 ? (
@@ -250,19 +242,18 @@ export default function StatsPage() {
           ) : <p className="text-muted-foreground text-center py-12">No data available</p>}
         </div>
 
-        {/* Mood Evolution */}
         <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
-          <h2 className="text-xl font-semibold mb-4">Mood Evolution</h2>
+          <h2 className="text-xl font-semibold mb-4">Top Genres</h2>
           {isLoading ? (
             <Skeleton className="h-64 w-full" />
-          ) : moodEvolution.length > 0 ? (
+          ) : genreData.length > 0 ? (
             <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={moodEvolution}>
-                <XAxis dataKey="track" />
-                <YAxis domain={[0, 1]} />
+              <BarChart data={genreData} layout="vertical">
+                <XAxis type="number" />
+                <YAxis type="category" dataKey="genre" width={120} />
                 <Tooltip />
-                <Line type="monotone" dataKey="valence" stroke="#1DB954" strokeWidth={2} name="Valence" />
-              </LineChart>
+                <Bar dataKey="count" fill="#1DB954" radius={[0, 8, 8, 0]} />
+              </BarChart>
             </ResponsiveContainer>
           ) : <p className="text-muted-foreground text-center py-12">No data available</p>}
         </div>

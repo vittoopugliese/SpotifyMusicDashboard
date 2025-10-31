@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import type { TopArtistsResponse, TopTracksResponse, AudioFeatures } from "@/lib/spotify";
+import type { TopArtistsResponse, TopTracksResponse } from "@/lib/spotify";
 
 type TimeRange = "short_term" | "medium_term" | "long_term";
 
@@ -48,44 +48,3 @@ export function useTopTracks(timeRange: TimeRange = "medium_term") {
 
   return { data, loading, error };
 }
-
-export function useAudioFeatures(trackIds: string[]) {
-  const [data, setData] = useState<{ audio_features: AudioFeatures[] } | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  // Build a stable key from IDs to avoid re-fetching on new array references
-  const idsKey = trackIds.length > 0 ? Array.from(new Set(trackIds)).sort().join(",") : "";
-
-  useEffect(() => {
-    if (!idsKey) {
-      setTimeout(() => setData(null), 0);
-      setTimeout(() => setLoading(false), 0);
-      return;
-    }
-
-    setTimeout(() => setLoading(true), 0);
-    const controller = new AbortController();
-    // Reconstruct ids array from key to keep effect dependency stable and avoid churn
-    const ids = idsKey.split(",").filter(Boolean);
-    fetch("/api/spotify/audio-features", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ trackIds: ids }),
-      // Ensure auth cookies are sent in all environments
-      credentials: "include",
-      signal: controller.signal,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.error) throw new Error(data.error);
-        setData(data);
-      })
-      .catch((err) => setError(err instanceof Error ? err : new Error(String(err))))
-      .finally(() => setLoading(false));
-    return () => controller.abort();
-  }, [idsKey]);
-
-  return { data, loading, error };
-}
-

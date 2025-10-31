@@ -51,6 +51,21 @@ export type TopTracksResponse = {
   offset: number;
 };
 
+export type SearchArtistsResponse = {
+  artists: {
+    items: Array<{
+      id: string;
+      name: string;
+      images: Array<{ url: string; height: number; width: number }>;
+      genres: string[];
+      popularity: number;
+      followers: { total: number };
+      external_urls: { spotify: string };
+    }>;
+    total: number;
+  };
+};
+
 // User-specific endpoints (requires user access token)
 // This fn is called from hooks and pass here the api route
 export async function spotifyFetchWithUserToken<T>( path: string, userToken: string, init?: RequestInit ): Promise<T> {

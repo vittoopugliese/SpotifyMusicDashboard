@@ -1,42 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
-import { spotifyFetchWithUserToken } from "@/lib/spotify";
-import { cookies } from "next/headers";
-
-type SearchArtistsResponse = {
-  artists: {
-    items: Array<{
-      id: string;
-      name: string;
-      images: Array<{ url: string; height: number; width: number }>;
-      genres: string[];
-      popularity: number;
-      followers: { total: number };
-      external_urls: { spotify: string };
-    }>;
-    total: number;
-  };
-};
+import { SearchArtistsResponse, spotifyFetchWithUserToken } from "@/lib/spotify";
+import { withAuth, badRequestResponse } from "@/lib/api-helpers";
 
 export async function GET(request: NextRequest) {
-  try {
-    const cookieStore = await cookies();
-    const accessToken = cookieStore.get("spotify_access_token")?.value;
-
-    if (!accessToken) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-
+  return withAuth(request, async (token) => {
     const { searchParams } = new URL(request.url);
     const query = searchParams.get("q");
 
-    if (!query || query.trim() === "") return NextResponse.json({ error: "Query parameter 'q' is required" }, { status: 400 });
+    if (!query || query.trim() === "") return badRequestResponse("Query parameter 'q' is required");
 
     const limit = searchParams.get("limit") || "20";
+    const data = await spotifyFetchWithUserToken<SearchArtistsResponse>(`/search?q=${encodeURIComponent(query)}&type=artist&limit=${limit}`, token);
 
-    const data = await spotifyFetchWithUserToken<SearchArtistsResponse>(`/search?q=${encodeURIComponent(query)}&type=artist&limit=${limit}`, accessToken);
-
-    return NextResponse.json({artists: data.artists.items, total: data.artists.total});
-  } catch (error) {
-    console.error("Error searching artists:", error);
-    return NextResponse.json({ error: "Failed to search artists" }, { status: 500 });
-  }
+    return NextResponse.json({ artists: data.artists.items, total: data.artists.total });
+  });
 }
 

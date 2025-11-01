@@ -53,7 +53,7 @@ export function usePlaylistSearch(options: UsePlaylistSearchOptions = {}): UsePl
         if (!response.ok) throw new Error("Error al buscar playlists");
 
         const data = await response.json();
-        setPlaylists(data.playlists || []);
+        setPlaylists(data.playlists.filter((playlist: SpotifyPlaylist) => !!playlist) || []); // a veces retorna nulls dentro del array por alguna razon (?)
       } catch (err) {
         setError(err instanceof Error ? err.message : "Error desconocido");
         setPlaylists([]);
@@ -65,13 +65,6 @@ export function usePlaylistSearch(options: UsePlaylistSearchOptions = {}): UsePl
     searchPlaylists();
   }, [debouncedQuery, session.authenticated, limit]);
 
-  return {
-    query,
-    setQuery,
-    playlists,
-    loading,
-    error,
-    isSearching: debouncedQuery.trim().length > 0,
-  };
+  return { query, setQuery, playlists, loading, error, isSearching: debouncedQuery.trim().length > 0, };
 }
 

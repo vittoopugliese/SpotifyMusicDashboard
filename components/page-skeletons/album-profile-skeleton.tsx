@@ -15,7 +15,7 @@ export function AlbumProfileSkeleton() {
           <div className="flex flex-col md:flex-row items-center md:items-end gap-6 w-full">
             {/* Album Image Skeleton */}
             <div className="relative">
-              <Skeleton className="h-48 w-48 md:h-64 md:w-64 rounded-lg border-4 border-background shadow-2xl" />
+              <Skeleton className="h-48 w-48 md:h-64 md:w-64 rounded-lg border-2 border-background shadow-2xl" />
             </div>
 
             {/* Album Info Skeleton */}

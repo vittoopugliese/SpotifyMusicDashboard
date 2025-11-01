@@ -1,8 +1,9 @@
 "use client";
 
 import { ArtistComparisonData } from "@/hooks/use-artist-comparison";
-import { Users, TrendingUp, Music } from "lucide-react";
+import { Users, TrendingUp, Music, Table } from "lucide-react";
 import Image from "next/image";
+import IconSubtitle from "./icon-subtitle";
 
 interface ComparisonTableProps {
   comparisonData: ArtistComparisonData[];
@@ -19,11 +20,7 @@ export default function ComparisonTable({ comparisonData, commonGenres, uniqueGe
 
   return (
     <div className="bg-card border rounded-lg overflow-hidden">
-      <div className="p-6 border-b">
-        <h2 className="text-xl font-bold">Comparison Overview</h2>
-        <p className="text-sm text-muted-foreground mt-1">Side-by-side comparison of selected artists</p>
-      </div>
-
+      <IconSubtitle icon={Table} title="Comparison Overview" subtitle="Side-by-side comparison of selected artists" className="p-6 pb-0" small />
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead className="bg-muted/50">
@@ -48,7 +45,6 @@ export default function ComparisonTable({ comparisonData, commonGenres, uniqueGe
             </tr>
           </thead>
           <tbody>
-
             <tr className="border-b hover:bg-muted/30 transition-colors">
               <td className="p-4 font-medium flex items-center gap-2"><TrendingUp className="h-4 w-4 text-muted-foreground" />Popularity</td>
               {comparisonData.map((data) => (
@@ -80,7 +76,6 @@ export default function ComparisonTable({ comparisonData, commonGenres, uniqueGe
                 </td>
               ))}
             </tr>
-
           </tbody>
         </table>
       </div>

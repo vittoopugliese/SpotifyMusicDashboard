@@ -3,6 +3,7 @@
 import { ArtistComparisonData } from "@/hooks/use-artist-comparison";
 import { Trophy, TrendingUp, Music, Users, Hash } from "lucide-react";
 import Image from "next/image";
+import IconSubtitle from "./icon-subtitle";
 
 interface WinnerCardsProps {
   comparisonData: ArtistComparisonData[];
@@ -56,10 +57,7 @@ export default function WinnerCards({ comparisonData }: WinnerCardsProps) {
 
   return (
     <div className="bg-card border rounded-lg p-6">
-      <div className="mb-6">
-        <h2 className="text-xl font-bold">Winner Categories</h2>
-        <p className="text-sm text-muted-foreground mt-1">See who wins in each category</p>
-      </div>
+      <IconSubtitle icon={Trophy} title="Winner Categories" subtitle="See who wins in each category" small />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {categories.map((category) => {

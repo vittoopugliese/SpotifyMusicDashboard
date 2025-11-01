@@ -1,19 +1,22 @@
 "use client";
 
+import { useState } from "react";
+import { useMemo } from "react";
+import { useSpotifySession } from "@/contexts/spotify-session-context";
 import { useTopArtists, useTopTracks } from "@/hooks/use-spotify-data";
 import { average, getDominantGenre, getGenreDistribution, yearFromDate } from "@/lib/utils";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Music2, TrendingUp, Clock, CalendarDays, Users, Disc3, Music, UserIcon } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip } from "recharts";
-import { useMemo } from "react";
-import InsightCard from "@/components/insight-card";
-import { useState } from "react";
-import TitleWithPeriodSelector from "@/components/title-with-period-selector";
+import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
-import { useSpotifySession } from "@/contexts/spotify-session-context";
+import Link from "next/link";
+import InsightCard from "@/components/insight-card";
 import SummaryCard from "@/components/summary-card";
 import ArtistMiniCard from "@/components/artist-mini-card";
+import CustomAvatarComponent from "@/components/custom-avatar-component";
+import TitleWithPeriodSelector from "@/components/title-with-period-selector";
+import IconSubtitle from "@/components/icon-subtitle";
 
 const COLORS = ["#1DB954", "#1ed760", "#19e68c", "#15d4a8", "#12c2c1"];
 
@@ -92,29 +95,30 @@ export default function OverviewPage() {
 
   return (
     <div className="p-6 space-y-6">
-      <TitleWithPeriodSelector title="Dashboard Overview" subtitle="Overview of your Spotify listening activity from a selected period" icon={Music} value={timeRange} onChange={setTimeRange} className="mb-4" />
+      <TitleWithPeriodSelector title="Dashboard Overview" subtitle="Overview of your Spotify listening activity" icon={Music} value={timeRange} onChange={setTimeRange} className="mb-4" />
 
       <div className="bg-card border border-border rounded-lg p-6 shadow-sm flex items-center justify-between">
-        {session.authenticated && session.profile ? <div className="flex items-center gap-4">
-          <Avatar className="h-14 w-14">
-            <AvatarImage src={session.profile.images?.[0]?.url} alt={session.profile.display_name || "User"} />
-            <AvatarFallback className="font-bold">{(session.profile.display_name || "U").charAt(0).toUpperCase()}</AvatarFallback>
-          </Avatar>
-          <div className="flex flex-col">
-            <span className="text-lg font-semibold">{session.profile.display_name || "Spotify User"}</span>
-            {session.profile.email ? (
-              <span className="text-sm text-muted-foreground">{session.profile.email}</span>
-            ) : null}
+        { session.authenticated && session.profile
+          ? <div className="flex items-center justify-between w-full">
+              <div className="flex items-center gap-4">
+                <CustomAvatarComponent image={session.profile.images?.[0]?.url} name={session.profile.display_name || "User"} />
+                <div className="flex flex-col">
+                  <span className="text-lg font-semibold">{session.profile.display_name || "Spotify User"}</span>
+                  {session.profile.email ? <span className="text-sm text-muted-foreground">{session.profile.email}</span> : null}
+                </div>
+              </div>
+              <Button variant="outline" size="sm" asChild>
+                <Link href="/profile">Visit My Profile</Link>
+              </Button>
           </div>
-        </div> : (
-          <div className="flex items-center gap-4">
-            <Spinner className="size-12" />
-            <div className="flex flex-row items-center gap-2">
-              <UserIcon className="h-8 w-8" />
-              <span className="text-lg font-semibold">Loading Spotify User...</span>
+          : <div className="flex items-center gap-4">
+              <Spinner className="size-12" />
+              <div className="flex flex-row items-center gap-2">
+                <UserIcon className="h-8 w-8" />
+                <span className="text-lg font-semibold">Loading Spotify User...</span>
+              </div>
             </div>
-          </div>
-        )}
+        }
       </div>
       <div className="bg-gradient-to-br from-primary/20 via-primary/10 to-background border border-border rounded-xl p-6 shadow-lg">
         <div className="flex items-center gap-3 mb-4">
@@ -140,7 +144,7 @@ export default function OverviewPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
-          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2"><Disc3 className="h-5 w-5" />Genre Distribution (Top 5)</h3>
+          <IconSubtitle icon={Disc3} title="Genre Distribution" subtitle="Distribution of your top 5 favorite genres" small />
           {isLoading ? (
             <Skeleton className="h-64 w-full" />
           ) : genreChartData.length > 0 ? (
@@ -158,7 +162,7 @@ export default function OverviewPage() {
         </div>
 
         <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
-          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2"><TrendingUp className="h-5 w-5" />Recent Musical Activity</h3>
+          <IconSubtitle icon={TrendingUp} title="Recent Musical Activity" subtitle="Activity of your favorite songs" small />
           {isLoading ? (
             <Skeleton className="h-64 w-full" />
           ) : timelineData.length > 0 ? (
@@ -177,7 +181,7 @@ export default function OverviewPage() {
       </div>
 
       <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
-        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2"><Users className="h-5 w-5" />Top 10 Artists</h3>
+        <IconSubtitle icon={Users} title="Top 10 Artists" subtitle="Your top 10 favorite artists" small />
         { isLoading ? <div className="flex gap-4">{[...Array(10)].map((_, i) => <Skeleton key={i} className="h-24 w-24 rounded-full" />)}</div>
           : topArtists.length > 0 ? 
           <div className="flex flex-wrap justify-center" style={{userSelect: "none"}}>

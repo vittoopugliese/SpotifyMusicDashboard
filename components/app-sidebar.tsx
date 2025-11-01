@@ -20,6 +20,16 @@ const data = {
       ],
     },
     {
+      title: "Insights",
+      url: "/insights",
+      icon: PieChart,
+      items: [
+        { title: "Music Trends", url: "/insights/trends", },
+        { title: "Genre Explorer", url: "/insights/genres", },
+        { title: "Fun Facts", url: "/insights/facts", },
+      ],
+    },
+    {
       title: "Playlists",
       url: "/playlists",
       icon: GalleryVerticalEnd,
@@ -55,17 +65,7 @@ const data = {
         { title: "Search Tracks", url: "/tracks/search", },
         { title: "Top Tracks", url: "/tracks/top", },
       ],
-    },
-    {
-      title: "Insights",
-      url: "/insights",
-      icon: PieChart,
-      items: [
-        { title: "Music Trends", url: "/insights/trends", },
-        { title: "Genre Explorer", url: "/insights/genres", },
-        { title: "Fun Facts", url: "/insights/facts", },
-      ],
-    },
+    }
   ]
 }
 

@@ -8,10 +8,10 @@ export function cn(...inputs: ClassValue[]) {
 
 export const timeRangeLabels: Record<"short_term" | "medium_term" | "long_term", string> = { short_term: "Last 4 weeks", medium_term: "6 months", long_term: "All time", };
 
-export const getRandomAvatar = () => {
-  const avatars = [ "https://www.svgrepo.com/show/384670/account-avatar-profile-user.svg", "https://www.svgrepo.com/show/384671/account-avatar-profile-user-14.svg", "https://www.svgrepo.com/show/384672/account-avatar-profile-user-7.svg", "https://www.svgrepo.com/show/384673/account-avatar-profile-user-5.svg", "https://www.svgrepo.com/show/384674/account-avatar-profile-user-11.svg", "https://www.svgrepo.com/show/384675/account-avatar-profile-user-2.svg", "https://www.svgrepo.com/show/384676/account-avatar-profile-user-6.svg", "https://www.svgrepo.com/show/384677/account-avatar-profile-user-12.svg", "https://www.svgrepo.com/show/384678/account-avatar-profile-user-9.svg", "https://www.svgrepo.com/show/384679/account-avatar-profile-user-3.svg", "https://www.svgrepo.com/show/384680/account-avatar-profile-user-4.svg", "https://www.svgrepo.com/show/384681/account-avatar-profile-user-16.svg", "https://www.svgrepo.com/show/384682/account-avatar-profile-user-10.svg", "https://www.svgrepo.com/show/384683/account-avatar-profile-user-8.svg", "https://www.svgrepo.com/show/384684/account-avatar-profile-user-15.svg", "https://www.svgrepo.com/show/384669/account-avatar-profile-user-13.svg", ];
-  return avatars[Math.floor(Math.random() * avatars.length)];
-};
+// export const getRandomAvatar = () => {
+//   const avatars = [ "https://www.svgrepo.com/show/384670/account-avatar-profile-user.svg", "https://www.svgrepo.com/show/384671/account-avatar-profile-user-14.svg", "https://www.svgrepo.com/show/384672/account-avatar-profile-user-7.svg", "https://www.svgrepo.com/show/384673/account-avatar-profile-user-5.svg", "https://www.svgrepo.com/show/384674/account-avatar-profile-user-11.svg", "https://www.svgrepo.com/show/384675/account-avatar-profile-user-2.svg", "https://www.svgrepo.com/show/384676/account-avatar-profile-user-6.svg", "https://www.svgrepo.com/show/384677/account-avatar-profile-user-12.svg", "https://www.svgrepo.com/show/384678/account-avatar-profile-user-9.svg", "https://www.svgrepo.com/show/384679/account-avatar-profile-user-3.svg", "https://www.svgrepo.com/show/384680/account-avatar-profile-user-4.svg", "https://www.svgrepo.com/show/384681/account-avatar-profile-user-16.svg", "https://www.svgrepo.com/show/384682/account-avatar-profile-user-10.svg", "https://www.svgrepo.com/show/384683/account-avatar-profile-user-8.svg", "https://www.svgrepo.com/show/384684/account-avatar-profile-user-15.svg", "https://www.svgrepo.com/show/384669/account-avatar-profile-user-13.svg", ];
+//   return avatars[Math.floor(Math.random() * avatars.length)];
+// };
 
 // SPOTIFY UTILS 
 

@@ -1,7 +1,9 @@
 "use client";
 
 import { ArtistComparisonData } from "@/hooks/use-artist-comparison";
+import { Music2 } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import IconSubtitle from "./icon-subtitle";
 
 interface TopTracksComparisonProps {
   comparisonData: ArtistComparisonData[];
@@ -24,10 +26,7 @@ export default function TopTracksComparison({ comparisonData }: TopTracksCompari
 
   return (
     <div className="bg-card border rounded-lg p-6">
-      <div className="mb-4">
-        <h2 className="text-xl font-bold">Top Tracks Popularity</h2>
-        <p className="text-sm text-muted-foreground mt-1">Compare the popularity of each artist&apos;s top tracks</p>
-      </div>
+      <IconSubtitle icon={Music2} title="Top Tracks Popularity" subtitle="Compare the popularity of each artist&apos;s top tracks" small className="mb-4" />
 
       <ResponsiveContainer width="100%" height={400}>
         <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
@@ -40,8 +39,7 @@ export default function TopTracksComparison({ comparisonData }: TopTracksCompari
         </BarChart>
       </ResponsiveContainer>
 
-      {/* Track Details */}
-      <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {comparisonData.map((data) => (
           <div key={data.artist.id} className="space-y-2">
             <h3 className="font-semibold text-sm">{data.artist.name}&apos;s Top Tracks</h3>

@@ -10,10 +10,7 @@ export async function GET(request: NextRequest) {
 
     if (!query || query.trim() === "") return badRequestResponse("Query parameter 'q' is required");
 
-    const data = await spotifyFetchWithUserToken<SearchPlaylistsResponse>(
-      `/search?q=${encodeURIComponent(query)}&type=playlist&limit=${limit}`,
-      token
-    );
+    const data = await spotifyFetchWithUserToken<SearchPlaylistsResponse>(`/search?q=${encodeURIComponent(query)}&type=playlist&limit=${limit}`, token);
 
     return NextResponse.json({ playlists: data.playlists.items, total: data.playlists.total });
   });

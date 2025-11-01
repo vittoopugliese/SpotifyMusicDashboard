@@ -10,8 +10,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
-import { Download, Music2, BarChart3, TrendingUp, Clock, Palette, Calendar } from "lucide-react";
+import { Download, Music2, BarChart3, TrendingUp, Clock, Palette, Calendar, Users } from "lucide-react";
 import ArtistMiniCard from "@/components/artist-mini-card";
+import IconSubtitle from "@/components/icon-subtitle";
 
 type TimeRange = "short_term" | "medium_term" | "long_term";
 
@@ -114,11 +115,11 @@ export default function StatsPage() {
   return (
     <div className="p-6 space-y-6">
       <TitleWithPeriodSelector title="Your Stats" icon={BarChart3} 
-        value={timeRange} onChange={setTimeRange} className="mb-4" subtitle="Analysis of your musical preferences based on your favorite artists and tracks"
+        value={timeRange} onChange={setTimeRange} className="mb-6" subtitle="Analysis of your musical preferences"
         actions={<Button variant="outline" onClick={handleExportStats} className="gap-2"><Download className="h-4 w-4" />Export Stats</Button>} />
 
       <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
-        <h2 className="text-xl font-semibold mb-1 flex items-center gap-2"><Music2 className="h-5 w-5" />Music Taste Profile</h2>
+        <IconSubtitle icon={Music2} title="Music Taste Profile" subtitle="Your music profile based on your favorite artists and tracks" small />
         {isLoading ? (
           <Skeleton className="h-96 w-full" />
         ) : radarData ? (
@@ -146,7 +147,7 @@ export default function StatsPage() {
 
       <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-4 overflow-auto max-h-[900px]">
         <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
-          <h2 className="text-xl font-semibold mb-4">Top Artists</h2>
+          <IconSubtitle icon={Users} title="Top Artists" small />
           {isLoading ? (
             <div className="grid grid-cols-2 gap-4">{[...Array(6)].map((_, i) => <Skeleton key={i} className="h-32 w-full" />)}</div>
           ) : artistsData?.items && artistsData.items.length > 0 ? (
@@ -161,7 +162,7 @@ export default function StatsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
-          <h2 className="text-xl font-semibold mb-4">Tracks by Decade</h2>
+          <IconSubtitle icon={Calendar} title="Tracks by Decade" subtitle="Distribution of your favorite songs by decade" small />
           {isLoading ? (
             <Skeleton className="h-64 w-full" />
           ) : decadeData.length > 0 ? (
@@ -177,7 +178,7 @@ export default function StatsPage() {
         </div>
 
         <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
-          <h2 className="text-xl font-semibold mb-4">Top Genres</h2>
+          <IconSubtitle icon={Palette} title="Top Genres" subtitle="Your top 8 favorite genres" small />
           {isLoading ? (
             <Skeleton className="h-64 w-full" />
           ) : genreData.length > 0 ? (

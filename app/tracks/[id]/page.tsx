@@ -1,8 +1,5 @@
 "use client";
 
-import Link from "next/link";
-import Image from "next/image";
-import CustomAlertComponent from "@/components/custom-alert-component";
 import { use } from "react";
 import { useTrackProfile } from "@/hooks/use-track-profile";
 import { TrackList } from "@/components/track-list";
@@ -11,6 +8,10 @@ import { Music2, Clock, TrendingUp, ExternalLink, Disc, Calendar, Sparkles } fro
 import { TrackProfileSkeleton } from "@/components/page-skeletons/track-profile-skeleton";
 import { TechnicalInfo } from "@/components/technical-info";
 import { formatDuration, yearFromDate } from "@/lib/utils";
+import Link from "next/link";
+import Image from "next/image";
+import CustomAlertComponent from "@/components/custom-alert-component";
+import CustomAvatarComponent from "@/components/custom-avatar-component";
 
 type TrackPageProps = {
   params: Promise<{ id: string }>;
@@ -21,7 +22,7 @@ export default function TrackProfilePage({ params }: TrackPageProps) {
   const { track, audioFeatures, recommendations, isLoading, error } = useTrackProfile(id);
 
   if (isLoading) return <TrackProfileSkeleton />;
-  if (error || !track) return <CustomAlertComponent variant="destructive" title="Error" description={error || "Failed to load track profile"} />;
+  if (error || !track) return <CustomAlertComponent variant="destructive" title="Error" description={error || "Failed to load track profile"} className="m-6" />;
 
   return (
     <div className="min-h-screen">
@@ -34,11 +35,7 @@ export default function TrackProfilePage({ params }: TrackPageProps) {
         
         <div className="relative h-full max-w-7xl mx-auto px-6 flex items-end pb-8">
           <div className="flex flex-col md:flex-row items-center md:items-end gap-6 w-full">
-            <div className="relative">
-              <div className="h-48 w-48 md:h-64 md:w-64 rounded-lg border-4 border-background shadow-2xl overflow-hidden bg-muted">
-                <Image src={track.album.images[0]?.url || "/placeholder.png"} alt={track.album.name} width={256} height={256} className="object-cover w-full h-full" priority draggable={false} />
-              </div>
-            </div>
+            <CustomAvatarComponent image={track.album.images[0]?.url} name={track.album.name} className="h-48 w-48 md:h-64 md:w-64 border-2 border-background shadow-2xl rounded-lg" />
 
             <div className="flex-1 text-center md:text-left space-y-4">
               <div>
@@ -47,10 +44,8 @@ export default function TrackProfilePage({ params }: TrackPageProps) {
                 <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-4">
                   {track.artists.map((artist, index) => (
                     <div key={artist.id} className="flex items-center gap-2">
-                      <Link href={`/artists/${artist.id}`} className="text-lg md:text-xl text-muted-foreground hover:text-foreground transition-colors">
-                        {artist.name}
-                      </Link>
-                      {index < track.artists.length - 1 && <span className="text-muted-foreground">,</span>}
+                      <Link href={`/artists/${artist.id}`} className="text-lg md:text-xl text-muted-foreground hover:text-foreground transition-colors">{artist.name}</Link>
+                      {index < track.artists.length - 1 && <span className="text-muted-foreground">x</span>}
                     </div>
                   ))}
                 </div>

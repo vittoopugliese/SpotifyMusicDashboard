@@ -135,6 +135,7 @@ export type SpotifyPlaylist = {
     total: number;
   };
   public: boolean;
+  collaborative?: boolean;
   tracks: {
     href: string;
     total: number;

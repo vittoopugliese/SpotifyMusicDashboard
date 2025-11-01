@@ -10,6 +10,8 @@ import { useUserPlaylists } from "@/hooks/use-user-playlists";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Music2 } from "lucide-react";
 import { SpotifyPlaylist } from "@/lib/spotify";
+import SearchBar from "./search-bar";
+import LoadingComponent from "./loading-component";
 
 type PlaylistSelectorProps = {
   onSelectPlaylist: (playlistId: string) => void;
@@ -70,67 +72,34 @@ export default function PlaylistSelector({ onSelectPlaylist, selectedPlaylistNam
             </DialogHeader>
 
             <div className="space-y-4">
-              {/* URL Input */}
-              <div className="space-y-2">
-                <Label htmlFor="playlist-url">Or paste Spotify playlist URL</Label>
-                <div className="flex gap-2">
-                  <Input
-                    id="playlist-url"
-                    placeholder="https://open.spotify.com/playlist/..."
-                    value={urlInput}
-                    onChange={(e) => setUrlInput(e.target.value)}
-                  />
-                  <Button onClick={handleUrlSubmit} disabled={!urlInput}>Analyze</Button>
-                </div>
-              </div>
-
-              {/* Search */}
-              <div className="space-y-2">
-                <Label htmlFor="search">Search your playlists</Label>
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <Input
-                    id="search"
-                    placeholder="Search playlists..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-9"
-                  />
-                </div>
-              </div>
+              {/* URL Input Search Bar */}
+              <SearchBar value={urlInput} onChange={setUrlInput} placeholder="https://open.spotify.com/playlist/..." 
+                labelTitle="Paste Spotify playlist URL" buttonText="Analyze" buttonAction={handleUrlSubmit} />
+              {/* Playlist Search Bar, local search */} 
+              <SearchBar value={searchTerm} onChange={setSearchTerm} placeholder="Search playlists..." 
+                labelTitle="Or search in your playlists" />
 
               {/* Playlist List */}
-              <div className="space-y-2 max-h-[300px] overflow-y-auto">
-                {isLoading ? (
-                  <div className="flex items-center justify-center py-8">
-                    <Loader2 className="w-6 h-6 animate-spin text-primary" />
-                  </div>
-                ) : filteredPlaylists.length > 0 ? (
-                  filteredPlaylists.map((playlist) => (
-                    <button
-                      key={playlist.id}
-                      onClick={() => handleSelectPlaylist(playlist)}
-                      className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors text-left"
-                    >
-                      <Avatar className="w-14 h-14 rounded-md">
-                        <AvatarImage src={playlist.images?.[0]?.url} alt={playlist.name} />
-                        <AvatarFallback className="rounded-md">
-                          <Music2 className="w-6 h-6" />
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-medium truncate">{playlist.name}</p>
-                        <p className="text-sm text-muted-foreground">
-                          {playlist.tracks?.total || 0} tracks
-                        </p>
-                      </div>
-                    </button>
-                  ))
-                ) : (
-                  <p className="text-center text-muted-foreground py-8">
-                    {searchTerm ? "No playlists found" : "No playlists available"}
-                  </p>
-                )}
+              <div className="space-y-2 max-h-[200px] overflow-y-auto">
+                {isLoading 
+                  ? <LoadingComponent message="Loading playlists..." /> 
+                  : filteredPlaylists.length > 0 ? (
+                    filteredPlaylists.map((playlist) => (
+                      <button key={playlist.id} onClick={() => handleSelectPlaylist(playlist)}
+                        className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors text-left cursor-pointer">
+                        <Avatar className="w-14 h-14 rounded-md">
+                          <AvatarImage src={playlist.images?.[0]?.url} alt={playlist.name} />
+                          <AvatarFallback className="rounded-md">
+                            <Music2 className="w-6 h-6" />
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium truncate">{playlist.name}</p>
+                          <p className="text-sm text-muted-foreground">{playlist.tracks?.total || 0} tracks</p>
+                        </div>
+                      </button>
+                    ))
+                ) : <p className="text-center text-muted-foreground py-8">{searchTerm ? "No playlists found" : "No playlists available"}</p> }
               </div>
             </div>
           </DialogContent>
@@ -139,4 +108,3 @@ export default function PlaylistSelector({ onSelectPlaylist, selectedPlaylistNam
     </div>
   );
 }
-

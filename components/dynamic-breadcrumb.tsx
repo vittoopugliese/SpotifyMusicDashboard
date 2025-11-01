@@ -29,10 +29,10 @@ const ROUTE_NAMES: Record<string, string> = {
 } as const
 
 const ID_LABELS: Record<string, string> = { 
-  tracks: "CurrentTrack", 
-  artists: "Current Artist", 
-  albums: "Current Album", 
-  playlists: "Your Playlist",
+  tracks: "Track Profile", 
+  artists: "Artist Profile", 
+  albums: "Album Profile", 
+  playlists: "Playlist Profile",
 } as const
 
 const REDIRECT_MAP: Record<string, string> = {

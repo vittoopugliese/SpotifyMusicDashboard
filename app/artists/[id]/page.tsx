@@ -9,6 +9,7 @@ import { ArtistProfileSkeleton } from "@/components/page-skeletons/artist-profil
 import ProfileHero, { ProfileType } from "@/components/profile-hero";
 import CustomAlertComponent from "@/components/custom-alert-component";
 import IconSubtitle from "@/components/icon-subtitle";
+import { AlbumList } from "@/components/album-list";
 
 type ArtistPageProps = {
   params: Promise<{ id: string }>;
@@ -36,9 +37,7 @@ export default function ArtistProfilePage({ params }: ArtistPageProps) {
         {albums.length > 0 && (
           <section>
             <IconSubtitle icon={Disc} title="Albums & Singles" subtitle="Click one to view more information" />
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-              {albums.map(album => <AlbumCard key={album.id} album={album} />)}
-            </div>
+            <AlbumList albums={albums} />
           </section>
         )}
       </div>

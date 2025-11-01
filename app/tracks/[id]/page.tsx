@@ -16,7 +16,7 @@ type TrackPageProps = {
 export default function TrackProfilePage({ params }: TrackPageProps) {
   const { id } = use(params);
   const { track, audioFeatures, recommendations, isLoading, error } = useTrackProfile(id);
-
+  console.log(recommendations)
   if (isLoading) return <TrackProfileSkeleton />;
   if (error || !track) return <CustomAlertComponent variant="destructive" title="Error" description={error || "Failed to load track profile"} className="m-6" />;
 

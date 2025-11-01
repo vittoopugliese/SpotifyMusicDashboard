@@ -7,7 +7,7 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail, } f
 import { TeamSwitcher } from "./team-switcher"
 
 const data = {
-  teams: [ { name: "Spori | Music Dashboard", logo: AudioWaveform, plan: "Music Analytics", }, ],
+  teams: [ { name: "Spori | Music Dashboard", logo: AudioWaveform, plan: "Music Analytics", url: "/" }, ],
   navMain: [
     {
       title: "Dashboard",

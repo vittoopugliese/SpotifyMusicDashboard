@@ -111,7 +111,7 @@ export function DynamicBreadcrumb() {
             <BreadcrumbPage>Spori</BreadcrumbPage>
           ) : (
             <BreadcrumbLink asChild>
-              <Link href={SPORI_HOME}>Spori</Link>
+              <Link href={"/"}>Spori</Link>
             </BreadcrumbLink>
           )}
         </BreadcrumbItem>

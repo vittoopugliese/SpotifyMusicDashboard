@@ -1,12 +1,11 @@
 "use client";
 
-import Image from "next/image";
 import { useUserProfile } from "@/hooks/use-user-profile";
 import { ProfileSkeleton } from "@/components/page-skeletons/profile-skeleton";
-import CustomAlertComponent from "@/components/custom-alert-component";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { User, ExternalLink, Users, MapPin, Music2, TrendingUp } from "lucide-react";
+import Image from "next/image";
+import CustomAlertComponent from "@/components/custom-alert-component";
 import ViewHint from "@/components/view-hint";
 import StatCard from "@/components/stat-card";
 import CustomAvatarComponent from "@/components/custom-avatar-component";
@@ -20,7 +19,6 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
       <div className="relative h-[400px] md:h-[500px] bg-gradient-to-b from-primary/20 to-background overflow-hidden">
         {profile.images?.[0]?.url && (
           <div className="absolute inset-0 opacity-30">

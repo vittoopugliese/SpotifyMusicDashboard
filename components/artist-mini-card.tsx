@@ -11,18 +11,16 @@ export default function ArtistMiniCard({artist, simplified = false}: {artist: Sp
         <AvatarFallback className="text-lg">{artist.name.charAt(0)}</AvatarFallback>
       </Avatar>
       <p className="text-center font-medium truncate w-full">{artist.name}</p>
-      <p className="text-center text-sm text-muted-foreground">{artist.genres[0] || "Unknown"}</p>
+      <p className="text-center text-sm text-muted-foreground">{artist.genres[0] || "music"}</p>
     </Link>
   );
-
-  if (simplified) return content;
 
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>{content}</TooltipTrigger>
         <TooltipContent>
-          <p>Go to {artist.name}&apos;s profile</p>
+          <p>Visit {artist.name}&apos;s profile</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

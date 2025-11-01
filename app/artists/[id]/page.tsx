@@ -64,11 +64,7 @@ export default function ArtistProfilePage({ params }: ArtistPageProps) {
 
               {artist.genres && artist.genres.length > 0 && (
                 <div className="flex flex-wrap gap-2 justify-center md:justify-start">
-                  {artist.genres.slice(0, 5).map((genre) => (
-                    <Badge key={genre} variant="secondary" className="text-xs">
-                      {genre}
-                    </Badge>
-                  ))}
+                  {artist.genres.slice(0, 5).map((genre) => <Badge key={genre} variant="secondary" className="text-xs">{genre}</Badge>)}
                 </div>
               )}
 

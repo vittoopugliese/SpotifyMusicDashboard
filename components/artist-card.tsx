@@ -2,6 +2,7 @@ import { Music2, Users } from "lucide-react";
 import { SpotifyArtist } from "@/lib/spotify";
 import Image from "next/image";
 import Link from "next/link";
+import { Badge } from "./ui/badge";
 
 const formatFollowers = (count: number): string => {
   if (count >= 1000000) {
@@ -43,9 +44,9 @@ export default function ArtistCard({artist}: {artist: SpotifyArtist}) {
         </div>
 
           <div className="flex flex-wrap gap-1">
-            { artist.genres.length > 0 
-                ? artist.genres.slice(0, 2).map((genre, idx) => <span key={idx} className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">{genre}</span>)
-                : <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">No genres found</span>
+            { artist.genres.length > 0  
+                ? artist.genres.slice(0, 2).map((genre, idx) => <Badge key={idx} variant="genre" className="text-xs">{genre}</Badge>)
+                : <Badge variant="genre" className="text-xs">music</Badge>
             }
             {artist.genres.length > 2 && <span className="text-xs text-muted-foreground px-2 py-1">+{artist.genres.length - 3}</span>}
           </div>

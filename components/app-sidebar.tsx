@@ -20,6 +20,16 @@ const data = {
       ],
     },
     {
+      title: "Playlists",
+      url: "/playlists",
+      icon: GalleryVerticalEnd,
+      items: [
+        { title: "Your Playlists", url: "/playlists/yours", },
+        { title: "Search Playlists", url: "/playlists/search", },
+        { title: "Playlist DNA", url: "/playlists/dna", },
+      ],
+    },
+    {
       title: "Artists",
       url: "/artists",
       icon: Bot,
@@ -44,16 +54,6 @@ const data = {
       items: [
         { title: "Search Tracks", url: "/tracks/search", },
         { title: "Top Tracks", url: "/tracks/top", },
-      ],
-    },
-    {
-      title: "Playlists",
-      url: "/playlists",
-      icon: GalleryVerticalEnd,
-      items: [
-        { title: "Your Playlists", url: "/playlists/yours", },
-        { title: "Search Playlists", url: "/playlists/search", },
-        { title: "Playlist DNA", url: "/playlists/dna", },
       ],
     },
     {

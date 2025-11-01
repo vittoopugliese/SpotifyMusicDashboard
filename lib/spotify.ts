@@ -9,6 +9,8 @@ export type SpotifyUserProfile = {
   images?: Array<{url: string; height?: number; width?: number}>;
   country?: string;
   followers?: {total?: number};
+  external_urls?: {spotify: string};
+  product: string;
 };
 
 export type SpotifyArtist = {

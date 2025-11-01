@@ -1,11 +1,10 @@
 "use client";
 
 import { use } from "react";
-import { Badge } from "@/components/ui/badge";
 import { useArtistProfile } from "@/hooks/use-artist-profile";
 import { TrackList } from "@/components/track-list";
 import { AlbumCard } from "@/components/album-card";
-import { Music2, Users, TrendingUp, Disc } from "lucide-react";
+import { Music2, Disc } from "lucide-react";
 import { ArtistProfileSkeleton } from "@/components/page-skeletons/artist-profile-skeleton";
 import CustomAlertComponent from "@/components/custom-alert-component";
 import IconSubtitle from "@/components/icon-subtitle";
@@ -24,35 +23,7 @@ export default function ArtistProfilePage({ params }: ArtistPageProps) {
 
   return (
     <div className="min-h-screen">
-      <ProfileHero
-        backgroundImage={artist.images[0]?.url}
-        avatarImage={artist.images[0]?.url}
-        avatarName={artist.name}
-        profileType="Artist"
-        title={artist.name}
-        spotifyUrl={artist.external_urls.spotify}
-        roundedAvatar={true}
-        metadata={
-          <>
-            <div className="flex items-center gap-2">
-              <Users className="h-4 w-4" />
-              <span className="font-semibold">
-                {artist.followers?.total.toLocaleString()} followers
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <TrendingUp className="h-4 w-4" />
-              <span className="font-semibold">Popularity: {artist.popularity}/100</span>
-            </div>
-          </>
-        }
-      >
-        {artist.genres && artist.genres.length > 0 && (
-          <div className="flex flex-wrap gap-2 justify-center md:justify-start mb-4">
-            {artist.genres.slice(0, 5).map((genre) => <Badge key={genre} variant="secondary" className="text-xs">{genre}</Badge>)}
-          </div>
-        )}
-      </ProfileHero>
+      <ProfileHero type="artist" data={artist} />
 
       <div className="max-w-7xl mx-auto px-6 py-12 space-y-12">
         {topTracks.length > 0 && (

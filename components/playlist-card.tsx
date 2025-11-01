@@ -1,6 +1,7 @@
 import { Music2, Users, Lock, Globe } from "lucide-react";
 import { SpotifyPlaylist } from "@/lib/spotify";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function PlaylistCard({ playlist }: { playlist: SpotifyPlaylist }) {
   return (
@@ -8,8 +9,7 @@ export default function PlaylistCard({ playlist }: { playlist: SpotifyPlaylist }
       <div className="group bg-card border rounded-lg overflow-hidden hover:shadow-lg transition-all duration-200 hover:scale-[1.02] cursor-pointer hover:bg-muted/50">
         <div className="relative aspect-square bg-muted">
           {playlist.images.length > 0 ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={playlist.images[1]?.url || playlist.images[0]?.url || ""} alt={playlist.name} draggable={false}
+            <Image src={playlist.images[1]?.url || playlist.images[0]?.url || ""} alt={playlist.name} draggable={false}
               className="object-cover group-hover:scale-105 transition-transform duration-200 w-full h-full"  />
           ) : (
             <div className="w-full h-full flex items-center justify-center">

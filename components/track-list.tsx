@@ -1,9 +1,8 @@
 "use client";
 
-import { Music2, ExternalLink, Clock, TrendingUp } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import Image from "next/image";
+import { Music2, Clock, TrendingUp } from "lucide-react";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { SpotifyTrack } from "@/lib/spotify";
 import { formatDuration } from "@/lib/utils";
 import { useRouter } from "next/navigation";

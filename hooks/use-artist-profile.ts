@@ -15,7 +15,6 @@ type ArtistProfileData = {
   artist: SpotifyArtist | null;
   topTracks: SpotifyTrack[];
   albums: Album[];
-  relatedArtists: SpotifyArtist[];
   isLoading: boolean;
   error: string | null;
 };
@@ -24,7 +23,6 @@ export function useArtistProfile(artistId: string): ArtistProfileData {
   const [artist, setArtist] = useState<SpotifyArtist | null>(null);
   const [topTracks, setTopTracks] = useState<SpotifyTrack[]>([]);
   const [albums, setAlbums] = useState<Album[]>([]);
-  const [relatedArtists, setRelatedArtists] = useState<SpotifyArtist[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -54,12 +52,6 @@ export function useArtistProfile(artistId: string): ArtistProfileData {
           setAlbums(albumsData.items || []);
         }
 
-        // Fetch related artists
-        const relatedRes = await fetch(`/api/spotify/artist/${artistId}/related-artists`);
-        if (relatedRes.ok) {
-          const relatedData = await relatedRes.json();
-          setRelatedArtists(relatedData.artists?.slice(0, 10) || []);
-        }
       } catch (err) {
         setError(err instanceof Error ? err.message : "An error occurred");
       } finally {
@@ -72,6 +64,6 @@ export function useArtistProfile(artistId: string): ArtistProfileData {
     }
   }, [artistId]);
 
-  return { artist, topTracks, albums, relatedArtists, isLoading, error };
+  return { artist, topTracks, albums, isLoading, error };
 }
 

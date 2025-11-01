@@ -33,15 +33,11 @@ export function usePlaylistProfile(playlistId: string): PlaylistProfileData {
         let hasMore = true;
 
         while (hasMore) {
-          const tracksRes = await fetch(
-            `/api/spotify/playlist/${playlistId}/tracks?limit=${limit}&offset=${offset}`
-          );
+          const tracksRes = await fetch(`/api/spotify/playlist/${playlistId}/tracks?limit=${limit}&offset=${offset}`);
           
           if (tracksRes.ok) {
             const tracksData: PlaylistTracksResponse = await tracksRes.json();
-            const validTracks = tracksData.items
-              .map((item) => item.track)
-              .filter((track): track is SpotifyTrack => track !== null);
+            const validTracks = tracksData.items.map((item) => item.track).filter((track): track is SpotifyTrack => track !== null);
             
             allTracks.push(...validTracks);
             

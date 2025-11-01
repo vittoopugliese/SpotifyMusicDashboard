@@ -3,21 +3,21 @@
 import { useState, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import { Dna } from "lucide-react";
+import { usePlaylistProfile } from "@/hooks/use-playlist-profile";
+import { average, yearFromDate } from "@/lib/utils";
 import IconTitle from "@/components/icon-title";
-import PlaylistSelector from "@/components/playlist-dna/playlist-selector";
-import PlaylistOverviewCard from "@/components/playlist-dna/playlist-overview-card";
-import PlaylistPersonalityCard from "@/components/playlist-dna/playlist-personality-card";
-import PopularityAnalysis from "@/components/playlist-dna/popularity-analysis";
-import TemporalAnalysis from "@/components/playlist-dna/temporal-analysis";
-import ArtistComposition from "@/components/playlist-dna/artist-composition";
-import OutliersExtremes from "@/components/playlist-dna/outliers-extremes";
-import DurationAnalysis from "@/components/playlist-dna/duration-analysis";
-import ExportAnalysis from "@/components/playlist-dna/export-analysis";
+import PlaylistSelector from "@/components/playlist-selector";
+import PlaylistOverviewCard from "@/components/playlist-overview-card";
+import PlaylistPersonalityCard from "@/components/playlist-personality-card";
+import PopularityAnalysis from "@/components/popularity-analysis";
+import TemporalAnalysis from "@/components/temporal-analysis";
+import ArtistComposition from "@/components/artist-composition";
+import OutliersExtremes from "@/components/outliers-extremes";
+import DurationAnalysis from "@/components/duration-analysis";
+import ExportAnalysis from "@/components/export-analysis";
 import LoadingComponent from "@/components/loading-component";
 import CustomAlertComponent from "@/components/custom-alert-component";
 import ViewHint from "@/components/view-hint";
-import { usePlaylistProfile } from "@/hooks/use-playlist-profile";
-import { average, yearFromDate } from "@/lib/utils";
 
 export default function PlaylistsDnaPage() {
   const searchParams = useSearchParams();

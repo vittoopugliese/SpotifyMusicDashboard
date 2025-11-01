@@ -1,8 +1,8 @@
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import { Users } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import IconSubtitle from "@/components/icon-subtitle";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/avatar";
-import { Badge } from "@/components/badge";
 
 type ArtistData = {
   id: string;
@@ -51,7 +51,7 @@ export default function ArtistComposition({ topArtists, totalArtists, artistDive
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                // label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
                 outerRadius={80}
                 fill="#8884d8"
                 dataKey="value"

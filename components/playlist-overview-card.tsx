@@ -1,6 +1,6 @@
 import { SpotifyPlaylist } from "@/lib/spotify";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/avatar";
-import { Badge } from "@/components/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Music2, Clock, Calendar, User } from "lucide-react";
 import { formatDuration } from "@/lib/utils";
 

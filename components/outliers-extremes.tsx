@@ -1,7 +1,7 @@
 import { SpotifyTrack } from "@/lib/spotify";
 import { formatDuration } from "@/lib/utils";
 import { Clock, TrendingUp, TrendingDown, Music2 } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import IconSubtitle from "@/components/icon-subtitle";
 
 type OutliersExtremesProps = {

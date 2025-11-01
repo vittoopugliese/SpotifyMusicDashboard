@@ -1,4 +1,3 @@
-import { Card } from "@/components/ui/card";
 import { Sparkles } from "lucide-react";
 
 type PlaylistPersonalityCardProps = {

@@ -2,19 +2,12 @@
 
 import { useState } from "react";
 import { Search, Loader2 } from "lucide-react";
-import { Button } from "@/components/button";
-import { Input } from "@/components/input";
-import { Label } from "@/components/label";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, } from "@/components/ui/dialog";
 import { useUserPlaylists } from "@/hooks/use-user-playlists";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Music2 } from "lucide-react";
 import { SpotifyPlaylist } from "@/lib/spotify";
 

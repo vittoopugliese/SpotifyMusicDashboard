@@ -28,6 +28,7 @@ export type SpotifyAlbum = {
   release_date: string;
   total_tracks: number;
   album_type: string;
+  artists: Array<{id: string; name: string}>;
   external_urls: {spotify: string};
 };
 
@@ -55,6 +56,13 @@ export type TopArtistsResponse = {
 };
 
 export type TopTracksResponse = {
+  items: SpotifyTrack[];
+  total: number;
+  limit: number;
+  offset: number;
+};
+
+export type AlbumTracksResponse = {
   items: SpotifyTrack[];
   total: number;
   limit: number;
@@ -156,6 +164,22 @@ export type SearchPlaylistsResponse = {
     limit: number;
     offset: number;
   };
+};
+
+export type SearchAlbumsResponse = {
+  albums: {
+    items: SpotifyAlbum[];
+    total: number;
+    limit: number;
+    offset: number;
+  };
+};
+
+export type TopAlbumsResponse = {
+  items: SpotifyAlbum[];
+  total: number;
+  limit: number;
+  offset: number;
 };
 
 // User-specific endpoints (requires user access token)

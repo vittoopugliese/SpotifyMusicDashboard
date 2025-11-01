@@ -5,9 +5,9 @@ import { TrackList } from "@/components/track-list";
 import { usePlaylistProfile } from "@/hooks/use-playlist-profile";
 import { PlaylistProfileSkeleton } from "@/components/page-skeletons/playlist-profile-skeleton";
 import { Music2 } from "lucide-react";
+import ProfileHero, { ProfileType } from "@/components/profile-hero";
 import IconSubtitle from "@/components/icon-subtitle";
 import CustomAlertComponent from "@/components/custom-alert-component";
-import ProfileHero from "@/components/profile-hero";
 
 type PlaylistPageProps = {
   params: Promise<{ id: string }>;
@@ -22,9 +22,9 @@ export default function PlaylistProfilePage({ params }: PlaylistPageProps) {
   
   return (
     <div className="min-h-screen">
-      <ProfileHero type="playlist" data={playlist} tracksCount={tracks.length} />
+      <ProfileHero type={ProfileType.Playlist} data={playlist} tracksCount={tracks.length} />
 
-      <div className="max-w-7xl mx-auto px-6 py-12 space-y-12">
+      <div className="max-w-7xl mx-auto px-6 py-8 space-y-12">
         {tracks.length > 0 && (
           <section>
             <IconSubtitle icon={Music2} title="Playlist Tracks" subtitle={`Click any of the ${tracks.length} tracks to view more information`} />

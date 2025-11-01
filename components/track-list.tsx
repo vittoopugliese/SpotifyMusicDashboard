@@ -1,7 +1,6 @@
 "use client";
 
-import Image from "next/image";
-import { Music2, Clock, TrendingUp } from "lucide-react";
+import { Music2 } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { SpotifyTrack } from "@/lib/spotify";
 import { formatDuration } from "@/lib/utils";
@@ -10,9 +9,11 @@ import TrackCard from "./track-card";
 
 type TrackListProps = {
   tracks: SpotifyTrack[];
+  albumImage?: string;
+  albumName?: string;
 };
 
-export function TrackList({ tracks }: TrackListProps) {
+export function TrackList({ tracks, albumImage, albumName }: TrackListProps) {
   const router = useRouter();
   return (
     <>
@@ -36,7 +37,7 @@ export function TrackList({ tracks }: TrackListProps) {
                   <td className="p-3">
                     <div className="flex items-center gap-3 min-w-0">
                       <Avatar className="h-12 w-12 rounded flex-shrink-0">
-                        <AvatarImage src={track.album.images[0]?.url} alt={track.name} draggable={false} />
+                        <AvatarImage src={albumImage || track.album?.images[0]?.url} alt={track.name} draggable={false} />
                         <AvatarFallback><Music2 className="h-6 w-6" /></AvatarFallback>
                       </Avatar>
                       <div className="min-w-0 flex-1">
@@ -48,7 +49,7 @@ export function TrackList({ tracks }: TrackListProps) {
                     </div>
                   </td>
                   <td className="p-3 text-muted-foreground">
-                    <p className="truncate" title={track.album.name}>{track.album.name}</p>
+                    <p className="truncate" title={albumName || track.album?.name}>{albumName || track.album?.name}</p>
                   </td>
                   <td className="p-3 text-muted-foreground text-center text-sm">
                     {formatDuration(track.duration_ms)}
@@ -65,7 +66,7 @@ export function TrackList({ tracks }: TrackListProps) {
 
       {/* Mobile/Tablet View - Cards */}
       <div className="xl:hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {tracks.map((track) => <TrackCard key={track.id} track={track} /> )}
+        {tracks.map((track) => <TrackCard key={track.id} track={track} albumImage={albumImage} albumName={albumName} /> )}
       </div>
     </>
   );

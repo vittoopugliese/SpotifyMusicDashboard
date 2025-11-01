@@ -1,12 +1,13 @@
 "use client";
 
-import CustomAlertComponent from "@/components/custom-alert-component";
 import { use } from "react";
 import { useAlbumProfile } from "@/hooks/use-album-profile";
 import { Music2 } from "lucide-react";
 import { AlbumProfileSkeleton } from "@/components/page-skeletons/album-profile-skeleton";
+import { TrackList } from "@/components/track-list";
+import ProfileHero, { ProfileType } from "@/components/profile-hero";
+import CustomAlertComponent from "@/components/custom-alert-component";
 import IconSubtitle from "@/components/icon-subtitle";
-import ProfileHero from "@/components/profile-hero";
 
 type AlbumPageProps = {
   params: Promise<{ id: string }>;
@@ -23,13 +24,13 @@ export default function AlbumProfilePage({ params }: AlbumPageProps) {
 
   return (
     <div className="min-h-screen">
-      <ProfileHero type="album" data={album} totalDuration={totalDuration} />
+      <ProfileHero type={ProfileType.Album} data={album} totalDuration={totalDuration} />
 
       <div className="max-w-7xl mx-auto px-6 py-12 space-y-12">
         {tracks.length > 0 && (
           <section>
             <IconSubtitle icon={Music2} title="Album Tracks" subtitle="Click one to view more information" />
-            {/* <TrackList tracks={tracks} /> */}
+            <TrackList tracks={tracks} albumImage={album.images[0]?.url} albumName={album.name} />
           </section>
         )}
       </div>

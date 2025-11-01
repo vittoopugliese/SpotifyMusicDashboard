@@ -7,7 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import CustomAvatarComponent from "@/components/custom-avatar-component";
 
-enum ProfileType { Album = "album", Track = "track", Artist = "artist", Playlist = "playlist", }
+export enum ProfileType { Album = "album", Track = "track", Artist = "artist", Playlist = "playlist", }
 type AlbumHeroProps = { type: ProfileType.Album; data: SpotifyAlbum; totalDuration?: number; };
 type TrackHeroProps = { type: ProfileType.Track; data: SpotifyTrack; };
 type ArtistHeroProps = { type: ProfileType.Artist; data: SpotifyArtist; };

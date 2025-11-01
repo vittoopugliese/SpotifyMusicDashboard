@@ -6,8 +6,8 @@ import { TrackList } from "@/components/track-list";
 import { Music2, Sparkles } from "lucide-react";
 import { TrackProfileSkeleton } from "@/components/page-skeletons/track-profile-skeleton";
 import { TechnicalInfo } from "@/components/technical-info";
+import ProfileHero, { ProfileType } from "@/components/profile-hero";
 import CustomAlertComponent from "@/components/custom-alert-component";
-import ProfileHero from "@/components/profile-hero";
 
 type TrackPageProps = {
   params: Promise<{ id: string }>;
@@ -22,7 +22,7 @@ export default function TrackProfilePage({ params }: TrackPageProps) {
 
   return (
     <div className="min-h-screen">
-      <ProfileHero type="track" data={track} />
+      <ProfileHero type={ProfileType.Track} data={track} />
 
       <div className="max-w-7xl mx-auto px-6 py-12 space-y-12">
         {audioFeatures && (

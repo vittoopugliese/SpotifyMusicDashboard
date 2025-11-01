@@ -10,7 +10,7 @@ export default function PlaylistCard({ playlist }: { playlist: SpotifyPlaylist }
         <div className="relative aspect-square bg-muted">
           {playlist.images.length > 0 ? (
             <Image src={playlist.images[1]?.url || playlist.images[0]?.url || ""} alt={playlist.name} draggable={false}
-              className="object-cover group-hover:scale-105 transition-transform duration-200 w-full h-full"  />
+              className="object-cover transition-transform duration-200 w-full h-full" width={500} height={500} sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 300px" />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
               <Music2 className="h-16 w-16 text-muted-foreground" />

@@ -1,4 +1,4 @@
-# 🎵 Spotify Music Dashboard
+# 🎵 Spori | Music Dashboard
 
 [Add a GIF/screenshot of the app in action]
 

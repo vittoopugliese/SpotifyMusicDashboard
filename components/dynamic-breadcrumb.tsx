@@ -45,7 +45,7 @@ export function DynamicBreadcrumb() {
       <BreadcrumbList>
         <BreadcrumbItem className="hidden md:block">
           <BreadcrumbLink asChild>
-            <Link href="/dashboard/overview">Spotify Music Dashboard</Link>
+            <Link href="/dashboard/overview">Spori | Music Dashboard</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
         

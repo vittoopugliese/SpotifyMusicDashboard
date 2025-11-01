@@ -13,6 +13,7 @@ import TitleWithPeriodSelector from "@/components/title-with-period-selector";
 import { Spinner } from "@/components/ui/spinner";
 import { useSpotifySession } from "@/contexts/spotify-session-context";
 import SummaryCard from "@/components/summary-card";
+import ArtistMiniCard from "@/components/artist-mini-card";
 
 const COLORS = ["#1DB954", "#1ed760", "#19e68c", "#15d4a8", "#12c2c1"];
 
@@ -177,27 +178,13 @@ export default function OverviewPage() {
 
       <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
         <h3 className="text-lg font-semibold mb-4 flex items-center gap-2"><Users className="h-5 w-5" />Top 10 Artists</h3>
-        {isLoading ? (
-          <div className="flex gap-4">
-            <Skeleton className="h-20 w-20 rounded-full" />
-            <Skeleton className="h-20 w-20 rounded-full" />
-            <Skeleton className="h-20 w-20 rounded-full" />
+        { isLoading ? <div className="flex gap-4">{[...Array(10)].map((_, i) => <Skeleton key={i} className="h-24 w-24 rounded-full" />)}</div>
+          : topArtists.length > 0 ? 
+          <div className="flex flex-wrap gap-6 justify-center" style={{userSelect: "none"}}>
+            {topArtists.map((artist) => <ArtistMiniCard key={artist.id} artist={artist} />)}
           </div>
-        ) : topArtists.length > 0 ? (
-          <div className="flex flex-wrap gap-6 justify-center">
-            {topArtists.map((artist) => (
-              <div key={artist.id} className="flex flex-col items-center gap-2 hover:scale-105 transition-all duration-300">
-                <Avatar className="h-20 w-20">
-                  <AvatarImage src={artist.images[0]?.url} alt={artist.name} draggable={false} />
-                  <AvatarFallback>{artist.name.charAt(0)}</AvatarFallback>
-                </Avatar>
-                <p className="text-sm font-medium text-center max-w-[100px] truncate">{artist.name}</p>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className="text-muted-foreground text-center py-8">No artists available</p>
-        )}
+          : <p className="text-muted-foreground text-center py-8">No artists available</p>
+        }
       </div>
 
       <InsightCard insight={insight} loading={isLoading} />

@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
 import { Download, Music2, BarChart3, TrendingUp, Clock, Palette, Calendar } from "lucide-react";
+import ArtistMiniCard from "@/components/artist-mini-card";
 
 type TimeRange = "short_term" | "medium_term" | "long_term";
 
@@ -150,16 +151,7 @@ export default function StatsPage() {
             <div className="grid grid-cols-2 gap-4">{[...Array(6)].map((_, i) => <Skeleton key={i} className="h-32 w-full" />)}</div>
           ) : artistsData?.items && artistsData.items.length > 0 ? (
             <div className="grid grid-cols-5 gap-4 overflow-auto max-h-[600px]">
-              {artistsData.items.map((artist) => 
-                <Link href={`/artists/${artist.id}`} key={artist.id} className="bg-muted/50 rounded-lg p-4 hover:bg-muted transition-colors flex flex-col items-center justify-center">
-                  <Avatar className="h-24 w-24 mx-auto mb-3">
-                    <AvatarImage src={artist.images[0]?.url} alt={artist.name} draggable={false} />
-                    <AvatarFallback className="text-lg" draggable={false}>{artist.name.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                  <p className="text-center font-medium truncate">{artist.name}</p>
-                  <p className="text-center text-sm text-muted-foreground">{artist.genres[0] || "Unknown"}</p>
-                </Link>
-              )}
+              {artistsData.items.map((artist) => <ArtistMiniCard key={artist.id} artist={artist} simplified />)}
             </div>
           ) : (
             <p className="text-muted-foreground text-center py-12">No artists available</p>

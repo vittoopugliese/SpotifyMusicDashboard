@@ -42,6 +42,7 @@ const data = {
       icon: GalleryVerticalEnd,
       items: [
         { title: "Your Playlists", url: "/playlists/yours", },
+        { title: "Search Playlists", url: "/playlists/search", },
         { title: "Playlist DNA", url: "/playlists/dna", },
       ],
     },

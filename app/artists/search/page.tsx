@@ -27,7 +27,7 @@ export default function ArtistsSearchPage() {
         </div>
       )}
 
-      { loading && <LoadingComponent message="Searching your favorite artists..." size={9} />}
+      { loading && <LoadingComponent message="Searching your favorite artists..." />}
       { error && <CustomAlertComponent title="Oops! Something went wrong" description={error} variant="destructive" /> }
       { !loading && !error && isSearching && artists.length === 0 && <CustomAlertComponent title="No artists found" description="Try with another search term" /> }
       { !loading && !error && !isSearching && <ViewHint title="Search your favorite artists" description="Write the name of an artist to start searching" icon={Search} /> }

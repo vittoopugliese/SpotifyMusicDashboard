@@ -101,6 +101,53 @@ export type TrackRecommendations = {
   }>;
 };
 
+export type SpotifyPlaylist = {
+  id: string;
+  name: string;
+  description: string | null;
+  images: Array<{url: string; height: number; width: number}>;
+  owner: {
+    id: string;
+    display_name: string;
+    external_urls: {spotify: string};
+  };
+  followers: {
+    total: number;
+  };
+  public: boolean;
+  tracks: {
+    href: string;
+    total: number;
+  };
+  external_urls: {spotify: string};
+};
+
+export type PlaylistTracksResponse = {
+  items: Array<{
+    track: SpotifyTrack | null;
+    added_at: string;
+  }>;
+  total: number;
+  limit: number;
+  offset: number;
+};
+
+export type UserPlaylistsResponse = {
+  items: SpotifyPlaylist[];
+  total: number;
+  limit: number;
+  offset: number;
+};
+
+export type SearchPlaylistsResponse = {
+  playlists: {
+    items: SpotifyPlaylist[];
+    total: number;
+    limit: number;
+    offset: number;
+  };
+};
+
 // User-specific endpoints (requires user access token)
 // This fn is called from hooks and pass here the api route
 export async function spotifyFetchWithUserToken<T>( path: string, userToken: string, init?: RequestInit ): Promise<T> {

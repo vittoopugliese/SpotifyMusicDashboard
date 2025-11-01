@@ -6,12 +6,14 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import Image from "next/image";
 import { SpotifyTrack } from "@/lib/spotify";
 import { formatDuration } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 type TrackListProps = {
   tracks: SpotifyTrack[];
 };
 
 export function TrackList({ tracks }: TrackListProps) {
+  const router = useRouter();
   return (
     <>
       {/* Desktop View - Table */}
@@ -25,12 +27,11 @@ export function TrackList({ tracks }: TrackListProps) {
                 <th className="p-3 text-left text-sm font-medium min-w-[200px]">Album</th>
                 <th className="p-3 text-left text-sm font-medium w-20 text-center">Duration</th>
                 <th className="p-3 text-left text-sm font-medium w-24 text-center">Popularity</th>
-                <th className="p-3 text-left text-sm font-medium w-28 text-center">Play</th>
               </tr>
             </thead>
             <tbody>
               {tracks.map((track, index) => (
-                <tr key={track.id} className="border-b hover:bg-muted/50 transition-colors">
+                <tr key={track.id} className="border-b hover:bg-muted/50 transition-colors cursor-pointer" onClick={() => router.push(`/tracks/${track.id}`)}>
                   <td className="p-3 text-muted-foreground font-medium">{index + 1}</td>
                   <td className="p-3">
                     <div className="flex items-center gap-3 min-w-0">
@@ -55,13 +56,6 @@ export function TrackList({ tracks }: TrackListProps) {
                   <td className="p-3 text-muted-foreground text-center">
                     <span className="inline-flex items-center gap-1 text-sm">{track.popularity}/100</span>
                   </td>
-                  <td className="p-3 text-center">
-                    <Button variant="ghost" size="sm" asChild>
-                      <a href={track.external_urls.spotify || ""} target="_blank" rel="noopener noreferrer">
-                        <ExternalLink className="h-4 w-4" />
-                      </a>
-                    </Button>
-                  </td>
                 </tr>
               ))}
             </tbody>
@@ -72,7 +66,7 @@ export function TrackList({ tracks }: TrackListProps) {
       {/* Mobile/Tablet View - Cards */}
       <div className="xl:hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {tracks.map((track, index) => (
-          <div key={track.id} className="bg-card rounded-lg border overflow-hidden hover:shadow-lg transition-all">
+          <div key={track.id} className="bg-card rounded-lg border overflow-hidden hover:shadow-lg transition-all cursor-pointer hover:bg-muted/50" onClick={() => router.push(`/tracks/${track.id}`)}>
             <div className="relative aspect-square bg-muted">
               <Image src={track.album.images[0]?.url || "/placeholder.png"} alt={track.name} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 300px" className="object-cover" draggable={false} />
               <div className="absolute top-3 left-3 bg-background/90 backdrop-blur-sm rounded-full h-10 w-10 flex items-center justify-center border shadow-lg z-10">
@@ -91,13 +85,6 @@ export function TrackList({ tracks }: TrackListProps) {
                 <span className="flex items-center gap-1"><Clock className="h-3.5 w-3.5" />{formatDuration(track.duration_ms)}</span>
                 <span className="flex items-center gap-1"><TrendingUp className="h-3.5 w-3.5" />{track.popularity}/100</span>
               </div>
-
-              <Button variant="default" size="sm" asChild className="w-full">
-                <a href={track.external_urls.spotify || ""} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2">
-                  <ExternalLink className="h-4 w-4" />
-                  Play on Spotify
-                </a>
-              </Button>
             </div>
           </div>
         ))}

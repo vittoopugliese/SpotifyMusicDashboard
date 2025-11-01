@@ -101,10 +101,10 @@ export default function ArtistProfilePage({ params }: ArtistPageProps) {
         {/* Top Tracks */}
         {topTracks.length > 0 && (
           <section>
-            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-              <Music2 className="h-6 w-6" />
-              Popular Tracks
-            </h2>
+            <div>
+            <h2 className="text-2xl font-bold mb-2 flex items-center gap-2"><Music2 className="h-6 w-6" />Popular Tracks</h2>
+            <p className="text-sm text-muted-foreground mb-6">Click one to view more information</p>
+            </div>
             <TrackList tracks={topTracks.slice(0, 10)} />
           </section>
         )}

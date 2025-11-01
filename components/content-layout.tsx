@@ -31,7 +31,7 @@ export function ContentLayout({ children }: ContentLayoutProps) {
           <main>
             {loading ? (
               <div className="flex items-center justify-center p-8">
-                <Spinner className="size-6" />
+                <Spinner className="size-10" />
               </div>
             ) : session.authenticated ? (
               children

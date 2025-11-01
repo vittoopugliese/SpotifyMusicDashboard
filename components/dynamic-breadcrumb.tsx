@@ -22,6 +22,8 @@ const routeNames: Record<string, string> = {
   trends: "Music Trends",
   genres: "Genre Explorer",
   facts: "Fun Facts",
+  "tracks/[id]": "Track Profile",
+  "artists/[id]": "Artist Profile",
 }
 
 export function DynamicBreadcrumb() {

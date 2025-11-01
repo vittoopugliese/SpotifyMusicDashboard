@@ -2,7 +2,6 @@
 
 import { use } from "react";
 import { useArtistProfile } from "@/hooks/use-artist-profile";
-import LoadingComponent from "@/components/loading-component";
 import CustomAlertComponent from "@/components/custom-alert-component";
 import { TrackList } from "@/components/track-list";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -11,6 +10,7 @@ import { Music2, Users, TrendingUp, ExternalLink, Disc, Calendar } from "lucide-
 import Link from "next/link";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
+import { ArtistProfileSkeleton } from "@/components/page-skeletons/artist-profile-skeleton";
 
 type ArtistPageProps = {
   params: Promise<{ id: string }>;
@@ -20,7 +20,7 @@ export default function ArtistProfilePage({ params }: ArtistPageProps) {
   const { id } = use(params);
   const { artist, topTracks, albums, relatedArtists, isLoading, error } = useArtistProfile(id);
 
-  if (isLoading) return <LoadingComponent message="Loading artist profile..." />
+  if (isLoading) return <ArtistProfileSkeleton />
   if (error || !artist) return <CustomAlertComponent variant="destructive" title="Error" description={error || "Failed to load artist profile"} />
 
   return (

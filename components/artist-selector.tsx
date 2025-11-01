@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import { SpotifyArtist } from "@/lib/spotify";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, X, Plus, Music2 } from "lucide-react";
+import { X, Plus, Music2 } from "lucide-react";
 import { useArtistSearch } from "@/hooks/use-artist-search";
-import Image from "next/image";
 import { Spinner } from "./ui/spinner";
+import Image from "next/image";
+import SearchBar from "@/components/search-bar";
 
 interface ArtistSelectorProps {
   selectedArtists: SpotifyArtist[];
@@ -66,10 +66,7 @@ export default function ArtistSelector({ selectedArtists, onAddArtist, onRemoveA
       {showSearch && canAddMore && (
         <div className="border rounded-lg p-4 space-y-3 bg-card">
           <div className="flex items-center gap-2">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input type="text" placeholder="Search for an artist..." value={query} onChange={(e) => setQuery(e.target.value)}  className="pl-10 w-full h-11" />
-            </div>
+            <SearchBar value={query} onChange={setQuery} placeholder="Search for an artist..." className="flex-1" />
             {selectedArtists.length > 0 && <Button variant="outline" onClick={() => setShowSearch(false)}>Cancel</Button>}
           </div>
 

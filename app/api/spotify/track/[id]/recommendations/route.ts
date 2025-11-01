@@ -6,12 +6,17 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   const { id } = await params;
   
   return withAuth(request, async (token) => {
-    const { searchParams } = request.nextUrl;
-    const limit = searchParams.get("limit") || "5";
+    try {
+      const { searchParams } = request.nextUrl;
+      const limit = searchParams.get("limit") || "10";
 
-    const data = await spotifyFetchWithUserToken<TrackRecommendations>(`/recommendations?seed_tracks=${id}&limit=${limit}`, token);
+      const data = await spotifyFetchWithUserToken<TrackRecommendations>(`/recommendations?seed_tracks=${id}&limit=${limit}`, token);
 
-    return NextResponse.json(data);
+      return NextResponse.json(data);
+    } catch (error) {
+      console.error("Error fetching recommendations:", error);
+      return NextResponse.json({ error: "Failed to fetch recommendations", tracks: [] }, { status: 500 });
+    }
   });
 }
 

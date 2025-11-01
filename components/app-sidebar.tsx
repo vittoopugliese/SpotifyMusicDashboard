@@ -1,6 +1,6 @@
 "use client"
 
-import { AudioWaveform, Bot, GalleryVerticalEnd, PieChart, SquareTerminal } from "lucide-react"
+import { Album, AudioWaveform, Bot, GalleryVerticalEnd, PieChart, SquareTerminal } from "lucide-react"
 import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail, } from "@/components/ui/sidebar"
@@ -29,12 +29,21 @@ const data = {
       ],
     },
     {
-      title: "Tracks & Albums",
-      url: "/top",
+      title: "Albums",
+      url: "/albums",
+      icon: Album,
+      items: [
+        { title: "Search Albums", url: "/albums/search", },
+        { title: "Top Albums", url: "/albums/top", },
+      ],
+    },
+    {
+      title: "Tracks",
+      url: "/tracks",
       icon: AudioWaveform,
       items: [
-        { title: "Top Tracks", url: "/top/tracks", },
-        { title: "Top Albums", url: "/top/albums", },
+        { title: "Search Tracks", url: "/tracks/search", },
+        { title: "Top Tracks", url: "/tracks/top", },
       ],
     },
     {

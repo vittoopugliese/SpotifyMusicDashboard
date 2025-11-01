@@ -42,8 +42,8 @@ export function TrackSearchBar({ onSelectTrack, placeholder = "Search for a trac
         const res = await fetch(`/api/spotify/search-tracks?q=${encodeURIComponent(query)}&limit=8`);
         const data = await res.json();
         
-        if (data.tracks && data.tracks.items) {
-          setResults(data.tracks.items);
+        if (data.tracks) {
+          setResults(data.tracks);
           setShowResults(true);
         }
       } catch (error) {

@@ -151,7 +151,7 @@ export default function StatsPage() {
             <div className="grid grid-cols-2 gap-4">{[...Array(6)].map((_, i) => <Skeleton key={i} className="h-32 w-full" />)}</div>
           ) : artistsData?.items && artistsData.items.length > 0 ? (
             <div className="grid grid-cols-5 gap-4 overflow-auto max-h-[600px]">
-              {artistsData.items.map((artist) => <ArtistMiniCard key={artist.id} artist={artist} simplified />)}
+              {artistsData.items.map((artist) => <ArtistMiniCard key={artist.id} artist={artist} />)}
             </div>
           ) : (
             <p className="text-muted-foreground text-center py-12">No artists available</p>

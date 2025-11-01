@@ -180,8 +180,8 @@ export default function OverviewPage() {
         <h3 className="text-lg font-semibold mb-4 flex items-center gap-2"><Users className="h-5 w-5" />Top 10 Artists</h3>
         { isLoading ? <div className="flex gap-4">{[...Array(10)].map((_, i) => <Skeleton key={i} className="h-24 w-24 rounded-full" />)}</div>
           : topArtists.length > 0 ? 
-          <div className="flex flex-wrap gap-6 justify-center" style={{userSelect: "none"}}>
-            {topArtists.map((artist) => <ArtistMiniCard key={artist.id} artist={artist} />)}
+          <div className="flex flex-wrap justify-center" style={{userSelect: "none"}}>
+            {topArtists.map((artist) => <ArtistMiniCard key={artist.id} artist={artist} simplified />)}
           </div>
           : <p className="text-muted-foreground text-center py-8">No artists available</p>
         }

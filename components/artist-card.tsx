@@ -1,6 +1,7 @@
 import { Music2, Users } from "lucide-react";
 import { SpotifyArtist } from "@/lib/spotify";
 import Image from "next/image";
+import Link from "next/link";
 
 const formatFollowers = (count: number): string => {
   if (count >= 1000000) {
@@ -14,6 +15,8 @@ const formatFollowers = (count: number): string => {
 
 export default function ArtistCard({artist}: {artist: SpotifyArtist}) {
   return (
+    <Link href={`/artists/${artist.id}`} style={{userSelect: "none"}} >
+
     <div className="group bg-card border rounded-lg overflow-hidden hover:shadow-lg transition-all duration-200 hover:scale-[1.02] cursor-pointer">
       <div className="relative aspect-square bg-muted">
         {artist.images.length > 0 ? (
@@ -56,5 +59,6 @@ export default function ArtistCard({artist}: {artist: SpotifyArtist}) {
         </div>
       </div>
     </div>
+    </Link>
   );
 }

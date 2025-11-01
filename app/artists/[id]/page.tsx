@@ -20,25 +20,8 @@ export default function ArtistProfilePage({ params }: ArtistPageProps) {
   const { id } = use(params);
   const { artist, topTracks, albums, relatedArtists, isLoading, error } = useArtistProfile(id);
 
-  if (isLoading) {
-    return (
-      <div className="p-6">
-        <LoadingComponent message="Loading artist profile..." />
-      </div>
-    );
-  }
-
-  if (error || !artist) {
-    return (
-      <div className="p-6">
-        <CustomAlertComponent
-          variant="destructive"
-          title="Error"
-          description={error || "Failed to load artist profile"}
-        />
-      </div>
-    );
-  }
+  if (isLoading) return <LoadingComponent message="Loading artist profile..." />
+  if (error || !artist) return <CustomAlertComponent variant="destructive" title="Error" description={error || "Failed to load artist profile"} />
 
   return (
     <div className="min-h-screen">
@@ -46,13 +29,7 @@ export default function ArtistProfilePage({ params }: ArtistPageProps) {
       <div className="relative h-[400px] md:h-[500px] bg-gradient-to-b from-primary/20 to-background overflow-hidden">
         {artist.images[0]?.url && (
           <div className="absolute inset-0 opacity-30">
-            <Image
-              src={artist.images[0].url}
-              alt={artist.name}
-              fill
-              className="object-cover blur-xl"
-              priority
-            />
+            <Image src={artist.images[0].url} alt={artist.name} fill className="object-cover blur-xl" priority draggable={false} />
           </div>
         )}
         
@@ -61,7 +38,7 @@ export default function ArtistProfilePage({ params }: ArtistPageProps) {
             {/* Artist Image */}
             <div className="relative">
               <Avatar className="h-48 w-48 md:h-64 md:w-64 border-4 border-background shadow-2xl">
-                <AvatarImage src={artist.images[0]?.url} alt={artist.name} />
+                <AvatarImage src={artist.images[0]?.url} alt={artist.name} draggable={false} />
                 <AvatarFallback className="text-6xl">
                   <Music2 className="h-24 w-24" />
                 </AvatarFallback>
@@ -141,34 +118,18 @@ export default function ArtistProfilePage({ params }: ArtistPageProps) {
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
               {albums.map((album) => (
-                <a
-                  key={album.id}
-                  href={album.external_urls.spotify}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group"
-                >
+                <a key={album.id} href={album.external_urls.spotify} target="_blank" rel="noopener noreferrer" className="group" >
                   <div className="bg-card rounded-lg overflow-hidden border hover:shadow-lg transition-all">
                     <div className="relative aspect-square bg-muted">
-                      <Image
-                        src={album.images[0]?.url || "/placeholder.png"}
-                        alt={album.name}
-                        fill
-                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
+                      <Image src={album.images[0]?.url || "/placeholder.png"} alt={album.name} fill sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw" className="object-cover group-hover:scale-105 transition-transform duration-300" draggable={false} />
                     </div>
                     <div className="p-3">
-                      <p className="font-semibold text-sm line-clamp-1" title={album.name}>
-                        {album.name}
-                      </p>
+                      <p className="font-semibold text-sm line-clamp-1" title={album.name}>{album.name}</p>
                       <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
                         <Calendar className="h-3 w-3" />
                         <span>{new Date(album.release_date).getFullYear()}</span>
                       </div>
-                      <p className="text-xs text-muted-foreground mt-1 capitalize">
-                        {album.album_type} • {album.total_tracks} tracks
-                      </p>
+                      <p className="text-xs text-muted-foreground mt-1 capitalize">{album.album_type} • {album.total_tracks} tracks</p>
                     </div>
                   </div>
                 </a>
@@ -193,7 +154,7 @@ export default function ArtistProfilePage({ params }: ArtistPageProps) {
                 >
                   <div className="bg-card rounded-lg p-4 hover:bg-muted/50 transition-colors text-center">
                     <Avatar className="h-24 w-24 mx-auto mb-3 ring-2 ring-transparent group-hover:ring-primary transition-all">
-                      <AvatarImage src={relatedArtist.images[0]?.url} alt={relatedArtist.name} />
+                      <AvatarImage src={relatedArtist.images[0]?.url} alt={relatedArtist.name} draggable={false} />
                       <AvatarFallback>
                         <Music2 className="h-12 w-12" />
                       </AvatarFallback>

@@ -30,10 +30,11 @@ const data = {
     },
     {
       title: "Tracks & Albums",
-      url: "/tracks",
+      url: "/top",
       icon: AudioWaveform,
       items: [
-        { title: "Top Tracks", url: "/tracks/top", },
+        { title: "Top Tracks", url: "/top/tracks", },
+        { title: "Top Albums", url: "/top/albums", },
       ],
     },
     {

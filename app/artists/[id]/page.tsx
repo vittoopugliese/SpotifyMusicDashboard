@@ -1,15 +1,15 @@
 "use client";
 
-import { use } from "react";
-import { useArtistProfile } from "@/hooks/use-artist-profile";
+import Image from "next/image";
 import CustomAlertComponent from "@/components/custom-alert-component";
+import { use } from "react";
+import { Badge } from "@/components/ui/badge";
+import { useArtistProfile } from "@/hooks/use-artist-profile";
 import { TrackList } from "@/components/track-list";
+import { AlbumCard } from "@/components/album-card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Music2, Users, TrendingUp, ExternalLink, Disc, Calendar } from "lucide-react";
-import Link from "next/link";
-import Image from "next/image";
-import { Badge } from "@/components/ui/badge";
+import { Music2, Users, TrendingUp, ExternalLink, Disc } from "lucide-react";
 import { ArtistProfileSkeleton } from "@/components/page-skeletons/artist-profile-skeleton";
 
 type ArtistPageProps = {
@@ -100,23 +100,7 @@ export default function ArtistProfilePage({ params }: ArtistPageProps) {
           <section>
             <h2 className="text-2xl font-bold mb-6 flex items-center gap-2"><Disc className="h-6 w-6" />Albums & Singles</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-              {albums.map((album) => (
-                <a key={album.id} href={album.external_urls.spotify} target="_blank" rel="noopener noreferrer" className="group" >
-                  <div className="bg-card rounded-lg overflow-hidden border hover:shadow-lg transition-all">
-                    <div className="relative aspect-square bg-muted">
-                      <Image src={album.images[0]?.url || "/placeholder.png"} alt={album.name} fill sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw" className="object-cover group-hover:scale-105 transition-transform duration-300" draggable={false} />
-                    </div>
-                    <div className="p-3">
-                      <p className="font-semibold text-sm line-clamp-1" title={album.name}>{album.name}</p>
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
-                        <Calendar className="h-3 w-3" />
-                        <span>{new Date(album.release_date).getFullYear()}</span>
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-1 capitalize">{album.album_type} • {album.total_tracks} tracks</p>
-                    </div>
-                  </div>
-                </a>
-              ))}
+              {albums.map(album => <AlbumCard key={album.id} album={album} />)}
             </div>
           </section>
         )}

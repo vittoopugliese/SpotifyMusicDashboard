@@ -1,20 +1,10 @@
 import { useState, useEffect } from "react";
-import { SpotifyArtist, SpotifyTrack } from "@/lib/spotify";
-
-type Album = {
-  id: string;
-  name: string;
-  images: Array<{ url: string; height: number; width: number }>;
-  release_date: string;
-  total_tracks: number;
-  album_type: string;
-  external_urls: { spotify: string };
-};
+import { SpotifyArtist, SpotifyTrack, SpotifyAlbum } from "@/lib/spotify";
 
 type ArtistProfileData = {
   artist: SpotifyArtist | null;
   topTracks: SpotifyTrack[];
-  albums: Album[];
+  albums: SpotifyAlbum[];
   isLoading: boolean;
   error: string | null;
 };
@@ -22,7 +12,7 @@ type ArtistProfileData = {
 export function useArtistProfile(artistId: string): ArtistProfileData {
   const [artist, setArtist] = useState<SpotifyArtist | null>(null);
   const [topTracks, setTopTracks] = useState<SpotifyTrack[]>([]);
-  const [albums, setAlbums] = useState<Album[]>([]);
+  const [albums, setAlbums] = useState<SpotifyAlbum[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

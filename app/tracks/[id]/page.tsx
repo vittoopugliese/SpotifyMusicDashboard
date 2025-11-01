@@ -1,16 +1,16 @@
 "use client";
 
+import Link from "next/link";
+import Image from "next/image";
+import CustomAlertComponent from "@/components/custom-alert-component";
 import { use } from "react";
 import { useTrackProfile } from "@/hooks/use-track-profile";
-import CustomAlertComponent from "@/components/custom-alert-component";
 import { TrackList } from "@/components/track-list";
 import { Button } from "@/components/ui/button";
 import { Music2, Clock, TrendingUp, ExternalLink, Disc, Calendar, Sparkles } from "lucide-react";
-import Link from "next/link";
-import Image from "next/image";
 import { TrackProfileSkeleton } from "@/components/page-skeletons/track-profile-skeleton";
 import { TechnicalInfo } from "@/components/technical-info";
-import { formatDuration } from "@/lib/utils";
+import { formatDuration, yearFromDate } from "@/lib/utils";
 
 type TrackPageProps = {
   params: Promise<{ id: string }>;
@@ -72,9 +72,7 @@ export default function TrackProfilePage({ params }: TrackPageProps) {
                 {track.album.release_date && (
                   <div className="flex items-center gap-2">
                     <Calendar className="h-4 w-4" />
-                    <span className="font-semibold">
-                      {new Date(track.album.release_date).getFullYear()}
-                    </span>
+                    <span className="font-semibold">{yearFromDate(track.album.release_date)}</span>
                   </div>
                 )}
               </div>

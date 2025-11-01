@@ -21,6 +21,16 @@ export type SpotifyArtist = {
   external_urls: {spotify: string};
 };
 
+export type SpotifyAlbum = {
+  id: string;
+  name: string;
+  images: Array<{url: string; height: number; width: number}>;
+  release_date: string;
+  total_tracks: number;
+  album_type: string;
+  external_urls: {spotify: string};
+};
+
 export type SpotifyTrack = {
   id: string;
   name: string;

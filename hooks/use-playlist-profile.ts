@@ -8,7 +8,7 @@ type PlaylistProfileData = {
   error: string | null;
 };
 
-export function usePlaylistProfile(playlistId: string): PlaylistProfileData {
+export function usePlaylistProfile(playlistId: string | null): PlaylistProfileData {
   const [playlist, setPlaylist] = useState<SpotifyPlaylist | null>(null);
   const [tracks, setTracks] = useState<SpotifyTrack[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -59,11 +59,8 @@ export function usePlaylistProfile(playlistId: string): PlaylistProfileData {
       }
     };
 
-    if (playlistId) {
-      fetchPlaylistData();
-    }
+    if (playlistId) fetchPlaylistData();
   }, [playlistId]);
 
   return { playlist, tracks, isLoading, error };
 }
-

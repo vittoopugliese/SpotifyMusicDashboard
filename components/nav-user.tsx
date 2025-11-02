@@ -38,7 +38,7 @@ export function NavUser() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <SidebarMenuButton size="lg" className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground cursor-pointer" >
-                <CustomAvatarComponent image={localUser?.images?.[0]?.url} name={localUser?.display_name || "User"} loading={loading} />
+                <CustomAvatarComponent image={localUser?.images?.[0]?.url} name={localUser?.display_name || "User"} loading={loading} className="size-10" />
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{loading ? "Username..." : localUser?.display_name}</span>
                   <span className="truncate text-xs">{loading ? "Email..." : localUser?.email}</span>

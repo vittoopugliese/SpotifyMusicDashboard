@@ -48,10 +48,10 @@ export default function PlaylistSelector({ onSelectPlaylist, selectedPlaylistNam
 
   return (
     <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <h2 className="text-xl font-semibold">Select a Playlist to Analyze</h2>
-          <p className="text-sm text-muted-foreground mt-1">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div className="text-center md:text-left">
+          <h2 className="text-2xl font-semibold md:text-lg">Select a Playlist</h2>
+          <p className="text-md text-muted-foreground mt-1">
             {selectedPlaylistName 
               ? `Currently analyzing: ${selectedPlaylistName}` 
               : "Choose from your playlists or enter a Spotify playlist URL"}
@@ -60,7 +60,7 @@ export default function PlaylistSelector({ onSelectPlaylist, selectedPlaylistNam
 
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
-            <Button className="gap-2">
+            <Button className="gap-2 w-full md:w-auto">
               <Search className="w-4 h-4" />
               {selectedPlaylistName ? "Change Playlist" : "Select Playlist"}
             </Button>

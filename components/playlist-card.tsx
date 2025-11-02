@@ -18,21 +18,21 @@ export default function PlaylistCard({ playlist }: { playlist: SpotifyPlaylist }
           )}
         </div>
 
-        <div className="p-4 h-[150px] flex flex-col justify-between">
-          <div className="flex flex-col gap-1">
+        <div className="p-4 h-full flex flex-col justify-between">
+          <div className="flex flex-col">
             <h3 className="font-semibold text-lg truncate group-hover:text-primary transition-colors" title={playlist.name}>{playlist.name}</h3>
             <p className="text-sm text-muted-foreground truncate" title={playlist.owner.display_name}>{playlist.owner.display_name}</p>
-            { playlist.description && <p className="text-xs text-muted-foreground line-clamp-1" title={playlist.description}>{playlist.description}</p> }
           </div>
 
           <div className="flex items-center justify-between text-sm text-muted-foreground">
-            <div className="flex items-center gap-2">
-              <div className="flex items-center gap-1">
-                {playlist.public ? <Globe className="h-4 w-4" /> : <Lock className="h-4 w-4" />}
-              </div>
+            <div className="flex items-center gap-2 justify-between w-full mt-2">
               <div className="flex items-center gap-1">
                 <Music2 className="h-4 w-4" />
                 <span>{playlist.tracks.total} tracks</span>
+              </div>
+              <div className="flex items-center gap-1">
+                {playlist.public ? <Globe className="h-4 w-4" /> : <Lock className="h-4 w-4" />}
+                <span>{playlist.public ? "Public" : "Private"}</span>
               </div>
             </div>
             {playlist.followers && (

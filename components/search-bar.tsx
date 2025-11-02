@@ -21,8 +21,8 @@ export default function SearchBar({ value, onChange, placeholder = "Search...", 
     <div className={cn("relative", className)}>
       { labelTitle && <Label htmlFor="search">{labelTitle}</Label> }
       <div className="relative mt-3">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-        <Input type="text" placeholder={placeholder} value={value} onChange={(e) => onChange(e.target.value)} className={cn("pl-11 w-full h-12", buttonText && "pr-28")} draggable={false} />
+        <Search className="absolute right-2 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+        <Input type="text" placeholder={placeholder} value={value} onChange={(e) => onChange(e.target.value)} className={cn("pr-11 w-full h-12", buttonText && "pr-28")} draggable={false} />
         { buttonText && buttonAction && <Button onClick={buttonAction} disabled={!value} className="absolute right-2 top-1/2 -translate-y-1/2" >{buttonText}</Button> }
       </div>
     </div>

@@ -2,6 +2,7 @@
 
 import { Search } from "lucide-react";
 import { useArtistSearch } from "@/hooks/use-artist-search";
+import { useSearchUrlSync } from "@/hooks/use-search-url-sync";
 import IconTitle from "@/components/icon-title";
 import ArtistCard from "@/components/artist-card";
 import LoadingComponent from "@/components/loading-component";
@@ -11,11 +12,12 @@ import SearchBar from "@/components/search-bar";
 
 export default function ArtistsSearchPage() {
   const { query, setQuery, artists, loading, error, isSearching } = useArtistSearch();
+  const { handleQueryChange } = useSearchUrlSync({ query, setQuery });
 
   return (
     <div className="p-6 space-y-6">
       <IconTitle icon={Search} title="Artists Search" subtitle="Search for your favorite artists and view their follower count, main genres and popularity" />
-      <SearchBar value={query} onChange={setQuery} placeholder="Search for an artist..." />
+      <SearchBar value={query} onChange={handleQueryChange} placeholder="Search for an artist..." />
 
       { !loading && !error && artists.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">

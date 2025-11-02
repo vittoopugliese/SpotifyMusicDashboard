@@ -20,7 +20,7 @@ export const metadata: Metadata = { title: "Spori | Music Dashboard", descriptio
 export default function RootLayout({children}: Readonly<{children: React.ReactNode;}>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${josefinSans.variable} antialiased`}>
+      <body className={`${josefinSans.variable} font-josefin-sans antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <SpotifySessionProvider>
             <SidebarProvider>

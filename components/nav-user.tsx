@@ -59,11 +59,7 @@ export function NavUser() {
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
-        ) : (
-          <div className="flex items-center justify-center mb-2">
-            <Button onClick={login}>Login with Spotify</Button>
-          </div>
-        )}
+        ) : null}
       </SidebarMenuItem>
     </SidebarMenu>
   );

@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { SpotifyPlaylist } from "@/lib/spotify";
 import { useSpotifySession } from "@/contexts/spotify-session-context";
+import { useSearchUrlSync } from "./use-search-url-sync";
 
 interface UsePlaylistSearchOptions {
   debounceMs?: number;
@@ -19,18 +20,30 @@ interface UsePlaylistSearchReturn {
 export function usePlaylistSearch(options: UsePlaylistSearchOptions = {}): UsePlaylistSearchReturn {
   const { debounceMs = 500, limit = 20 } = options;
   const { session } = useSpotifySession();
+  const { initialQuery, syncUrlWithQuery } = useSearchUrlSync();
 
-  const [query, setQuery] = useState("");
-  const [debouncedQuery, setDebouncedQuery] = useState("");
+  const [query, setQuery] = useState(initialQuery);
+  const [debouncedQuery, setDebouncedQuery] = useState(initialQuery);
   const [playlists, setPlaylists] = useState<SpotifyPlaylist[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const lastSyncedQuery = useRef(initialQuery);
 
+  // Debounce para búsqueda API
   useEffect(() => {
     const handler = setTimeout(() => setDebouncedQuery(query), debounceMs);
     return () => clearTimeout(handler);
   }, [query, debounceMs]);
 
+  // Sincronizar URL cuando query cambia (solo si realmente cambió)
+  useEffect(() => {
+    if (query !== lastSyncedQuery.current) {
+      lastSyncedQuery.current = query;
+      syncUrlWithQuery(query);
+    }
+  }, [query, syncUrlWithQuery]);
+
+  // Realizar búsqueda
   useEffect(() => {
     if (!debouncedQuery.trim()) {
       setPlaylists([]);

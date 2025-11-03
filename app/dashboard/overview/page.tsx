@@ -97,7 +97,7 @@ export default function OverviewPage() {
     <div className="p-6 space-y-6">
       <TitleWithPeriodSelector title="Dashboard Overview" subtitle="Overview of your Spotify listening activity" icon={Music} value={timeRange} onChange={setTimeRange} className="mb-4" />
 
-      <div className="bg-card border border-border rounded-lg p-6 shadow-sm flex items-center justify-between">
+      {/* <div className="bg-card border border-border rounded-lg p-6 shadow-sm flex items-center justify-between">
         { session.authenticated && session.profile
           ? <div className="flex items-center justify-between w-full">
               <div className="flex items-center gap-4">
@@ -119,7 +119,7 @@ export default function OverviewPage() {
               </div>
             </div>
         }
-      </div>
+      </div> */}
       <div className="bg-gradient-to-br from-primary/20 via-primary/10 to-background border border-border rounded-xl p-6 shadow-lg">
         <div className="flex items-center gap-3 mb-4">
           <Music2 className="h-8 w-8 text-primary" />

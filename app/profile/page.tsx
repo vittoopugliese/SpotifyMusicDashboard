@@ -19,7 +19,7 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen">
-      <div className="relative h-[400px] md:h-[500px] bg-gradient-to-b from-primary/20 to-background overflow-hidden">
+      <div className="relative rounded-t-4xl h-[400px] md:h-[500px] bg-gradient-to-b from-primary/20 to-background overflow-hidden">
         {profile.images?.[0]?.url && (
           <div className="absolute inset-0 opacity-30">
             <Image src={profile.images[0].url} alt="Profile" fill className="object-cover blur-xl" priority draggable={false} />

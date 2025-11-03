@@ -106,26 +106,26 @@ export function DynamicBreadcrumb() {
   return (
     <Breadcrumb>
       <BreadcrumbList>
-        <BreadcrumbItem className="hidden md:block">
+        <BreadcrumbItem>
           {isOnSporiHome ? (
-            <BreadcrumbPage>Spori</BreadcrumbPage>
+            <BreadcrumbPage className="text-sm sm:text-base">Spori</BreadcrumbPage>
           ) : (
             <BreadcrumbLink asChild>
-              <Link href={"/"}>Spori</Link>
+              <Link href={"/"} className="text-sm sm:text-base">Spori</Link>
             </BreadcrumbLink>
           )}
         </BreadcrumbItem>
         
         {segments.map(({ segment, label, href, isLink }) => (
           <Fragment key={segment}>
-            <BreadcrumbSeparator className="hidden md:block" />
+            <BreadcrumbSeparator />
             <BreadcrumbItem>
               {isLink ? (
                 <BreadcrumbLink asChild>
-                  <Link href={href}>{label}</Link>
+                  <Link href={href} className="text-sm sm:text-base truncate max-w-[100px] sm:max-w-none">{label}</Link>
                 </BreadcrumbLink>
               ) : (
-                <BreadcrumbPage>{label}</BreadcrumbPage>
+                <BreadcrumbPage className="text-sm sm:text-base truncate max-w-[100px] sm:max-w-none">{label}</BreadcrumbPage>
               )}
             </BreadcrumbItem>
           </Fragment>

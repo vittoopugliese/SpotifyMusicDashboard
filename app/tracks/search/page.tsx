@@ -2,7 +2,6 @@
 
 import { Search } from "lucide-react";
 import { useTrackSearch } from "@/hooks/use-track-search";
-import { useSearchUrlSync } from "@/hooks/use-search-url-sync";
 import IconTitle from "@/components/icon-title";
 import TrackCard from "@/components/track-card";
 import LoadingComponent from "@/components/loading-component";
@@ -12,13 +11,12 @@ import SearchBar from "@/components/search-bar";
 
 export default function TracksSearchPage() {
   const { query, setQuery, tracks, loading, error, isSearching } = useTrackSearch();
-  const { handleQueryChange } = useSearchUrlSync({ query, setQuery });
 
   return (
     <div className="p-6 space-y-6">
-      <IconTitle icon={Search} title="Tracks Search" subtitle="Search for your favorite tracks and view their details, duration and popularity" />
+      <IconTitle icon={Search} title="Track Search" subtitle="Search for your favorite tracks and view their details, duration and popularity" />
 
-      <SearchBar value={query} onChange={handleQueryChange} placeholder="Search for a track..." />
+      <SearchBar value={query} onChange={setQuery} placeholder="Search for a track..." />
 
       {!loading && !error && tracks.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">

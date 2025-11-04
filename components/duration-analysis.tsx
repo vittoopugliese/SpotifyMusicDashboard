@@ -19,12 +19,7 @@ export default function DurationAnalysis({ durationDistribution, avgDuration }: 
 
   return (
     <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
-      <IconSubtitle 
-        icon={Clock} 
-        title="Duration Analysis" 
-        subtitle={`Average: ${formatDuration(avgDuration)} • ${getLengthStyle(avgDuration)}`} 
-        small 
-      />
+      <IconSubtitle icon={Clock} title="Duration Analysis" subtitle={`Average: ${formatDuration(avgDuration)} • ${getLengthStyle(avgDuration)}`} small />
       
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={durationDistribution}>

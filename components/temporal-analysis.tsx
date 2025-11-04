@@ -22,12 +22,7 @@ export default function TemporalAnalysis({ decadeDistribution, avgYear, oldestYe
 
   return (
     <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
-      <IconSubtitle 
-        icon={Calendar} 
-        title="Temporal Analysis" 
-        subtitle={`${oldestYear} - ${newestYear} • ${getEraDescription(avgYear)}`} 
-        small 
-      />
+      <IconSubtitle icon={Calendar} title="Temporal Analysis" subtitle={`${oldestYear} - ${newestYear} • ${getEraDescription(avgYear)}`} small />
       
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={decadeDistribution}>
@@ -57,4 +52,3 @@ export default function TemporalAnalysis({ decadeDistribution, avgYear, oldestYe
     </div>
   );
 }
-

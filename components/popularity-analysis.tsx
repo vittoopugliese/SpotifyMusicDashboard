@@ -28,9 +28,7 @@ export default function PopularityAnalysis({ popularityDistribution, avgPopulari
           <YAxis />
           <Tooltip />
           <Bar dataKey="count" fill="#1DB954" radius={[8, 8, 0, 0]}>
-            {popularityDistribution.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-            ))}
+            {popularityDistribution.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)}
           </Bar>
         </BarChart>
       </ResponsiveContainer>

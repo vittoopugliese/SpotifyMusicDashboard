@@ -3,6 +3,8 @@ import { Users } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import IconSubtitle from "@/components/icon-subtitle";
+import CustomAvatarComponent from "./custom-avatar-component";
+import Link from "next/link";
 
 type ArtistData = {
   id: string;
@@ -34,7 +36,6 @@ export default function ArtistComposition({ topArtists, totalArtists, artistDive
       <IconSubtitle icon={Users} title="Artist Composition" subtitle={`${totalArtists} unique artists • ${getDiversityLabel(artistDiversity)}`} small />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Pie Chart */}
         <div>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
@@ -46,21 +47,17 @@ export default function ArtistComposition({ topArtists, totalArtists, artistDive
           </ResponsiveContainer>
         </div>
 
-        {/* Top Artists List */}
         <div className="space-y-2 max-h-[300px] overflow-y-auto">
           <h3 className="text-sm font-semibold mb-3">Top Artists</h3>
           {topArtists.slice(0, 10).map((artist, index) => (
-            <div key={artist.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
+            <Link key={artist.id} href={`/artists/${artist.id}`} className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
               <span className="text-xs font-bold text-muted-foreground w-6">{index + 1}</span>
-              <Avatar className="w-10 h-10">
-                <AvatarImage src={artist.image} alt={artist.name} />
-                <AvatarFallback>{artist.name[0]}</AvatarFallback>
-              </Avatar>
+              <CustomAvatarComponent image={artist.image} name={artist.name} className="w-10 h-10" />
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium truncate">{artist.name}</p>
               </div>
               <Badge variant="secondary">{artist.count} tracks</Badge>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

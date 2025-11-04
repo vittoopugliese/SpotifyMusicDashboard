@@ -55,7 +55,7 @@ export function TrackList({ tracks, albumImage, albumName }: TrackListProps) {
                     {formatDuration(track.duration_ms)}
                   </td>
                   <td className="p-3 text-muted-foreground text-center">
-                    <span className="inline-flex items-center gap-1 text-sm">{track.popularity}/100</span>
+                    <span className="inline-flex items-center gap-1 text-sm">{track.popularity ? `${track.popularity}/100` : 'N/A'}</span>
                   </td>
                 </tr>
               ))}

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { spotifyFetchWithUserToken, SpotifySearchResult, SpotifySearchType } from "./spotify";
 
 /** * Gets and validates the Spotify access token from cookies/headers and automatically refreshes the token if expired */
 export async function getValidAccessToken(request: NextRequest): Promise<string | null> {
@@ -60,4 +61,29 @@ export async function withAuth(request: NextRequest, handler: (token: string, re
   } catch (error) {
     return internalErrorResponse(error);
   }
+}
+
+/** 
+ * Generic search handler for Spotify search endpoints
+ * Encapsulates common logic: auth validation, query param extraction, and response formatting
+ * @param request - The Next.js request object
+ * @param searchType - The type of search (artist, track, album, playlist)
+ * @returns A standardized search response with items array and total count
+ */
+export async function handleSpotifySearch<T>(request: NextRequest, searchType: SpotifySearchType): Promise<NextResponse> {
+  return withAuth(request, async (token) => {
+    const { searchParams } = new URL(request.url);
+    const query = searchParams.get("q");
+
+    if (!query || query.trim() === "") return badRequestResponse("Query parameter 'q' is required");
+
+    const limit = searchParams.get("limit") || "20";
+    const data = await spotifyFetchWithUserToken<T>(`/search?q=${encodeURIComponent(query)}&type=${searchType}&limit=${limit}`, token);
+
+    // Extract the relevant data based on search type (artists, tracks, albums, playlists)
+    const responseKey = `${searchType}s` as keyof T;
+    const results = data[responseKey] as SpotifySearchResult<unknown>;
+
+    return NextResponse.json({[responseKey]: results.items, total: results.total});
+  });
 }

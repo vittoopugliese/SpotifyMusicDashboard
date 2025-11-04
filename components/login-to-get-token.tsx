@@ -3,19 +3,12 @@
 import { useSpotifySession } from "@/contexts/spotify-session-context";
 import { Button } from "@/components/ui/button";
 import { AudioWaveform, BarChart3, Music, TrendingUp, Users, Album, Sparkles, ArrowRight, Heart } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import FeatureCard from "@/components/feature-card";
 
 export default function LoginToGetTokenMessage() {
-  const { session, loading, login } = useSpotifySession();
-  const router = useRouter();
+  const { loading, login } = useSpotifySession();
   const isMobile = useIsMobile();
-
-  useEffect(() => {
-    // if (!loading && session.authenticated) router.push("/dashboard/overview");
-  }, [session.authenticated, loading, router]);
 
   if (loading) {
     return (
@@ -29,40 +22,16 @@ export default function LoginToGetTokenMessage() {
   }
 
   const features = [
-    {
-      icon: BarChart3,
-      title: "Detailed Analytics",
-      description: "Get deep insights into your listening habits with comprehensive stats and visualizations."
-    },
-    {
-      icon: TrendingUp,
-      title: "Music Trends",
-      description: "Discover patterns in your music taste and see how it evolves over time."
-    },
-    {
-      icon: Users,
-      title: "Artist Comparison",
-      description: "Compare your favorite artists and discover similarities between them."
-    },
-    {
-      icon: Album,
-      title: "Playlist DNA",
-      description: "Analyze your playlists to understand their unique characteristics and mood."
-    },
-    {
-      icon: Music,
-      title: "Track Insights",
-      description: "Explore audio features and get recommendations based on your favorite songs."
-    },
-    {
-      icon: Sparkles,
-      title: "Fun Facts",
-      description: "Learn interesting facts about your music library and listening patterns."
-    }
+    { icon: BarChart3, title: "Detailed Analytics", description: "Get deep insights into your listening habits with comprehensive stats and visualizations." },
+    { icon: TrendingUp, title: "Music Trends", description: "Discover patterns in your music taste and see how it evolves over time." },
+    { icon: Users, title: "Artist Comparison", description: "Compare your favorite artists and discover similarities between them." },
+    { icon: Album, title: "Playlist DNA", description: "Analyze your playlists to understand their unique characteristics and mood." },
+    { icon: Music, title: "Track Insights", description: "Explore audio features and get recommendations based on your favorite songs." },
+    { icon: Sparkles, title: "Fun Facts", description: "Learn interesting facts about your music library and listening patterns." }
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-primary/25 via-background to-black/80">
+    <div className="sm:rounded-tl-2xl rounded-none min-h-screen bg-gradient-to-b from-primary/25 via-background to-black/80">
       <div className="container mx-auto px-4 py-16 md:py-24 lg:py-32">
         <div className="flex flex-col items-center text-center space-y-8 max-w-4xl mx-auto">
           <div className="relative">

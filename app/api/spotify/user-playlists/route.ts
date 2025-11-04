@@ -8,11 +8,8 @@ export async function GET(request: NextRequest) {
     const limit = searchParams.get("limit") || "50";
     const offset = searchParams.get("offset") || "0";
 
-    const data = await spotifyFetchWithUserToken<UserPlaylistsResponse>(
-      `/me/playlists?limit=${limit}&offset=${offset}`,
-      token
-    );
+    const data = await spotifyFetchWithUserToken<UserPlaylistsResponse>(`/me/playlists?limit=${limit}&offset=${offset}`, token);
+    
     return NextResponse.json(data);
   });
 }
-

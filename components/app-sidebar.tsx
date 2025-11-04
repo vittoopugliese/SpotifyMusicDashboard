@@ -1,6 +1,6 @@
 "use client"
 
-import { Album, AudioWaveform, Bot, GalleryVerticalEnd, PieChart, SquareTerminal } from "lucide-react"
+import { Album, AudioWaveform, Bot, GalleryVerticalEnd, SquareTerminal } from "lucide-react"
 import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail, } from "@/components/ui/sidebar"
@@ -17,16 +17,6 @@ const data = {
       items: [
         { title: "Overview", url: "/dashboard/overview", },
         { title: "Your Stats", url: "/dashboard/stats", },
-      ],
-    },
-    {
-      title: "Insights",
-      url: "/insights",
-      icon: PieChart,
-      items: [
-        { title: "Music Trends", url: "/insights/trends", },
-        { title: "Genre Explorer", url: "/insights/genres", },
-        { title: "Fun Facts", url: "/insights/facts", },
       ],
     },
     {

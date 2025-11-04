@@ -220,7 +220,7 @@ export default function ProfileHero(props: ProfileHeroProps) {
   const { backgroundImage, avatarImage, avatarName, profileType, title, spotifyUrl, roundedAvatar } = getProfileData();
 
   return (
-    <div className="relative h-[550px] md:h-[500px] sm:rounded-t-2xl rounded-none bg-gradient-to-b from-white/15 to-background overflow-hidden">
+    <div className="relative h-[550px] md:h-[500px] sm:rounded-tl-2xl rounded-none bg-gradient-to-b from-white/15 to-background overflow-hidden">
       {backgroundImage && (
         <div className="absolute inset-0 opacity-30">
           <Image src={backgroundImage} alt={title} fill className="object-cover blur-xl" priority draggable={false} />

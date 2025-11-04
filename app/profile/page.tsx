@@ -12,14 +12,14 @@ import CustomAvatarComponent from "@/components/custom-avatar-component";
 
 export default function ProfilePage() {
   const { profile, topArtists, topTracks, isLoading, error } = useUserProfile();
-  const avatarImage = profile?.images?.[0]?.url || "avatarPlaceholder.png";
+  const avatarImage = profile?.images?.[0]?.url;
 
   if (isLoading) return <ProfileSkeleton />;
   if (error || !profile) return <CustomAlertComponent variant="destructive" title="Error" description={error || "Failed to load profile. Please log in to view your profile."} />
 
   return (
     <div className="min-h-screen">
-      <div className="relative rounded-t-4xl h-[400px] md:h-[500px] bg-gradient-to-b from-primary/20 to-background overflow-hidden">
+      <div className="relative rounded-tl-2xl h-[400px] md:h-[500px] bg-gradient-to-b from-primary/20 to-background overflow-hidden">
         {profile.images?.[0]?.url && (
           <div className="absolute inset-0 opacity-30">
             <Image src={profile.images[0].url} alt="Profile" fill className="object-cover blur-xl" priority draggable={false} />

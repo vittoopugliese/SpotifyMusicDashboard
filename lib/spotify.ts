@@ -185,6 +185,9 @@ export type TopAlbumsResponse = {
   offset: number;
 };
 
+export type SpotifySearchResult<TItem> = { items: TItem[]; total: number; };
+export type SpotifySearchType = 'artist' | 'track' | 'album' | 'playlist';
+
 // User-specific endpoints (requires user access token)
 // This fn is called from hooks and pass here the api route
 export async function spotifyFetchWithUserToken<T>( path: string, userToken: string, init?: RequestInit ): Promise<T> {
@@ -193,6 +196,7 @@ export async function spotifyFetchWithUserToken<T>( path: string, userToken: str
 
   if (!res.ok) {
     const text = await res.text();
+    console.error(`Spotify API ${path} failed: ${res.status} ${text}`);
     throw new Error(`Spotify API ${path} failed: ${res.status} ${text}`);
   }
 

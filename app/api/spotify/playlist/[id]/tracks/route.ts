@@ -10,11 +10,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     const limit = searchParams.get("limit") || "100";
     const offset = searchParams.get("offset") || "0";
 
-    const data = await spotifyFetchWithUserToken<PlaylistTracksResponse>(
-      `/playlists/${id}/tracks?limit=${limit}&offset=${offset}`,
-      token
-    );
+    const data = await spotifyFetchWithUserToken<PlaylistTracksResponse>(`/playlists/${id}/tracks?limit=${limit}&offset=${offset}`, token);
+    
     return NextResponse.json(data);
   });
 }
-

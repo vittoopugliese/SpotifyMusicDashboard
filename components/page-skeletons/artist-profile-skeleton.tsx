@@ -6,7 +6,7 @@ export function ArtistProfileSkeleton() {
   return (
     <div className="min-h-screen">
       {/* Hero Section Skeleton */}
-      <div className="relative h-[400px] md:h-[500px] bg-gradient-to-b from-primary/20 to-background overflow-hidden">
+      <div className="relative h-[400px] md:h-[500px] sm:rounded-tl-2xl rounded-none bg-gradient-to-b from-primary/20 to-background overflow-hidden">
         <div className="absolute inset-0 opacity-30">
           <Skeleton className="w-full h-full" />
         </div>

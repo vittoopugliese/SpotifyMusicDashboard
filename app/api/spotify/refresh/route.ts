@@ -11,13 +11,11 @@ async function refreshAccessToken(refreshToken: string) {
   const clientSecret = getEnv("SPOTIFY_CLIENT_SECRET");
   const body = new URLSearchParams({ grant_type: "refresh_token", refresh_token: refreshToken });
   const res = await fetch("https://accounts.spotify.com/api/token", {
-    method: "POST",
+    method: "POST", body, cache: "no-store",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
       Authorization: `Basic ${Buffer.from(`${clientId}:${clientSecret}`).toString("base64")}`,
     },
-    body,
-    cache: "no-store",
   });
   if (!res.ok) throw new Error(`Refresh failed: ${res.status} ${await res.text()}`);
   return res.json() as Promise<{ access_token: string; expires_in: number }>;
@@ -37,5 +35,3 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: e instanceof Error ? e.message : "Refresh failed" }, { status: 500 });
   }
 }
-
-

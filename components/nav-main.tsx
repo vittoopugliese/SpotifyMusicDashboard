@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger, } from "@/components/ui/collapsible"
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, } from "@/components/ui/sidebar"
 import { usePathname } from "next/navigation";
+import { useSpotifySession } from "@/contexts/spotify-session-context"
 
 type itemType = {
   title: string
@@ -17,6 +18,7 @@ type itemType = {
 export function NavMain({ items, }: { items: itemType[] }) {
   // get pathname to return if the user clicks on the same item as the user is currently on
   const pathname = usePathname();
+  const { session } = useSpotifySession();
 
   return (
     <SidebarGroup>
@@ -37,7 +39,7 @@ export function NavMain({ items, }: { items: itemType[] }) {
                   {item.items?.map((subItem) => (
                     <SidebarMenuSubItem key={subItem.title}>
                       <SidebarMenuSubButton asChild>
-                        <Link href={subItem.url} aria-disabled={pathname === subItem.url} > 
+                        <Link href={subItem.url} aria-disabled={pathname === subItem.url || !session.authenticated} > 
                           <span style={{userSelect: "none"}}>{subItem.title}</span>
                         </Link>
                       </SidebarMenuSubButton>

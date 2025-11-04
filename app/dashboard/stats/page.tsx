@@ -1,18 +1,16 @@
 "use client";
 
-import StatCard from "@/components/stat-card";
-import Link from "next/link"
-import TitleWithPeriodSelector from "@/components/title-with-period-selector";
 import { useState, useMemo } from "react";
 import { useTopArtists, useTopTracks } from "@/hooks/use-spotify-data";
 import { average, yearFromDate, getGenreDistribution } from "@/lib/utils";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
 import { Download, Music2, BarChart3, TrendingUp, Clock, Palette, Calendar, Users } from "lucide-react";
+import StatCard from "@/components/stat-card";
+import TitleWithPeriodSelector from "@/components/title-with-period-selector";
 import ArtistMiniCard from "@/components/artist-mini-card";
 import IconSubtitle from "@/components/icon-subtitle";
+import DashboardStatsSkeleton from "@/components/page-skeletons/dashboard-stats-skeleton";
 
 type TimeRange = "short_term" | "medium_term" | "long_term";
 
@@ -112,6 +110,8 @@ export default function StatsPage() {
     URL.revokeObjectURL(url);
   };
 
+  if (isLoading) return <DashboardStatsSkeleton />;
+
   return (
     <div className="p-6 space-y-6">
       <TitleWithPeriodSelector title="Your Stats" icon={BarChart3} 
@@ -120,9 +120,7 @@ export default function StatsPage() {
 
       <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
         <IconSubtitle icon={Music2} title="Music Taste Profile" subtitle="Your music profile based on your favorite artists and tracks" small />
-        {isLoading ? (
-          <Skeleton className="h-96 w-full" />
-        ) : radarData ? (
+        {radarData ? (
           <ResponsiveContainer width="100%" height={400}>
             <RadarChart data={radarData}>
               <PolarGrid />
@@ -139,18 +137,16 @@ export default function StatsPage() {
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard icon={TrendingUp} title="Popularity" value={isLoading || !musicStats ? "—" : `${musicStats.avgPopularity}/100`} loading={isLoading} tooltipDescription="Average popularity of your favorite songs in Spotify (0-100)" />
-        <StatCard icon={Clock} title="Average Duration" value={isLoading || !musicStats ? "—" : `${Math.floor(musicStats.avgDuration / 60)}:${String(musicStats.avgDuration % 60).padStart(2, '0')}`} loading={isLoading} tooltipDescription="Average duration of your favorite songs" />
-        <StatCard icon={Palette} title="Unique Genres" value={isLoading || !musicStats ? "—" : `${musicStats.uniqueGenres}`} loading={isLoading} tooltipDescription="Number of unique genres in your library" />
-        <StatCard icon={Calendar} title="Average Year" value={isLoading || !musicStats ? "—" : `~${musicStats.avgYear}`} loading={isLoading} tooltipDescription="Average year of release of your favorite songs" />
+        <StatCard icon={TrendingUp} title="Popularity" value={!musicStats ? "—" : `${musicStats.avgPopularity}/100`} loading={false} tooltipDescription="Average popularity of your favorite songs in Spotify (0-100)" />
+        <StatCard icon={Clock} title="Average Duration" value={!musicStats ? "—" : `${Math.floor(musicStats.avgDuration / 60)}:${String(musicStats.avgDuration % 60).padStart(2, '0')}`} loading={false} tooltipDescription="Average duration of your favorite songs" />
+        <StatCard icon={Palette} title="Unique Genres" value={!musicStats ? "—" : `${musicStats.uniqueGenres}`} loading={false} tooltipDescription="Number of unique genres in your library" />
+        <StatCard icon={Calendar} title="Average Year" value={!musicStats ? "—" : `~${musicStats.avgYear}`} loading={false} tooltipDescription="Average year of release of your favorite songs" />
       </div>
 
       <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-4 overflow-auto max-h-[900px]">
         <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
           <IconSubtitle icon={Users} title="Top Artists" small />
-          {isLoading ? (
-            <div className="grid grid-cols-2 gap-4">{[...Array(6)].map((_, i) => <Skeleton key={i} className="h-32 w-full" />)}</div>
-          ) : artistsData?.items && artistsData.items.length > 0 ? (
+          {artistsData?.items && artistsData.items.length > 0 ? (
             <div className="grid grid-cols-5 gap-4 overflow-auto max-h-[600px]">
               {artistsData.items.map((artist) => <ArtistMiniCard key={artist.id} artist={artist} />)}
             </div>
@@ -163,9 +159,7 @@ export default function StatsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
           <IconSubtitle icon={Calendar} title="Tracks by Decade" subtitle="Distribution of your favorite songs by decade" small />
-          {isLoading ? (
-            <Skeleton className="h-64 w-full" />
-          ) : decadeData.length > 0 ? (
+          {decadeData.length > 0 ? (
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={decadeData}>
                 <XAxis dataKey="decade" />
@@ -179,9 +173,7 @@ export default function StatsPage() {
 
         <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
           <IconSubtitle icon={Palette} title="Top Genres" subtitle="Your top 8 favorite genres" small />
-          {isLoading ? (
-            <Skeleton className="h-64 w-full" />
-          ) : genreData.length > 0 ? (
+          {genreData.length > 0 ? (
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={genreData} layout="vertical">
                 <XAxis type="number" />

@@ -51,7 +51,7 @@ function AppHeaderComponent({ authenticated, loading }: AppHeaderProps) {
 
   // Determinar si mostrar el skeleton
   if (loading || (!authenticated && !state.delayPassed)) return <AppHeaderSkeleton />;
-  console.log(state);
+
   // Si no está autenticado, mostramos header simplificado
   if (!authenticated) {
     return (

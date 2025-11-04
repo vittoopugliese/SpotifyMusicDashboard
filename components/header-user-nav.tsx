@@ -55,9 +55,7 @@ export function HeaderUserNav() {
             </DropdownMenuTrigger>
           </TooltipTrigger>
           <TooltipContent side="bottom">
-            <p className="text-xs">
-              {loading ? "Loading..." : localUser?.display_name}
-            </p>
+            <p className="text-xs">{loading ? "Loading..." : localUser?.display_name}</p>
           </TooltipContent>
         </Tooltip>
 
@@ -66,12 +64,12 @@ export function HeaderUserNav() {
             <div className="flex flex-col space-y-1">
               <p className="text-sm font-medium leading-none">{loading ? "Loading..." : localUser?.display_name}</p>
               <p className="text-xs leading-none text-muted-foreground">{loading ? "Loading..." : localUser?.email}</p>
-              <div className="flex items-center gap-2 pt-1">
+              <div className="flex items-center gap-2 pt-1 justify-center">
                 <Badge variant="secondary" className="text-xs">
                   <Music className="mr-1 h-3 w-3" />
                   {localUser?.product.toUpperCase() || "FREE"}
                 </Badge>
-                {session.authenticated && <Badge variant="default" className="text-xs bg-green-500">Connected</Badge>}
+                {session.authenticated && <Badge variant="default" className="text-xs">Connected</Badge>}
               </div>
             </div>
           </DropdownMenuLabel>

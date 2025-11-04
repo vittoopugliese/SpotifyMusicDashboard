@@ -37,7 +37,7 @@ export function NavMain({ items, }: { items: itemType[] }) {
                   {item.items?.map((subItem) => (
                     <SidebarMenuSubItem key={subItem.title}>
                       <SidebarMenuSubButton asChild>
-                        <Link href={subItem.url} aria-disabled={pathname === subItem.url}>
+                        <Link href={subItem.url} aria-disabled={pathname === subItem.url} > 
                           <span style={{userSelect: "none"}}>{subItem.title}</span>
                         </Link>
                       </SidebarMenuSubButton>

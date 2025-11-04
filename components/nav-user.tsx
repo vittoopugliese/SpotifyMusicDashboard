@@ -5,13 +5,12 @@ import { LogOut, User, EllipsisVertical } from "lucide-react";
 import { useSpotifySession } from "@/contexts/spotify-session-context";
 import { SpotifyUserProfile } from "@/lib/spotify";
 import { useEffect, useState } from "react";
-import { Button } from "./ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger, } from "@/components/ui/dropdown-menu";
 import { usePathname, useRouter } from "next/navigation";
 import CustomAvatarComponent from "./custom-avatar-component";
 
 export function NavUser() {
-  const {session, loading, login} = useSpotifySession();
+  const { session, loading } = useSpotifySession();
   const [localUser, setLocalUser] = useState<SpotifyUserProfile | null>(null);
   const router = useRouter();
   const pathname = usePathname();
@@ -38,7 +37,7 @@ export function NavUser() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <SidebarMenuButton size="lg" className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground cursor-pointer" >
-                <CustomAvatarComponent image={localUser?.images?.[0]?.url} name={localUser?.display_name || "User"} loading={loading} className="size-10" />
+                <CustomAvatarComponent image={localUser?.images?.[0]?.url} name={localUser?.display_name || "User"} loading={loading} className="size-8" />
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{loading ? "Username..." : localUser?.display_name}</span>
                   <span className="truncate text-xs">{loading ? "Email..." : localUser?.email}</span>

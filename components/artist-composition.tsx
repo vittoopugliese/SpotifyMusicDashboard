@@ -20,10 +20,7 @@ type ArtistCompositionProps = {
 const COLORS = ["#1DB954", "#1ed760", "#19e68c", "#15d4a8", "#12c2c1", "#0fa7b8", "#0c8ca0", "#097188"];
 
 export default function ArtistComposition({ topArtists, totalArtists, artistDiversity }: ArtistCompositionProps) {
-  const pieData = topArtists.slice(0, 8).map((artist) => ({
-    name: artist.name,
-    value: artist.count,
-  }));
+  const pieData = topArtists.slice(0, 8).map((artist) => ({ name: artist.name, value: artist.count, }));
 
   const getDiversityLabel = (diversity: number) => {
     if (diversity >= 0.8) return "Extremely Diverse 🌈";
@@ -34,31 +31,15 @@ export default function ArtistComposition({ topArtists, totalArtists, artistDive
 
   return (
     <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
-      <IconSubtitle 
-        icon={Users} 
-        title="Artist Composition" 
-        subtitle={`${totalArtists} unique artists • ${getDiversityLabel(artistDiversity)}`} 
-        small 
-      />
+      <IconSubtitle icon={Users} title="Artist Composition" subtitle={`${totalArtists} unique artists • ${getDiversityLabel(artistDiversity)}`} small />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Pie Chart */}
         <div>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
-              <Pie
-                data={pieData}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                // label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                outerRadius={80}
-                fill="#8884d8"
-                dataKey="value"
-              >
-                {pieData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
+              <Pie data={pieData} cx="50%" cy="50%" labelLine={false} outerRadius={80} fill="#8884d8" dataKey="value" >
+                {pieData.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} /> )}
               </Pie>
               <Tooltip />
             </PieChart>
@@ -87,8 +68,8 @@ export default function ArtistComposition({ topArtists, totalArtists, artistDive
       <div className="mt-4 p-4 bg-muted/50 rounded-lg">
         <p className="text-sm text-muted-foreground">
           {artistDiversity >= 0.6 
-            ? "This playlist showcases a wide variety of artists, perfect for discovering new sounds!" 
-            : "This playlist focuses on a select group of artists, showing strong musical preferences."}
+            ? "This playlist showcases a wide variety of artists, perfect for discovering new artists!" 
+            : "This playlist focuses on a select group of artists, showing strong preferences."}
         </p>
       </div>
     </div>

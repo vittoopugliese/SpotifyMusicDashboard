@@ -74,7 +74,7 @@ export default function PlaylistSelector({ onSelectPlaylist, selectedPlaylistNam
             <div className="space-y-4">
               {/* URL Input Search Bar */}
               <SearchBar value={urlInput} onChange={setUrlInput} placeholder="https://open.spotify.com/playlist/..." 
-                labelTitle="Paste Spotify playlist URL" buttonText="Analyze" buttonAction={handleUrlSubmit} />
+                labelTitle="Paste Spotify playlist URL" buttonText="Analyze" buttonAction={handleUrlSubmit} hideSearchIcon />
               {/* Playlist Search Bar, local search */} 
               <SearchBar value={searchTerm} onChange={setSearchTerm} placeholder="Search playlists..." 
                 labelTitle="Or search in your playlists" />

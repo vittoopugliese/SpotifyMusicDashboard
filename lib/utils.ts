@@ -42,24 +42,19 @@ export function calculateAnalytics(tracks: SpotifyTrack[], playlist: SpotifyPlay
     const decade = `${Math.floor(year / 10) * 10}s`;
     decadeCounts[decade] = (decadeCounts[decade] || 0) + 1;
   });
-  const decadeDistribution = Object.entries(decadeCounts)
-    .map(([decade, count]) => ({ decade, count }))
-    .sort((a, b) => a.decade.localeCompare(b.decade));
+
+  const decadeDistribution = Object.entries(decadeCounts).map(([decade, count]) => ({ decade, count })).sort((a, b) => a.decade.localeCompare(b.decade));
 
   // Artist analysis
   const artistCounts: Record<string, { count: number; name: string; image?: string }> = {};
   tracks.forEach((track) => {
     track.artists.forEach((artist) => {
-      if (!artistCounts[artist.id]) {
-        artistCounts[artist.id] = { count: 0, name: artist.name };
-      }
+      if (!artistCounts[artist.id]) artistCounts[artist.id] = { count: 0, name: artist.name };
       artistCounts[artist.id].count++;
     });
   });
 
-  const topArtists = Object.entries(artistCounts)
-    .map(([id, data]) => ({ id, ...data }))
-    .sort((a, b) => b.count - a.count);
+  const topArtists = Object.entries(artistCounts).map(([id, data]) => ({ id, ...data })).sort((a, b) => b.count - a.count);
 
   const totalArtists = topArtists.length;
   const artistDiversity = Math.min(totalArtists / trackCount, 1);

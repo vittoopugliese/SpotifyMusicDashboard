@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Dna } from "lucide-react";
 import { usePlaylistProfile } from "@/hooks/use-playlist-profile";
 import { calculateAnalytics } from "@/lib/utils";
@@ -20,9 +21,28 @@ import CustomAlertComponent from "@/components/custom-alert-component";
 import ViewHint from "@/components/view-hint";
 
 export default function PlaylistsDnaPage() {
-  // fetch a random playlist id
-  const [selectedPlaylistId, setSelectedPlaylistId] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  
+  // Initialize selectedPlaylistId from URL params if available
+  const [selectedPlaylistId, setSelectedPlaylistId] = useState<string | null>(() => {
+    return searchParams.get("id") || null;
+  });
+  
   const { playlist, tracks, isLoading, error } = usePlaylistProfile(selectedPlaylistId);
+
+  // Sync URL with selectedPlaylistId
+  useEffect(() => {
+    const currentId = searchParams.get("id");
+    
+    if (selectedPlaylistId && selectedPlaylistId !== currentId) {
+      // Update URL when playlist is selected
+      router.push(`/playlists/dna?id=${selectedPlaylistId}`, { scroll: false });
+    } else if (!selectedPlaylistId && currentId) {
+      // Clear URL when playlist is deselected
+      router.push("/playlists/dna", { scroll: false });
+    }
+  }, [selectedPlaylistId, searchParams, router]);
 
   // Calculate all analytics
   const analytics = useMemo(() => {
@@ -33,15 +53,12 @@ export default function PlaylistsDnaPage() {
   return (
     <div className="p-6 space-y-6">
       <IconTitle icon={Dna} title="Playlist DNA" subtitle="Analyze the DNA of your playlists and discover their unique characteristics"
-        action={playlist && analytics && !isLoading ? <ExportAnalysis playlist={playlist} analytics={analytics} /> : undefined}
-      />
+        action={playlist && analytics && !isLoading ? <ExportAnalysis playlist={playlist} analytics={analytics} /> : undefined} />
 
       <PlaylistSelector onSelectPlaylist={setSelectedPlaylistId} selectedPlaylistName={playlist?.name} />
 
       { isLoading && <LoadingComponent message="Analyzing playlist DNA..." />}
-      
       { error && <CustomAlertComponent title="Error loading playlist" description={error} variant="destructive" /> }
-
       { !selectedPlaylistId && !isLoading && <ViewHint title="Start Your Analysis" description="Select a playlist above to uncover its unique musical DNA and characteristics" icon={Dna} /> }
 
       { playlist && analytics && !isLoading && (

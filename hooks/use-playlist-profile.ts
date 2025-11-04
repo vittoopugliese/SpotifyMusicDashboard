@@ -11,10 +11,19 @@ type PlaylistProfileData = {
 export function usePlaylistProfile(playlistId: string | null): PlaylistProfileData {
   const [playlist, setPlaylist] = useState<SpotifyPlaylist | null>(null);
   const [tracks, setTracks] = useState<SpotifyTrack[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // Reset state when playlistId changes
+    if (!playlistId) {
+      setPlaylist(null);
+      setTracks([]);
+      setIsLoading(false);
+      setError(null);
+      return;
+    }
+
     const fetchPlaylistData = async () => {
       setIsLoading(true);
       setError(null);
@@ -59,7 +68,7 @@ export function usePlaylistProfile(playlistId: string | null): PlaylistProfileDa
       }
     };
 
-    if (playlistId) fetchPlaylistData();
+    fetchPlaylistData();
   }, [playlistId]);
 
   return { playlist, tracks, isLoading, error };

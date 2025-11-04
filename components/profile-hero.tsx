@@ -220,7 +220,7 @@ export default function ProfileHero(props: ProfileHeroProps) {
   const { backgroundImage, avatarImage, avatarName, profileType, title, spotifyUrl, roundedAvatar } = getProfileData();
 
   return (
-    <div className="relative h-[400px] md:h-[500px] bg-gradient-to-b from-white/15 to-background overflow-hidden">
+    <div className="relative h-[550px] md:h-[500px] sm:rounded-t-2xl rounded-none bg-gradient-to-b from-white/15 to-background overflow-hidden">
       {backgroundImage && (
         <div className="absolute inset-0 opacity-30">
           <Image src={backgroundImage} alt={title} fill className="object-cover blur-xl" priority draggable={false} />
@@ -228,7 +228,7 @@ export default function ProfileHero(props: ProfileHeroProps) {
       )}
       
       <div className="relative h-full max-w-7xl mx-auto px-6 flex items-end pb-8">
-        <div className="flex flex-col md:flex-row items-center md:items-end gap-6 w-full">
+        <div className="flex flex-col md:flex-row items-center md:items-end gap-3 w-full">
           <CustomAvatarComponent image={avatarImage} name={avatarName} className={`h-48 w-48 md:h-64 md:w-64 border-2 border-background shadow-2xl ${roundedAvatar ? '' : 'rounded-lg'}`} />
           
           <div className="flex-1 text-center md:text-left space-y-4">

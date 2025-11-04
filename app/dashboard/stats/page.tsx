@@ -143,17 +143,15 @@ export default function StatsPage() {
         <StatCard icon={Calendar} title="Average Year" value={!musicStats ? "—" : `~${musicStats.avgYear}`} loading={false} tooltipDescription="Average year of release of your favorite songs" />
       </div>
 
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-4 overflow-auto max-h-[900px]">
-        <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
-          <IconSubtitle icon={Users} title="Top Artists" small />
-          {artistsData?.items && artistsData.items.length > 0 ? (
-            <div className="grid grid-cols-5 gap-4 overflow-auto max-h-[600px]">
-              {artistsData.items.map((artist) => <ArtistMiniCard key={artist.id} artist={artist} />)}
-            </div>
-          ) : (
-            <p className="text-muted-foreground text-center py-12">No artists available</p>
-          )}
-        </div>
+      <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
+        <IconSubtitle icon={Users} title="Top Artists" small />
+        {artistsData?.items && artistsData.items.length > 0 ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-3 md:gap-4 overflow-auto max-h-[600px]">
+            {artistsData.items.map((artist) => <ArtistMiniCard key={artist.id} artist={artist} />)}
+          </div>
+        ) : (
+          <p className="text-muted-foreground text-center py-12">No artists available</p>
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

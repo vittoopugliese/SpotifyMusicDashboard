@@ -17,7 +17,7 @@ export default function PlaylistsYoursPage() {
     <Button asChild variant="outline">
       <Link href="/playlists/search" className="gap-2">
         <Search className="h-4 w-4" />
-        Search Playlists
+        Search 
       </Link>
     </Button>
   );

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useReducer, useEffect, memo } from 'react'
 import { SidebarTrigger } from './ui/sidebar'
 import { DynamicBreadcrumb } from './dynamic-breadcrumb'
 import { ThemeToggler } from './ui/theme-toggler'
@@ -8,38 +8,51 @@ import { HeaderUserNav } from './header-user-nav'
 import { QuickSearchButton } from './quick-search-button'
 import AppHeaderSkeleton from './page-skeletons/app-header-skeleton'
 
-export function AppHeader({authenticated, loading}: {authenticated: boolean, loading: boolean}) {
-  // Creamos una key única basada en el estado de loading y authenticated
-  const stateKey = useMemo(() => `${loading}-${authenticated}`, [loading, authenticated]);
-  
-  const [timeoutCompleted, setTimeoutCompleted] = useState(false);
-  const [currentStateKey, setCurrentStateKey] = useState(stateKey);
+interface AppHeaderProps {
+  authenticated: boolean;
+  loading: boolean;
+}
 
-  // Cuando la key cambia, reseteamos el timeout
-  if (currentStateKey !== stateKey) {
-    setCurrentStateKey(stateKey);
-    setTimeoutCompleted(false);
+interface DelayState {
+  delayPassed: boolean;
+  effectId: number;
+}
+
+type DelayAction = | { type: 'RESET'; effectId: number } | { type: 'DELAY_PASSED'; effectId: number };
+
+function delayReducer(state: DelayState, action: DelayAction): DelayState {
+  switch (action.type) {
+    case 'RESET':
+      return { delayPassed: false, effectId: action.effectId };
+    case 'DELAY_PASSED':
+      // Solo actualizar si el effectId coincide con el actual
+      if (action.effectId === state.effectId) return { ...state, delayPassed: true };
+      return state;
+    default:
+      return state;
   }
+}
+
+function AppHeaderComponent({ authenticated, loading }: AppHeaderProps) {
+  const [state, dispatch] = useReducer(delayReducer, { delayPassed: false, effectId: 0, });
 
   useEffect(() => {
-    // Solo configuramos timeout si no está cargando y no está autenticado
-    if (!loading && !authenticated) {
-      const timer = setTimeout(() => {
-        setTimeoutCompleted(true);
-      }, 2000);
+    // Generar un ID único para este ciclo de effect
+    const thisEffectId = Date.now();
+    // Resetear el estado para este nuevo ciclo
+    dispatch({ type: 'RESET', effectId: thisEffectId });
+    // Si está loading o autenticado, no configurar timeout
+    if (loading || authenticated) return;
+    // Configurar timeout de 2 segundos para usuarios no autenticados
+    const timer = setTimeout(() => dispatch({ type: 'DELAY_PASSED', effectId: thisEffectId }) , 2000);
 
-      return () => clearTimeout(timer);
-    }
-  }, [loading, authenticated]);
+    return () => clearTimeout(timer);
+  }, [authenticated, loading]);
 
-  // Determinamos si mostrar skeleton
-  const shouldShowSkeleton = loading || (!authenticated && !timeoutCompleted);
-
-  if (shouldShowSkeleton) {
-    return <AppHeaderSkeleton />;
-  }
-
-  // Si no está autenticado y ya esperamos suficiente, mostramos el header sin contenido de usuario
+  // Determinar si mostrar el skeleton
+  if (loading || (!authenticated && !state.delayPassed)) return <AppHeaderSkeleton />;
+  console.log(state);
+  // Si no está autenticado, mostramos header simplificado
   if (!authenticated) {
     return (
       <header className="flex h-14 shrink-0 items-center transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-14 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -75,3 +88,6 @@ export function AppHeader({authenticated, loading}: {authenticated: boolean, loa
     </header>
   );
 };
+
+// Memoizamos el componente para evitar re-renders innecesarios
+export const AppHeader = memo(AppHeaderComponent);

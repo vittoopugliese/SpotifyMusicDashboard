@@ -1,6 +1,11 @@
 # 🎵 Spori | Music Dashboard
-
-[Add a GIF/screenshot of the app in action]
+<img width="1895" height="791" alt="image" src="https://github.com/user-attachments/assets/df57d6aa-c577-4f40-8403-dd6ad9d91433" />
+<img width="1898" height="803" alt="image" src="https://github.com/user-attachments/assets/7be6122c-90c4-4c08-acb1-a0acf1763f57" />
+<img width="1633" height="850" alt="image" src="https://github.com/user-attachments/assets/f598eb29-b281-43cd-a355-41324fdee0a5" />
+<img width="1685" height="771" alt="image" src="https://github.com/user-attachments/assets/8a74e95d-696f-4beb-ba05-c11ecc14b910" />
+<img width="1635" height="725" alt="image" src="https://github.com/user-attachments/assets/0b5d45c1-d711-4cec-b9a3-9816b7dfd65a" />
+<img width="1612" height="667" alt="image" src="https://github.com/user-attachments/assets/de38761e-951f-40c9-b46f-5947ade82e56" />
+<img width="1577" height="815" alt="image" src="https://github.com/user-attachments/assets/4cff30e3-fb45-4f4f-906f-78fbd0d11fac" />
 
 ## 💡 The Insight
 

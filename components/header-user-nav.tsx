@@ -18,14 +18,12 @@ export function HeaderUserNav() {
   const pathname = usePathname();
 
   useEffect(() => {
-    if (session.authenticated && session.profile) {
-      setLocalUser(session.profile as SpotifyUserProfile);
-    }
+    if (session.authenticated && session.profile) setLocalUser(session.profile as SpotifyUserProfile);
   }, [session.authenticated, session.profile]);
 
   const handleLogout = () => {
-    const origin = window.location.origin || "http://127.0.0.1:3000";
-    window.location.href = `${origin}/api/spotify/logout`;
+    const baseUrl = process.env.NODE_ENV === "development" ? process.env.NEXT_PUBLIC_SPORI_DEV_REDIRECT_URL : process.env.NEXT_PUBLIC_SPORI_PROD_REDIRECT_URL;
+    window.location.href = `${baseUrl}/api/spotify/logout`;
   };
 
   const handleGoToProfile = () => {

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || process.env.BASE_URL || "http://127.0.0.1:3000";
+  const baseUrl = process.env.NODE_ENV === "development" ? process.env.NEXT_PUBLIC_SPORI_DEV_REDIRECT_URL : process.env.NEXT_PUBLIC_SPORI_PROD_REDIRECT_URL;
   const res = NextResponse.redirect(`${baseUrl}/dashboard/overview`);
 
   // Clear Spotify auth cookies

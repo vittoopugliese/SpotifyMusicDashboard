@@ -82,7 +82,10 @@ export async function handleSpotifySearch<T>(request: NextRequest, searchType: S
 
     // Extract the relevant data based on search type (artists, tracks, albums, playlists)
     const responseKey = `${searchType}s` as keyof T;
+    console.log(responseKey);
+    console.log(data);
     const results = data[responseKey] as SpotifySearchResult<unknown>;
+    console.log(results);
 
     return NextResponse.json({[responseKey]: results.items, total: results.total});
   });
